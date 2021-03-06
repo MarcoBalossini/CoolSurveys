@@ -102,10 +102,13 @@ DROP TABLE IF EXISTS `option`;
 CREATE TABLE `option` (
   `option_id` int NOT NULL AUTO_INCREMENT,
   `question_id` int NOT NULL,
+  `questionaire_id` int NOT NULL,
   `text` varchar(50) NOT NULL,
-  PRIMARY KEY (`option_id`),
+  PRIMARY KEY (`option_id`,`question_id`,`questionaire_id`),
   KEY `option/question_idx` (`question_id`),
-  CONSTRAINT `option/question` FOREIGN KEY (`question_id`) REFERENCES `question` (`question_id`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `option/questionnaire_idx` (`questionaire_id`),
+  CONSTRAINT `option/question` FOREIGN KEY (`question_id`) REFERENCES `question` (`question_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `option/questionnaire` FOREIGN KEY (`questionaire_id`) REFERENCES `questionnaire` (`q_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -129,7 +132,7 @@ CREATE TABLE `question` (
   `question_id` int NOT NULL AUTO_INCREMENT,
   `questionnaire_id` int NOT NULL,
   `question` varchar(512) NOT NULL,
-  PRIMARY KEY (`question_id`),
+  PRIMARY KEY (`question_id`,`questionnaire_id`),
   KEY `questionnaire_idx` (`questionnaire_id`),
   CONSTRAINT `questionnaire/question` FOREIGN KEY (`questionnaire_id`) REFERENCES `questionnaire` (`q_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -177,11 +180,13 @@ DROP TABLE IF EXISTS `submission`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `submission` (
-  `submission_id` int NOT NULL AUTO_INCREMENT,
   `user` int NOT NULL,
   `questionnaire` int NOT NULL,
   `submitted` tinyint NOT NULL,
-  PRIMARY KEY (`submission_id`),
+  `age` int DEFAULT NULL,
+  `sex` tinyint DEFAULT NULL,
+  `expertise_level` int DEFAULT NULL,
+  PRIMARY KEY (`user`,`questionnaire`),
   KEY `submission/user_idx` (`user`),
   KEY `submission/questionnaire_idx` (`questionnaire`),
   CONSTRAINT `submission/questionnaire` FOREIGN KEY (`questionnaire`) REFERENCES `questionnaire` (`q_id`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -210,10 +215,9 @@ CREATE TABLE `user` (
   `username` varchar(20) NOT NULL,
   `mail` varchar(64) NOT NULL,
   `age` int DEFAULT NULL,
-  `gender` tinyint DEFAULT NULL,
-  `expertise_level` int DEFAULT NULL,
   `points` int DEFAULT '0',
   `producer` tinyint DEFAULT '0',
+  `blocked_until` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `username_UNIQUE` (`username`),
   UNIQUE KEY `mail_UNIQUE` (`mail`)
@@ -238,4 +242,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-03-06  7:55:54
+-- Dump completed on 2021-03-06 12:21:53
