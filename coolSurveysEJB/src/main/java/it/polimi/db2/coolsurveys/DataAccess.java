@@ -13,7 +13,7 @@ import java.util.List;
 public class DataAccess implements DataAccessInt{
 
     @PersistenceContext(unitName = "coolSurveys")
-    protected EntityManager em;
+    public EntityManager em;
 
     /**
      * Retrieves a user from the database, given its username as parameter

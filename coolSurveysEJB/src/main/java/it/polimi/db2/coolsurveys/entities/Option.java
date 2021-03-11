@@ -15,20 +15,20 @@ public class Option {
     @Id
     private int option_id;
 
-    @Id
+    @Column (nullable = false)
     private int question_id;
 
-    @Id
+    @Column
     private int questionnaire_id;
 
     @Column (nullable = false)
     private String text;
 
-    @ManyToOne (cascade = CascadeType.ALL)
+    @ManyToOne (fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Question question;
 
     //TODO: is the relation with the questionnaire necessary?
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "questionnaire_id", orphanRemoval = true, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Questionnaire questionnaire;
 
     public int getQuestion_id() {

@@ -10,10 +10,10 @@ public class Answer {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int answer_id;
 
-    @Id
+    @Column (nullable = false)
     private int question_id;
 
-    @Id
+    @Column (nullable = false)
     private int questionnaire_id;
 
     @Column (nullable = false)
@@ -28,7 +28,7 @@ public class Answer {
     /**
      * If a user is removed, also his answers have to be removed
      */
-    @OneToOne(fetch = FetchType.EAGER, mappedBy = "user_id", orphanRemoval = true, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private User user;
 
     public String getAnswer() {

@@ -2,6 +2,7 @@ package it.polimi.db2.coolsurveys.entities;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @NamedQueries({
         @NamedQuery(name = "User.selectByUsername",
@@ -22,8 +23,14 @@ public class User {
     @Column
     private LocalDateTime blocked_until = LocalDateTime.now();
 
-    @OneToOne (fetch = FetchType.EAGER, mappedBy = "user_id", cascade = CascadeType.ALL)
+    @OneToOne (fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Credentials credentials;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
+    private List<Answer> answers;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<Submission> submission;
 
     public int getPoints() {
         return points;

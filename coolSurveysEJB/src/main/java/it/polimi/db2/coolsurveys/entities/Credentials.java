@@ -22,7 +22,7 @@ public class Credentials {
     @Column (nullable = false)
     private boolean admin = false;
 
-    @OneToOne(fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToOne(fetch = FetchType.EAGER, mappedBy = "credentials", orphanRemoval = true)
     private User user;
 
     public String getPassword_hash() {

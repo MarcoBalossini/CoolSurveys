@@ -25,10 +25,10 @@ public class Question {
     @ManyToOne (fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Questionnaire questionnaire;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "question_id")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "question")
     private List<Option> options;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "question_id")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "question")
     private List<Answer> answers;
 
     public List<Answer> getAnswers() {

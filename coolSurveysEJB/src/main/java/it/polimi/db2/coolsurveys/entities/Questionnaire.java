@@ -26,14 +26,14 @@ public class Questionnaire {
     @Column (nullable = false)
     private final LocalDateTime date = LocalDateTime.now();
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "questionnaire_id")
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Question> questions;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "questionnaire_id")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "questionnaire")
     private List<Submission> submissions;
 
     //TODO: necessary??
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "questionnaire_id")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "questionnaire")
     private List<Option> options;
 
     public LocalDateTime getDate() {

@@ -12,7 +12,7 @@ public class Submission {
     @Id
     private int user_id;
 
-    @Id
+    @Column(nullable = false)
     private int questionnaire_id;
 
     @Column (nullable = false)
