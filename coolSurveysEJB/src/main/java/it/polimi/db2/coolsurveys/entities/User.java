@@ -1,6 +1,7 @@
 package it.polimi.db2.coolsurveys.entities;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -12,15 +13,17 @@ import java.util.List;
 })
 
 @Entity
-public class User {
+@Table(name = "user")
+public class User implements Serializable {
 
     @Id
-    private int user_id;
+    @Column(name = "user_id", nullable = false)
+    private Integer userId;
 
-    @Column
-    private int points = 0;
+    @Column(name = "points")
+    private Integer points = 0;
 
-    @Column
+    @Column(name = "blocked_until")
     private LocalDateTime blocked_until = LocalDateTime.now();
 
     @OneToOne (fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -49,10 +52,10 @@ public class User {
     }
 
     public int getUser_id() {
-        return user_id;
+        return userId;
     }
 
     public void setUser_id(int user_id) {
-        this.user_id = user_id;
+        this.userId = user_id;
     }
 }

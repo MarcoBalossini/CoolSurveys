@@ -1,6 +1,7 @@
 package it.polimi.db2.coolsurveys.entities;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @NamedQueries({
         @NamedQuery(name = "Option.selectByText",
@@ -8,20 +9,22 @@ import javax.persistence.*;
 })
 
 @Entity
-public class Option {
+@Table(name = "option")
+public class Option implements Serializable {
 
-    //TODO: composite keys (with @Embedded?)
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
-    private int option_id;
+    @Column(name = "option_id", nullable = false)
+    private Integer optionId;
 
-    @Column (nullable = false)
-    private int question_id;
+    @Id
+    @Column(name = "question_id", nullable = false)
+    private Integer questionId;
 
-    @Column
-    private int questionnaire_id;
+    @Id
+    @Column(name = "questionnaire_id", nullable = false)
+    private Integer questionnaireId;
 
-    @Column (nullable = false)
+    @Column(name = "text", nullable = false)
     private String text;
 
     @ManyToOne (fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -31,20 +34,20 @@ public class Option {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Questionnaire questionnaire;
 
-    public int getQuestion_id() {
-        return question_id;
+    public Integer getQuestion_id() {
+        return questionId;
     }
 
     public void setQuestion_id(int question_id) {
-        this.question_id = question_id;
+        this.questionId = question_id;
     }
 
-    public int getQuestionnaire_id() {
-        return questionnaire_id;
+    public Integer getQuestionnaire_id() {
+        return questionnaireId;
     }
 
     public void setQuestionnaire_id(int questionnaire_id) {
-        this.questionnaire_id = questionnaire_id;
+        this.questionnaireId = questionnaire_id;
     }
 
     public String getText() {

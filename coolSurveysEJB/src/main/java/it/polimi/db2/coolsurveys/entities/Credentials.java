@@ -1,21 +1,25 @@
 package it.polimi.db2.coolsurveys.entities;
 
 import javax.persistence.*;
+import java.io.Serializable;
+
 
 @Entity
-public class Credentials {
+@Table(name = "credentials")
+public class Credentials implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int user_id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id", nullable = false)
+    private Integer userId;
 
-    @Column (nullable = false, unique = true)
+    @Column(name = "username", nullable = false, unique = true)
     private String username;
 
-    @Column (nullable = false)
-    private String password_hash;
+    @Column(name = "password_hash", nullable = false)
+    private String passwordHash;
 
-    @Column (nullable = false, unique = true)
+    @Column (name = "mail", nullable = false, unique = true)
     private String mail;
 
     //sets admin to false by default
@@ -26,11 +30,11 @@ public class Credentials {
     private User user;
 
     public String getPassword_hash() {
-        return password_hash;
+        return passwordHash;
     }
 
     public void setPassword_hash(String password_hash) {
-        this.password_hash = password_hash;
+        this.passwordHash = password_hash;
     }
 
     public String getMail() {
@@ -57,7 +61,7 @@ public class Credentials {
         this.username = username;
     }
 
-    public int getUser_id() {
-        return user_id;
+    public Integer getUser_id() {
+        return userId;
     }
 }

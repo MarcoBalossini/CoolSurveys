@@ -1,6 +1,7 @@
 package it.polimi.db2.coolsurveys.entities;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -10,21 +11,26 @@ import java.util.List;
 })
 
 @Entity
-public class Questionnaire {
+@Table(name = "questionnaire")
+public class Questionnaire implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int q_id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "q_id", nullable = false)
+    private Integer qId;
 
-    @Column (nullable = false, unique = true)
+    @Column(name = "name", nullable = false)
     private String name;
 
-    //TODO: see how images in byte[] work
-    @Column (nullable = false)
-    private byte[] photo;
-
-    @Column (nullable = false)
+    @Column(name = "date", nullable = false)
     private final LocalDateTime date = LocalDateTime.now();
+
+    /**
+     * Photo_path not unique since a questionnaire may be re-proposed
+     */
+    //TODO: see how images in byte[] work
+    @Column (name = "photo", nullable = false)
+    private byte[] photo;
 
     @OneToMany(fetch = FetchType.EAGER)
     private List<Question> questions;
@@ -64,7 +70,7 @@ public class Questionnaire {
         this.questions = questions;
     }
 
-    public int getQ_id() {
-        return q_id;
+    public Integer getQ_id() {
+        return qId;
     }
 }

@@ -1,6 +1,7 @@
 package it.polimi.db2.coolsurveys.entities;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 @NamedQueries({
@@ -9,17 +10,19 @@ import java.util.List;
 })
 
 @Entity
-public class Question {
+@Table(name = "question")
+public class Question implements Serializable {
 
     //TODO: composite keys (with @Embedded?)
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int question_id;
+    @Column(name = "question_id", nullable = false)
+    private Integer questionId;
 
     @Id
-    private int questionnaire_id;
+    @Column(name = "questionnaire_id", nullable = false)
+    private Integer questionnaireId;
 
-    @Column (nullable = false)
+    @Column(name = "question", nullable = false)
     private String question;
 
     @ManyToOne (fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -60,10 +63,10 @@ public class Question {
     }
 
     public void setQuestionnaire_id(int questionnaire_id) {
-        this.questionnaire_id = questionnaire_id;
+        this.questionnaireId = questionnaire_id;
     }
 
-    public int getQuestion_id() {
-        return question_id;
+    public Integer getQuestion_id() {
+        return questionId;
     }
 }

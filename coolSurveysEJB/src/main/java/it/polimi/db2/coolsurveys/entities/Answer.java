@@ -1,25 +1,30 @@
 package it.polimi.db2.coolsurveys.entities;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
-public class Answer {
+@Table(name = "answer")
+public class Answer implements Serializable {
 
     //TODO: composite keys (with @Embedded?)
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int answer_id;
+    @Column(name = "answer_id", nullable = false)
+    private Integer answer_id;
 
-    @Column (nullable = false)
-    private int question_id;
+    @Id
+    @Column(name = "question_id", nullable = false)
+    private Integer question_id;
 
-    @Column (nullable = false)
-    private int questionnaire_id;
+    @Id
+    @Column(name = "questionnaire_id", nullable = false)
+    private Integer questionnaire_id;
 
-    @Column (nullable = false)
-    private int user_id;
+    @Id
+    @Column(name = "user_id", nullable = false)
+    private Integer user_id;
 
-    @Column
+    @Column(name = "answer")
     private String answer;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

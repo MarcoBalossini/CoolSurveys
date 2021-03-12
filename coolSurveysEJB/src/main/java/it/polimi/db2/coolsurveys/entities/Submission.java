@@ -1,33 +1,32 @@
 package it.polimi.db2.coolsurveys.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
-public class Submission {
+@Table(name = "submission")
+public class Submission implements Serializable {
 
-    //TODO: composite keys (with @Embedded?)
     @Id
-    private int user_id;
+    @Column(name = "user_id", nullable = false)
+    private Integer userId;
 
-    @Column(nullable = false)
-    private int questionnaire_id;
+    @Id
+    @Column(name = "questionnaire_id", nullable = false)
+    private Integer questionnaireId;
 
-    @Column (nullable = false)
+    @Column(name = "submitted", nullable = false)
     private boolean submitted;
 
-    //todo: initialize to null?
-    @Column
-    private int age = 0;
+    @Column(name = "age")
+    private Integer age = null;
 
-    @Column
-    private boolean sex;
+    @Column(name = "sex")
+    private Integer sex = null;
 
     //TODO: use enum?
-    @Column
-    private int expertiseLevel;
+    @Column(name = "expertise_level")
+    private Integer expertiseLevel = null;
 
     @ManyToOne
     private Questionnaire questionnaire;
@@ -43,19 +42,19 @@ public class Submission {
         this.age = age;
     }
 
-    public boolean isSex() {
-        return sex;
-    }
-
-    public void setSex(boolean sex) {
-        this.sex = sex;
-    }
-
-    public int getExpertiseLevel() {
+    public Integer getExpertiseLevel() {
         return expertiseLevel;
     }
 
     public void setExpertiseLevel(int expertiseLevel) {
         this.expertiseLevel = expertiseLevel;
+    }
+
+    public Integer getSex() {
+        return sex;
+    }
+
+    public void setSex(Integer sex) {
+        this.sex = sex;
     }
 }
