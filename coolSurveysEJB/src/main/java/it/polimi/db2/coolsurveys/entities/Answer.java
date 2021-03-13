@@ -6,8 +6,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "answer")
 public class Answer implements Serializable {
-
-    //TODO: composite keys (with @Embedded?)
+    
     @Id
     @Column(name = "answer_id", nullable = false)
     private Integer answer_id;
