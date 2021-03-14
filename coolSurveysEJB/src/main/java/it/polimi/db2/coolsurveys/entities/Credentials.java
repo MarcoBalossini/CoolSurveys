@@ -6,11 +6,12 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "credentials")
+@NamedQuery(name="Credentials.findAll", query="SELECT c FROM Credentials c")
 public class Credentials implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id", nullable = false)
+    @Column(name = "user_id")
     private Integer userId;
 
     @Column(name = "username", nullable = false, unique = true)

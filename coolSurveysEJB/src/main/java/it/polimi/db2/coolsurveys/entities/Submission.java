@@ -7,13 +7,8 @@ import java.io.Serializable;
 @Table(name = "submission")
 public class Submission implements Serializable {
 
-    @Id
-    @Column(name = "user_id", nullable = false)
-    private Integer userId;
-
-    @Id
-    @Column(name = "questionnaire_id", nullable = false)
-    private Integer questionnaireId;
+    @EmbeddedId
+    private SubmissionPK id;
 
     @Column(name = "submitted", nullable = false)
     private boolean submitted;
@@ -29,11 +24,53 @@ public class Submission implements Serializable {
     private Integer expertiseLevel = null;
 
     @ManyToOne
+    @JoinColumn(name="questionnaire_id")
     private Questionnaire questionnaire;
 
     @ManyToOne
+    @JoinColumn(name="user_id")
     private User user;
 
+
+    public SubmissionPK getId() {
+        return id;
+    }
+
+    public void setId(SubmissionPK id) {
+        this.id = id;
+    }
+
+    public boolean isSubmitted() {
+        return submitted;
+    }
+
+    public void setSubmitted(boolean submitted) {
+        this.submitted = submitted;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public void setExpertiseLevel(Integer expertiseLevel) {
+        this.expertiseLevel = expertiseLevel;
+    }
+
+    public Questionnaire getQuestionnaire() {
+        return questionnaire;
+    }
+
+    public void setQuestionnaire(Questionnaire questionnaire) {
+        this.questionnaire = questionnaire;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
     public int getAge() {
         return age;
     }

@@ -8,20 +8,18 @@
         <non-jta-data-source>coolSurveysDSUnManaged</non-jta-data-source>
 
         <class>it.polimi.db2.coolsurveys.entities.Answer</class>
+        <class>it.polimi.db2.coolsurveys.entities.BadWord</class>
         <class>it.polimi.db2.coolsurveys.entities.Credentials</class>
-        <class>it.polimi.db2.coolsurveys.entities.ExpertiseLevel</class>
-        <class>it.polimi.db2.coolsurveys.entities.User</class>
         <class>it.polimi.db2.coolsurveys.entities.Option</class>
         <class>it.polimi.db2.coolsurveys.entities.Question</class>
         <class>it.polimi.db2.coolsurveys.entities.Questionnaire</class>
         <class>it.polimi.db2.coolsurveys.entities.Submission</class>
+        <class>it.polimi.db2.coolsurveys.entities.User</class>
+
+
 
     <properties>
-        <property name="eclipselink.logging.level" value="SEVERE" />
-        <property name="eclipselink.ddl-generation" value="drop-and-create-tables"/>
-        <property name="eclipselink.create-ddl-jdbc-file-name" value="createDDL_ddlGeneration.jdbc"/>
-        <property name="eclipselink.drop-ddl-jdbc-file-name" value="dropDDL_ddlGeneration.jdbc"/>
-        <property name="eclipselink.ddl-generation.output-mode" value="database"/>
+        <property name="eclipselink.logging.level" value="FINE" />
 
     </properties>
 </persistence-unit>
@@ -29,17 +27,24 @@
 <persistence-unit name="coolSurveysTest">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 
+    <class>it.polimi.db2.coolsurveys.entities.Answer</class>
+    <class>it.polimi.db2.coolsurveys.entities.BadWord</class>
+
+    <class>it.polimi.db2.coolsurveys.entities.Option</class>
+    <class>it.polimi.db2.coolsurveys.entities.Question</class>
+    <class>it.polimi.db2.coolsurveys.entities.Questionnaire</class>
+    <class>it.polimi.db2.coolsurveys.entities.Submission</class>
+    <class>it.polimi.db2.coolsurveys.entities.User</class>
+    <class>it.polimi.db2.coolsurveys.entities.Credentials</class>
+
     <properties>
+
         <property name="javax.persistence.transactionType" value="RESOURCE_LOCAL"/>
         <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
         <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/cool_surveys"/>
         <property name="javax.persistence.jdbc.user" value="root"/>
         <property name="javax.persistence.jdbc.password" value="CoolSurveys"/>
 
-        <property name="eclipselink.ddl-generation" value="drop-and-create-tables"/>
-        <property name="eclipselink.create-ddl-jdbc-file-name" value="createDDL_ddlGeneration.jdbc"/>
-        <property name="eclipselink.drop-ddl-jdbc-file-name" value="dropDDL_ddlGeneration.jdbc"/>
-        <property name="eclipselink.ddl-generation.output-mode" value="database"/>
     </properties>
 </persistence-unit>
 </persistence>

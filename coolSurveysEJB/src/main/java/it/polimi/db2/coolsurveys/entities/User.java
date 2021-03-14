@@ -5,20 +5,21 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
+
+@Entity
 @NamedQueries({
         @NamedQuery(name = "User.selectByUsername",
                 query = "select u from User u where u.credentials.username = :username"),
         @NamedQuery(name = "User.selectByMail",
                 query = "select u from User u where u.credentials.mail = :mail")
 })
-
-@Entity
 @Table(name = "user")
 public class User implements Serializable {
 
     @Id
-    @Column(name = "user_id", nullable = false)
-    private Integer userId;
+    @OneToOne (fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private Credentials credentials;
 
     @Column(name = "points")
     private Integer points = 0;
@@ -26,14 +27,41 @@ public class User implements Serializable {
     @Column(name = "blocked_until")
     private LocalDateTime blocked_until = LocalDateTime.now();
 
-    @OneToOne (fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Credentials credentials;
-
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
     private List<Answer> answers;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Submission> submission;
+
+    public void setPoints(Integer points) {
+        this.points = points;
+    }
+
+    public Credentials getCredentials() {
+        return credentials;
+    }
+
+    public void setCredentials(Credentials credentials) {
+        this.credentials = credentials;
+    }
+
+    public List<Answer> getAnswers() {
+        return answers;
+    }
+
+    public void setAnswers(List<Answer> answers) {
+        this.answers = answers;
+    }
+
+    public List<Submission> getSubmission() {
+        return submission;
+    }
+
+    public void setSubmission(List<Submission> submission) {
+        this.submission = submission;
+    }
+
+
 
     public int getPoints() {
         return points;
@@ -51,11 +79,4 @@ public class User implements Serializable {
         this.blocked_until = blocked_until;
     }
 
-    public int getUser_id() {
-        return userId;
-    }
-
-    public void setUser_id(int user_id) {
-        this.userId = user_id;
-    }
 }

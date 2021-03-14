@@ -6,26 +6,22 @@ import java.util.List;
 
 @NamedQueries({
         @NamedQuery(name = "Question.selectByQuestion",
-                query = "select q from Question q where q.question = :question")
+                query = "select q from Question q where q.question = :question"),
+        @NamedQuery(name="Question.findAll", query="SELECT q FROM Question q")
 })
 
 @Entity
 @Table(name = "question")
 public class Question implements Serializable {
 
-    //TODO: composite keys (with @Embedded?)
-    @Id
-    @Column(name = "question_id", nullable = false)
-    private Integer questionId;
-
-    @Id
-    @Column(name = "questionnaire_id", nullable = false)
-    private Integer questionnaireId;
+    @EmbeddedId
+    private QuestionPK id;
 
     @Column(name = "question", nullable = false)
     private String question;
 
     @ManyToOne (fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "questionnaire_id")
     private Questionnaire questionnaire;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "question")
@@ -33,6 +29,13 @@ public class Question implements Serializable {
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "question")
     private List<Answer> answers;
+
+
+    public Question(String question) {
+        this.question = question;
+    }
+
+    public Question() {}
 
     public List<Answer> getAnswers() {
         return answers;
@@ -62,11 +65,15 @@ public class Question implements Serializable {
         this.question = question;
     }
 
-    public void setQuestionnaire_id(int questionnaire_id) {
-        this.questionnaireId = questionnaire_id;
+    public QuestionPK getId() {
+        return id;
     }
 
-    public Integer getQuestion_id() {
-        return questionId;
+    public void setId(QuestionPK id) {
+        this.id = id;
+    }
+
+    public String getQuestion() {
+        return question;
     }
 }

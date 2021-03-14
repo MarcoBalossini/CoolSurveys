@@ -30,24 +30,21 @@ public class Questionnaire implements Serializable {
      */
     //TODO: see how images in byte[] work
     @Column (name = "photo", nullable = false)
+    @Lob
     private byte[] photo;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "questionnaire", cascade = CascadeType.PERSIST)
     private List<Question> questions;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "questionnaire")
     private List<Submission> submissions;
-
-    //TODO: necessary??
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "questionnaire")
-    private List<Option> options;
 
     public LocalDateTime getDate() {
         return date;
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -55,7 +52,7 @@ public class Questionnaire implements Serializable {
     }
 
     public byte[] getPhoto() {
-        return photo;
+        return this.photo;
     }
 
     public void setPhoto(byte[] photo) {
@@ -63,14 +60,49 @@ public class Questionnaire implements Serializable {
     }
 
     public List<Question> getQuestions() {
-        return questions;
+        return this.questions;
     }
 
     public void setQuestions(List<Question> questions) {
         this.questions = questions;
     }
 
-    public Integer getQ_id() {
+    public Question addQuestion(Question question) {
+        getQuestions().add(question);
+        question.setQuestionnaire(this);
+
+        return question;
+    }
+
+    public Question removeQuestion(Question question) {
+        getQuestions().remove(question);
+        question.setQuestionnaire(null);
+
+        return question;
+    }
+
+    public List<Submission> getSubmissions() {
+        return this.submissions;
+    }
+
+    public void setSubmissions(List<Submission> submissions) {
+        this.submissions = submissions;
+    }
+
+    public Submission addSubmission(Submission submission) {
+        getSubmissions().add(submission);
+        submission.setQuestionnaire(this);
+
+        return submission;
+    }
+
+    public Submission removeSubmission(Submission submission) {
+        getSubmissions().remove(submission);
+        submission.setQuestionnaire(null);
+
+        return submission;
+    }
+    public Integer getQId() {
         return qId;
     }
 }
