@@ -8,17 +8,19 @@ import javax.persistence.*;
  * 
  */
 @Embeddable
-@Table(name="question")
 public class QuestionPK implements Serializable {
 	//default serial version id, required for serializable classes.
 	private static final long serialVersionUID = 1L;
 
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="question_id")
 	private int questionId;
 
 	@Column(name="questionnaire_id", insertable=false, updatable=false)
 	private int questionnaireId;
+
+
+	public QuestionPK() {}
 
 	public int getQuestionId() {
 		return this.questionId;

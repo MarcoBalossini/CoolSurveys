@@ -13,7 +13,7 @@ public class AnswerPK implements Serializable {
 
     private QuestionPK questionId;
 
-    @Column(name = "user_id", nullable = false)
+    @Column(name = "user_id", nullable = false, insertable = false, updatable = false)
     private Integer userId;
 
     public Integer getAnswerId() {

@@ -3,6 +3,7 @@ package it.polimi.db2.coolsurveys.entities;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @NamedQueries({
@@ -33,11 +34,15 @@ public class Questionnaire implements Serializable {
     @Lob
     private byte[] photo;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "questionnaire", cascade = CascadeType.PERSIST)
-    private List<Question> questions;
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "questionnaire", cascade = CascadeType.ALL)
+    private List<Question> questions = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "questionnaire")
-    private List<Submission> submissions;
+    private List<Submission> submissions = new ArrayList<>();
+
+    public Questionnaire() {
+    }
+
 
     public LocalDateTime getDate() {
         return date;
@@ -67,16 +72,16 @@ public class Questionnaire implements Serializable {
         this.questions = questions;
     }
 
-    public Question addQuestion(Question question) {
+    public void addQuestion(Question question) {
+
         getQuestions().add(question);
         question.setQuestionnaire(this);
 
-        return question;
     }
 
     public Question removeQuestion(Question question) {
         getQuestions().remove(question);
-        question.setQuestionnaire(null);
+        //question.setQuestionnaire(null);
 
         return question;
     }

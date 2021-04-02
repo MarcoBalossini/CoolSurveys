@@ -16,9 +16,9 @@ public class QuestionnaireDAO {
         this.em = em;
     }
 
-    public Questionnaire insertQuestionnaire (String name, byte[] photo, List<Question> questionList) throws AlreadyExistsException {
+    public Questionnaire insertQuestionnaire (String name, byte[] photo, List<String> questionList) throws AlreadyExistsException {
 
-        if(name == null || photo == null || questionList == null)
+        if(name == null || photo == null || questionList == null || name.isEmpty() || questionList.isEmpty() || photo.length == 0)
             throw new IllegalArgumentException();
 
         if (em.createNamedQuery("Questionnaire.selectByName")
@@ -27,17 +27,32 @@ public class QuestionnaireDAO {
 
         Questionnaire questionnaire = new Questionnaire();
         questionnaire.setName(name);
-
-        for(Question q : questionList)
-            q.setQuestionnaire(questionnaire);
-
-        questionnaire.setQuestions(questionList);
         questionnaire.setPhoto(photo);
+
+        for(String q : questionList)
+            questionnaire.addQuestion(new Question(q, questionnaire));
 
         em.persist(questionnaire);
 
+        for(Question q: questionnaire.getQuestions())
+            em.persist(q);
 
         return questionnaire;
+    }
+
+    public Questionnaire getByName(String name) {
+        if(name == null || name.isEmpty())
+            throw new IllegalArgumentException();
+
+        return em.createNamedQuery("Questionnaire.selectByName", Questionnaire.class).setParameter("name", name).getSingleResult();
+    }
+
+    public void removeQuestionnaire(Questionnaire questionnaire) {
+        for (Question q : questionnaire.getQuestions()) {
+            em.remove(q);
+        }
+
+        em.remove(questionnaire);
     }
 
 }
