@@ -2,6 +2,7 @@ package it.polimi.db2.coolsurveys.entities;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @NamedQueries({
@@ -20,19 +21,22 @@ public class Question implements Serializable {
     @Column(name = "question", nullable = false)
     private String question;
 
+    @MapsId("questionnaireId")
     @ManyToOne (fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "questionnaire_id")
     private Questionnaire questionnaire;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "question")
-    private List<Option> options;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "question")
+    private List<Option> options = new ArrayList<>();
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "question")
-    private List<Answer> answers;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "question")
+    private List<Answer> answers = new ArrayList<>();
 
 
-    public Question(String question) {
+    public Question(String question, Questionnaire questionnaire) {
         this.question = question;
+        this.questionnaire = questionnaire;
+
     }
 
     public Question() {}
@@ -63,14 +67,6 @@ public class Question implements Serializable {
 
     public void setQuestion(String question) {
         this.question = question;
-    }
-
-    public QuestionPK getId() {
-        return id;
-    }
-
-    public void setId(QuestionPK id) {
-        this.id = id;
     }
 
     public String getQuestion() {

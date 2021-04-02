@@ -12,7 +12,6 @@ import java.io.Serializable;
 @Table(name = "option")
 public class Option implements Serializable {
 
-
     @EmbeddedId
     private OptionPK id;
 
@@ -43,12 +42,5 @@ public class Option implements Serializable {
         this.question = question;
     }
 
-    public OptionPK getId() {
-        return id;
-    }
-
-    public void setId(OptionPK id) {
-        this.id = id;
-    }
 
 }
