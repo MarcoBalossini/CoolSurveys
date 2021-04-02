@@ -30,6 +30,16 @@ public class Credentials implements Serializable {
     @OneToOne(fetch = FetchType.EAGER, mappedBy = "credentials", orphanRemoval = true)
     private User user;
 
+    public Credentials(int userId, String username, String passwordHash, String mail, boolean admin) {
+        this.userId = userId;
+        this.username = username;
+        this.passwordHash = passwordHash;
+        this.mail = mail;
+        this.admin = admin;
+    }
+
+    public Credentials() {}
+
     public String getPassword_hash() {
         return passwordHash;
     }

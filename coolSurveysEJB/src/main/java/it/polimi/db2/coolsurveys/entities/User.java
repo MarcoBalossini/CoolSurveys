@@ -33,6 +33,12 @@ public class User implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Submission> submission;
 
+    public User(Credentials credentials) {
+        this.credentials = credentials;
+    }
+
+    public User() {}
+
     public void setPoints(Integer points) {
         this.points = points;
     }

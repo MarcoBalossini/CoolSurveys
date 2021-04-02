@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Cool Surveys - Index</title>
+    </head>
+    <body>
+
+        <h1>Cool Surveys</h1>
+
+        <div id="welcomeView">
+            <button id="toLogin">Login</button>
+            <button id="toRegistration">Register</button>
+        </div>
+
+        <div id="loginView">
+            <form style="display: none">
+                <h2>Login</h2>
+
+                <input type="text" name="username" required>
+                <input type="password" name="pwd" required>
+                <input type="submit" value="Login">
+            </form>
+        </div>
+
+        <div id="registrationView">
+            <form style="display: none">
+                <h2>Registration</h2>
+
+                <input type="email" name="mail" required>
+                <input type="text" name="username" required>
+                <input type="password" name="pwd" required>
+                <input type="password" name="confPwd" required>
+                <input type="submit" value="Login">
+            </form>
+        </div>
+
+        <div id="errorMsg">
+            {{ message }}
+        </div>
+
+        <!-- development version, includes helpful console warnings -->
+        <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+        <!--
+            production version, optimized for size and speed
+            <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+        -->
+    </body>
+</html>

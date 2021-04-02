@@ -17,6 +17,8 @@ public class UserDAO {
         this.em = em;
     }
 
+    public UserDAO() {}
+
     public User insertUser(String username, String password, String mail) throws AlreadyExistsException {
 
 

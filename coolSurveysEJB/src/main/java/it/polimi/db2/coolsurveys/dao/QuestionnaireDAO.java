@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class QuestionnaireDAO {
-    @PersistenceContext
+    @PersistenceContext(unitName = "coolSurveys")
     private EntityManager em;
 
     public QuestionnaireDAO(EntityManager em) {
@@ -18,7 +18,7 @@ public class QuestionnaireDAO {
 
     public Questionnaire insertQuestionnaire (String name, byte[] photo, List<Question> questionList) throws AlreadyExistsException {
 
-        if(name == null || photo == null || questionList == null)
+        if(name == null || name.isEmpty() || photo == null || questionList == null || questionList.size() <= 0)
             throw new IllegalArgumentException();
 
         if (em.createNamedQuery("Questionnaire.selectByName")

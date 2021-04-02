@@ -1,0 +1,5 @@
+.idea
+/coolSurveysEJB/target/
+/coolSurveysWEB/target/
+*.class
+*.iml
