@@ -1,49 +1,159 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:v-on="http://java.sun.com/jsf/composite">
     <head>
         <meta charset="UTF-8">
         <title>Cool Surveys - Index</title>
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js" defer></script>
+        <script src= "./app.js" defer></script>
+        <link rel="stylesheet" type="text/css" href="./style.css">
     </head>
     <body>
+        <div id="vueApp">
 
-        <h1>Cool Surveys</h1>
+            <div id="welcomeView" v-if = "welcome">
+                <header>
+                    <h1>Cool Surveys</h1>
+                </header>
+                <div class = "buttons">
+                    <button id="toLogin" v-on:click="()=>{login = true; welcome = false}">Login</button>
+                    <button id="toRegistration" v-on:click="()=>{registration = true; welcome = false}">Register</button>
+                </div>
+            </div>
 
-        <div id="welcomeView">
-            <button id="toLogin">Login</button>
-            <button id="toRegistration">Register</button>
+            <div id="loginView" v-if = "login">
+                <form>
+                    <h2>Login to start your daily survey!</h2>
+                    <div class="form-field">
+                        <label for="username">Username</label>
+                        <input v-model="username" type="text" id ="username" required/>
+                    </div>
+                    <div class="form-field">
+                        <label for="password">Password</label>
+                        <input v-model="password" type="password" id ="password" required/>
+                    </div>
+
+                    <div class="buttons">
+                        <button type="reset" class="reset" v-on:click="()=>{welcome = true; login = false}">Cancel</button>
+                        <button type="submit" v-on:click="()=>{section1 = true; login = false}">Login</button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="registrationView">
+                <form v-if = "registration" >
+                    <h2>Registration</h2>
+                    <div class="form-field">
+                        <label for="email">Email</label>
+                        <input v-model="email" type="text" id="email" required/>
+                    </div>
+                    <div class="form-field">
+                        <label for="newUsername">Username</label>
+                        <input v-model="username" type="text" id ="newUsername" minlength="3" maxlength="15" required/>
+                    </div>
+                    <div class="form-field">
+                        <label for="newPassword">Password</label>
+                        <input v-model="password" type="password" id="newPassword" minlength="10" maxlength="15" required/>
+                    </div>
+                    <div class="form-field">
+                        <label for="passwordConfirm">Confirm Password</label>
+                        <input v-model="password"  type="password" id="passwordConfirm" required/>
+                    </div>
+
+                    <div class="buttons">
+                        <button type="reset" class="reset" v-on:click="()=>{welcome = true; registration = false}">Exit</button>
+                        <button type="submit" v-on:click="()=>{login = true; registration = false}">Register</button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="homePage" v-if = "homepage">
+                <h1>HomePage</h1>
+            </div>
+
+            <div id="formView">
+                <div id="section1" v-if = "section1">
+                    <form>
+                        <h2>What about today product?</h2>
+                            <div class="form-field" v-for="question in questions">
+                                <label for="answer">{{question}}</label>
+                                <div class="productMultipleChoiceQuestion" v-if="options" v-for="option in options">
+                                    <label for="option">{{option}}</label>
+
+                                    <!-- Radio TO BE FIXED -->
+                                    <input type="radio" v-model="answer" value="option" id="option" required>
+
+                                </div>
+                                <div class="productOpenQuestion" v-if="!options">
+                                    <textarea id="answer" v-model="answer" rows="5" cols="30" minlength="2" maxlength="100" required></textarea>
+                                </div>
+                            </div>
+
+                        <div class="buttons">
+                            <button type="reset" class="reset" v-on:click="()=>{homepage = true; section1 = false}">Cancel</button>
+                            <button v-on:click="()=>{section2 = true; section1 = false}">Next</button>
+                        </div>
+                    </form>
+                </div>
+                <div id="section2" v-if = "section2">
+                    <form>
+
+                        <h2>Tell us something about you!</h2>
+
+                        <div class="form-field">
+                            <label for="age">What's your age?</label>
+                            <! -- only numbers 0-9 and 1 or 2 as length -->
+                            <input v-model="age" type="number" min="1" max="99" id="age"/>
+                        </div>
+
+                        <div class="form-field">
+                            <label>What's your sex? <br> </label>
+                            <label for="male">male</label>
+                            <input type="radio" id="male" v-model="sex" value=0>
+                            <br>
+                            <label for="female">female</label>
+                            <input type="radio" id="female" v-model="sex" value=1>
+                        </div>
+
+                        <div class="form-field">
+                            <label for="expertiseLevel">Select your expertise level</label>
+                            <select id="expertiseLevel" v-model="explvl">
+                                <option value="low">Low</option>
+                                <option value="medium">Medium</option>
+                                <option value="high">High</option>
+                            </select>
+                        </div>
+
+                        <div class="buttons">
+                            <button type="reset" class="reset" v-on:click="()=>{homepage = true; section2 = false}">Cancel</button>
+                            <button v-on:click="()=>{section1 = true; section2 = false}">Previous</button>
+                            <button type="submit" v-on:click="()=>{leaderboard = true; section2 = false}">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div id="leaderBoard"  v-if = "leaderboard">
+                <header>
+                    <h1>LeaderBoard</h1>
+                </header>
+                <div class="scores">
+                    <table>
+                        <th>Position</th>
+                        <th scope="col">Username</th>
+                        <th scope="col">Score</th>
+                        <tr class="score" v-for="score in scores">
+                            <td></td>
+                            <td>{{ score[0] }}</td>
+                            <td>{{ score[1] }}</td>
+                        </tr>
+                    </table>
+                    <button v-on:click="()=>{homepage = true; leaderboard = false}">Back</button>
+                </div>
+            </div>
+
+            <div id="errorMsg">
+              {{ message }}
+            </div>
         </div>
-
-        <div id="loginView">
-            <form style="display: none">
-                <h2>Login</h2>
-
-                <input type="text" name="username" required>
-                <input type="password" name="pwd" required>
-                <input type="submit" value="Login">
-            </form>
-        </div>
-
-        <div id="registrationView">
-            <form style="display: none">
-                <h2>Registration</h2>
-
-                <input type="email" name="mail" required>
-                <input type="text" name="username" required>
-                <input type="password" name="pwd" required>
-                <input type="password" name="confPwd" required>
-                <input type="submit" value="Login">
-            </form>
-        </div>
-
-        <div id="errorMsg">
-            {{ message }}
-        </div>
-
-        <!-- development version, includes helpful console warnings -->
-        <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
-        <!--
-            production version, optimized for size and speed
-            <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
-        -->
     </body>
 </html>
