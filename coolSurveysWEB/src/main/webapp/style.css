@@ -1,29 +1,193 @@
 
+body {
+    background: -webkit-linear-gradient(left, #3931af, #00c6ff);
+}
+
+/*--------------------------------------------------------------
+# FORMS
+--------------------------------------------------------------*/
+
+.question {
+    font-weight : 500 !important;
+}
+
 .form-field label {
+    font-weight : 300;
     font-family: 'Lato', sans-serif;
-    font-size: 15px;
-    text-align: center;
+    display: inline-block;
+    margin-right: 1em;
+    margin-bottom: 15px;
 }
 
-h1 {
-    text-align: center;
+.multipleChoiceQuestion label {
+    margin-left: 1em;
 }
 
-h2 {
-    color: black;
-    font-size: 2em;
-    padding-top: 100px;
-    width: 100%;
-    text-align: center;
+form {
+    margin-top: 13% !important;
+    margin-left: 25%;
+    display: block;
+    width: 50%;
+    padding: .375rem .75rem;
+    line-height: 1.5;
+    color: #212529;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
+
+
+#the-count {
+    position: relative;
+}
+
+span {
+    color: rgb(102, 102, 102);
+}
+
+.productOpenQuestion textarea {
+    resize: none;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    padding: 0.5rem;
+    color: #666;
+    box-shadow: inset 0 0 0.25rem #ddd;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow: auto;
+    margin: 0;
+    font-family: inherit;
+    font-size: inherit;
+}
+
+#expertiseLevel {
+    display: block;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+/*--------------------------------------------------------------
+# BUTTONS
+--------------------------------------------------------------*/
 
 .buttons {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 50px;
-    border: 3px solid blanchedalmond;
 }
+
+button {
+    display:inline-block;
+    padding:0 22px;
+    margin: 72px auto 25px;
+    margin-right: 0.5rem !important;
+    border:0.16em solid rgba(255,255,255,0);
+    border-radius:2em;
+    box-sizing: border-box;
+    font-family:'Lato',sans-serif;
+    font-weight:300;
+    color:#FFFFFF;
+    background-color: #FF4E4E;
+    -webkit-box-sizing: border-box;
+    text-shadow: 0 0.04em 0.04em rgba(0,0,0,0.35);
+    text-align:center;
+    transition: all 0.2s;
+}
+
+button:hover{
+    border-color: rgba(255,255,255,1);
+}
+
+@media all and (max-width:30em){
+    button{
+        display:block;
+        margin:0.2em auto;
+    }
+}
+
+button, input, optgroup, select {
+    margin: 0;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+}
+
+/*--------------------------------------------------------------
+# HEADERS
+--------------------------------------------------------------*/
+
+h1 {
+    margin: 30px 0 10px 0;
+    font-weight: 1000;
+    line-height: 48px;
+    text-transform: uppercase;
+    color: #fff;
+    text-align: center;
+}
+
+
+h2 {
+    padding: 4px 0;
+    color: #FF4E4E;
+    font-size: 24px;
+    font-weight: 700;
+    text-transform: uppercase;
+    width: 100%;
+    text-align: center;
+    display: block;
+    margin-bottom: 1rem;
+    margin-block-start: 1.33em;
+    margin-block-end: 1.33em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+}
+
+/*--------------------------------------------------------------
+# RADIO BUTTONS
+--------------------------------------------------------------*/
+
+
+input[type='radio']:after {
+    width: 15px;
+    height: 15px;
+    border-radius: 15px;
+    top: -2px;
+    left: -1px;
+    position: relative;
+    background-color: white;
+    content: '';
+    display: inline-block;
+    visibility: visible;
+    border: 1px solid #d1d3d1;
+}
+
+input[type='radio']:checked:after {
+    width: 6px;
+    height: 6px;
+    border-radius: 15px;
+    top: -2px;
+    left: -1px;
+    position: relative;
+    background-color: white;
+    content: '';
+    display: inline-block;
+    visibility: visible;
+    border: 5px solid #4285F4;
+}
+
+/*--------------------------------------------------------------
+# LEADERBOARD TABLE
+--------------------------------------------------------------*/
 
 table {
     border: 1px solid black;
@@ -57,5 +221,5 @@ th, td, tr {
 }
 
 th {
-    background: indianred;
+    background: moccasin;
 }

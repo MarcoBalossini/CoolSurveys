@@ -4,9 +4,9 @@ let app = new Vue ({
         username: '',
         password: '',
         email: '',
-        answer: '',
-        questions: ['Do you like the daily product?'],
-        options: ['yes', 'no'],
+        answers: [],
+        questions: ['Do you like the daily product?', 'Do you find it comfortable?', 'Do you think it is durable?'],
+        options: [['yes', 'no'], null, [0,1]],
         age: 0,
         sex: 0,
         explvl: '',
@@ -18,17 +18,21 @@ let app = new Vue ({
         registration:false,
         section1:false,
         section2:false,
-        leaderboard:false
+        leaderboard:false,
+        totalCharacters: 0
     },
     computed: {
 
     },
     methods:{
+        charCount: function(index){
+        this.totalCharacters = this.answers[index].length;
+        },
         resetFields: function() {
             this.username = '';
             this.password = '';
             this.email = '';
-            this.answer= '';
+            this.answers= [];
             this.questions= [];
             this.options= null;
             this.sex = 0;

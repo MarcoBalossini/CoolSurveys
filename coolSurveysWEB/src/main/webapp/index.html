@@ -24,38 +24,39 @@
                 <form>
                     <h2>Login to start your daily survey!</h2>
                     <div class="form-field">
-                        <label for="username">Username</label>
+                        <label class="question" for="username">Username</label>
                         <input v-model="username" type="text" id ="username" required/>
                     </div>
                     <div class="form-field">
-                        <label for="password">Password</label>
+                        <label class="question" for="password">Password</label>
                         <input v-model="password" type="password" id ="password" required/>
                     </div>
 
                     <div class="buttons">
                         <button type="reset" class="reset" v-on:click="()=>{welcome = true; login = false}">Cancel</button>
-                        <button type="submit" v-on:click="()=>{section1 = true; login = false}">Login</button>
+                        <button type="submit" v-on:click="()=>{homepage = true; login = false}"> Sign in </button>
                     </div>
                 </form>
             </div>
 
             <div id="registrationView">
-                <form v-if = "registration" >
+                <form v-if = "registration">
                     <h2>Registration</h2>
                     <div class="form-field">
-                        <label for="email">Email</label>
-                        <input v-model="email" type="text" id="email" required/>
+                        <label class="question" for="email">Email</label>
+                        <input v-model="email" type="email" id="email" placeholder="you@example.com" required/>
                     </div>
                     <div class="form-field">
-                        <label for="newUsername">Username</label>
+                        <label class="question" for="newUsername">Username</label>
                         <input v-model="username" type="text" id ="newUsername" minlength="3" maxlength="15" required/>
                     </div>
                     <div class="form-field">
-                        <label for="newPassword">Password</label>
+                        <label class="question" for="newPassword">Password</label>
                         <input v-model="password" type="password" id="newPassword" minlength="10" maxlength="15" required/>
                     </div>
+                    <!-- check same -->
                     <div class="form-field">
-                        <label for="passwordConfirm">Confirm Password</label>
+                        <label class="question" for="passwordConfirm">Confirm Password</label>
                         <input v-model="password"  type="password" id="passwordConfirm" required/>
                     </div>
 
@@ -68,54 +69,66 @@
 
             <div id="homePage" v-if = "homepage">
                 <h1>HomePage</h1>
+                <div class="buttons">
+                    <button v-on:click="()=>{leaderboard = true; homepage = false}">LeaderBoard</button>
+                    <button v-on:click="()=>{section1 = true; homepage = false}">StartSurvey</button>
+                </div>
             </div>
 
             <div id="formView">
                 <div id="section1" v-if = "section1">
                     <form>
                         <h2>What about today product?</h2>
-                            <div class="form-field" v-for="question in questions">
-                                <label for="answer">{{question}}</label>
-                                <div class="productMultipleChoiceQuestion" v-if="options" v-for="option in options">
-                                    <label for="option">{{option}}</label>
+                            <div class="form-field" v-for="(question,index) in questions">
+                                <label class="question" for="answer">{{question}}</label>
 
-                                    <!-- Radio TO BE FIXED -->
-                                    <input type="radio" v-model="answer" value="option" id="option" required>
-
+                                <div class="multipleChoiceQuestion" v-if="options[index]" v-for="option in options[index]">
+                                    <input type="radio" v-model="answers[index]" :value="option" :id="option" required>
+                                    <label :for="option">{{option}}</label>
                                 </div>
-                                <div class="productOpenQuestion" v-if="!options">
-                                    <textarea id="answer" v-model="answer" rows="5" cols="30" minlength="2" maxlength="100" required></textarea>
+
+                                <div class="productOpenQuestion" v-if="!options[index]">
+                                    <textarea id="answer" v-model="answers[index]" v-on:keyup="charCount(index)"
+                                              rows="5" cols="30" minlength="2" maxlength="100" required></textarea>
+                                    <div id="the-count">
+                                        <span id="current"> {{ totalCharacters }}</span>
+                                        <span id="maximum">/ 150</span>
+                                    </div>
                                 </div>
                             </div>
 
                         <div class="buttons">
                             <button type="reset" class="reset" v-on:click="()=>{homepage = true; section1 = false}">Cancel</button>
-                            <button v-on:click="()=>{section2 = true; section1 = false}">Next</button>
+
+                            <!-- CHANGE VIEW ONLY IF FORM SUBMITTED-->
+                            <button v-on:click="()=>{section1 = false; section2 = true;}">Next</button>
                         </div>
                     </form>
                 </div>
+
                 <div id="section2" v-if = "section2">
                     <form>
 
                         <h2>Tell us something about you!</h2>
 
                         <div class="form-field">
-                            <label for="age">What's your age?</label>
-                            <! -- only numbers 0-9 and 1 or 2 as length -->
-                            <input v-model="age" type="number" min="1" max="99" id="age"/>
+                            <label class="question" for="age">What's your age?</label>
+                            <input v-model="age" type="number" min="0" max="99" id="age"/>
                         </div>
 
                         <div class="form-field">
-                            <label>What's your sex? <br> </label>
-                            <label for="male">male</label>
-                            <input type="radio" id="male" v-model="sex" value=0>
-                            <br>
-                            <label for="female">female</label>
-                            <input type="radio" id="female" v-model="sex" value=1>
+                            <label class="question">What's your sex? </label> <br>
+                            <div class ="multipleChoiceQuestion">
+                                <input type="radio" id="male" v-model="sex" value=0 checked>
+                                <label for="male"> male</label>
+                                <br>
+                                <input type="radio" id="female" v-model="sex" value=1>
+                                <label for="female">female</label>
+                            </div>
                         </div>
 
                         <div class="form-field">
-                            <label for="expertiseLevel">Select your expertise level</label>
+                            <label class="question" for="expertiseLevel">Select your expertise level</label>
                             <select id="expertiseLevel" v-model="explvl">
                                 <option value="low">Low</option>
                                 <option value="medium">Medium</option>
@@ -126,7 +139,7 @@
                         <div class="buttons">
                             <button type="reset" class="reset" v-on:click="()=>{homepage = true; section2 = false}">Cancel</button>
                             <button v-on:click="()=>{section1 = true; section2 = false}">Previous</button>
-                            <button type="submit" v-on:click="()=>{leaderboard = true; section2 = false}">Submit</button>
+                            <button type="submit" v-on:click="()=>{homepage = true; section2 = false}">Submit</button>
                         </div>
                     </form>
                 </div>
