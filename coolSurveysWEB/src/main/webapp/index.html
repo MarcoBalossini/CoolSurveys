@@ -54,10 +54,11 @@
                         <label class="question" for="newPassword">Password</label>
                         <input v-model="password" type="password" id="newPassword" minlength="10" maxlength="15" required/>
                     </div>
-                    <!-- check same -->
+
+                    <!-- TODO: check same -->
                     <div class="form-field">
                         <label class="question" for="passwordConfirm">Confirm Password</label>
-                        <input v-model="password"  type="password" id="passwordConfirm" required/>
+                        <input type="password" id="passwordConfirm" required/>
                     </div>
 
                     <div class="buttons">
@@ -160,7 +161,9 @@
                             <td>{{ score[1] }}</td>
                         </tr>
                     </table>
-                    <button v-on:click="()=>{homepage = true; leaderboard = false}">Back</button>
+                    <div class="buttons">
+                        <button v-on:click="()=>{homepage = true; leaderboard = false}">Back</button>
+                    </div>
                 </div>
             </div>
 

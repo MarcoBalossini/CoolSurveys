@@ -16,17 +16,17 @@ body {
     font-family: 'Lato', sans-serif;
     display: inline-block;
     margin-right: 1em;
-    margin-bottom: 15px;
+    margin-bottom: 6px;
 }
 
 .multipleChoiceQuestion label {
     margin-left: 1em;
 }
 
-form {
-    margin-top: 13% !important;
+#formView form {
+    margin-top: 10% !important;
     margin-left: 25%;
-    display: block;
+    display: inline-grid;
     width: 50%;
     padding: .375rem .75rem;
     line-height: 1.5;
@@ -38,6 +38,40 @@ form {
     transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
 
+#registrationView input, #loginView input {
+    display: inline-block;
+    float: left;
+}
+
+#registrationView label, #loginView label {
+    display: inline-block;
+    float: left;
+    clear: left;
+    width: 250px;
+    text-align: right;
+}
+
+#registrationView form, #loginView form {
+    margin-top: 13% !important;
+    margin-left: 25%;
+    width: 50%;
+    line-height: 1.5;
+    display: inline-grid;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+#registrationView .buttons, #loginView .buttons, #leaderBoard .buttons {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1rem;
+    margin-block-start: 1.33em;
+    margin-block-end: 1.33em;
+}
 
 #the-count {
     position: relative;
@@ -79,7 +113,7 @@ span {
 # BUTTONS
 --------------------------------------------------------------*/
 
-.buttons {
+#formView .buttons, #welcomeView .buttons, #homePage .buttons {
     display: flex;
     justify-content: center;
     align-items: center;
