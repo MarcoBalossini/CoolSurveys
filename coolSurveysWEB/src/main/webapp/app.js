@@ -3,6 +3,7 @@ let app = new Vue ({
     data: {
         username: '',
         password: '',
+        passwordConfirm: '',
         email: '',
         answers: [],
         questions: ['Do you like the daily product?', 'Do you find it comfortable?', 'Do you think it is durable?'],
@@ -21,16 +22,22 @@ let app = new Vue ({
         leaderboard:false,
         totalCharacters: 0
     },
-    computed: {
 
+    //computed properties: dynamic data based on other dynamic data
+
+    computed: {
+        validRegForm: function () {
+            return this.password === this.passwordConfirm;
+        }
     },
     methods:{
         charCount: function(index){
         this.totalCharacters = this.answers[index].length;
         },
-        resetFields: function() {
+        resetAll: function() {
             this.username = '';
             this.password = '';
+            this.passwordConfirm= '';
             this.email = '';
             this.answers= [];
             this.questions= [];
@@ -47,6 +54,35 @@ let app = new Vue ({
             this.section1 = false;
             this.section2 = false;
             this.leaderboard = false;
+            this.totalCharacters = 0;
+        },
+        resetLoginForm: function () {
+            this.username='';
+            this.password='';
+            this.welcome = true;
+            this.login = false;
+        },
+        resetRegistrationForm: function (){
+            this.username='';
+            this.password='';
+            this.passwordConfirm= '';
+            this.email='';
+            this.welcome = true;
+            this.registration = false;
+        },
+        resetSection1Form: function () {
+            this.answers=[];
+            if (this.totalCharacters !==0)
+                this.totalCharacters = 0;
+            this.homepage = true;
+            this.section1 = false;
+        },
+        resetSection2Form: function () {
+            this.age='';
+            this.sex='';
+            this.explvl='';
+            this.homepage = true;
+            this.section2 = false;
         }
     }
 });

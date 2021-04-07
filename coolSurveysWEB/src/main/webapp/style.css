@@ -49,6 +49,7 @@ body {
     clear: left;
     width: 250px;
     text-align: right;
+    margin-bottom: 15px;
 }
 
 #registrationView form, #loginView form {

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:v-on="http://java.sun.com/jsf/composite">
+<html lang="en" xmlns:v-on="http://java.sun.com/jsf/composite" xmlns="http://java.sun.com/jsf/core" xmlns=""
+      xmlns:v-bind="http://java.sun.com/jsf/html">
     <head>
         <meta charset="UTF-8">
         <title>Cool Surveys - Index</title>
@@ -21,11 +22,12 @@
             </div>
 
             <div id="loginView" v-if = "login">
-                <form>
+                <form v-on:reset="resetLoginForm" v-on:submit="()=>{homepage = true; login = false}">
                     <h2>Login to start your daily survey!</h2>
                     <div class="form-field">
+                        <!-- .trim to remove spaces from beginning and end of a field value-->
                         <label class="question" for="username">Username</label>
-                        <input v-model="username" type="text" id ="username" required/>
+                        <input v-model.trim="username" type="text" id ="username" required/>
                     </div>
                     <div class="form-field">
                         <label class="question" for="password">Password</label>
@@ -33,14 +35,14 @@
                     </div>
 
                     <div class="buttons">
-                        <button type="reset" class="reset" v-on:click="()=>{welcome = true; login = false}">Cancel</button>
-                        <button type="submit" v-on:click="()=>{homepage = true; login = false}"> Sign in </button>
+                        <button type="reset" class="reset">Cancel</button>
+                        <button type="submit"> Sign in </button>
                     </div>
                 </form>
             </div>
 
-            <div id="registrationView">
-                <form v-if = "registration">
+            <div id="registrationView" v-if = "registration">
+                <form v-on:reset="resetRegistrationForm" v-on:submit="()=>{login = true; registration = false}">
                     <h2>Registration</h2>
                     <div class="form-field">
                         <label class="question" for="email">Email</label>
@@ -48,22 +50,21 @@
                     </div>
                     <div class="form-field">
                         <label class="question" for="newUsername">Username</label>
-                        <input v-model="username" type="text" id ="newUsername" minlength="3" maxlength="15" required/>
+                        <input v-model.trim="username" type="text" id ="newUsername" minlength="3" maxlength="15" required/>
                     </div>
                     <div class="form-field">
                         <label class="question" for="newPassword">Password</label>
                         <input v-model="password" type="password" id="newPassword" minlength="10" maxlength="15" required/>
                     </div>
 
-                    <!-- TODO: check same -->
                     <div class="form-field">
                         <label class="question" for="passwordConfirm">Confirm Password</label>
-                        <input type="password" id="passwordConfirm" required/>
+                        <input v-model="passwordConfirm" type="password" id="passwordConfirm" required/>
                     </div>
 
                     <div class="buttons">
-                        <button type="reset" class="reset" v-on:click="()=>{welcome = true; registration = false}">Exit</button>
-                        <button type="submit" v-on:click="()=>{login = true; registration = false}">Register</button>
+                        <button type="reset" class="reset">Exit</button>
+                        <button type="submit" v-bind:disabled="!validRegForm">Register</button>
                     </div>
                 </form>
             </div>
@@ -78,7 +79,7 @@
 
             <div id="formView">
                 <div id="section1" v-if = "section1">
-                    <form>
+                    <form v-on:reset="resetSection1Form" v-on:submit="()=>{section1 = false; section2 = true;}">
                         <h2>What about today product?</h2>
                             <div class="form-field" v-for="(question,index) in questions">
                                 <label class="question" for="answer">{{question}}</label>
@@ -99,22 +100,20 @@
                             </div>
 
                         <div class="buttons">
-                            <button type="reset" class="reset" v-on:click="()=>{homepage = true; section1 = false}">Cancel</button>
-
-                            <!-- CHANGE VIEW ONLY IF FORM SUBMITTED-->
-                            <button v-on:click="()=>{section1 = false; section2 = true;}">Next</button>
+                            <button type="reset" class="reset">Cancel</button>
+                            <button>Next</button>
                         </div>
                     </form>
                 </div>
 
                 <div id="section2" v-if = "section2">
-                    <form>
+                    <form v-on:reset="resetSection2Form" v-on:submit="()=>{homepage = true; section2 = false}">
 
                         <h2>Tell us something about you!</h2>
 
                         <div class="form-field">
                             <label class="question" for="age">What's your age?</label>
-                            <input v-model="age" type="number" min="0" max="99" id="age"/>
+                            <input v-model.number="age" type="number" min="0" max="99" id="age"/>
                         </div>
 
                         <div class="form-field">
@@ -138,9 +137,9 @@
                         </div>
 
                         <div class="buttons">
-                            <button type="reset" class="reset" v-on:click="()=>{homepage = true; section2 = false}">Cancel</button>
+                            <button type="reset" class="reset">Cancel</button>
                             <button v-on:click="()=>{section1 = true; section2 = false}">Previous</button>
-                            <button type="submit" v-on:click="()=>{homepage = true; section2 = false}">Submit</button>
+                            <button type="submit">Submit</button>
                         </div>
                     </form>
                 </div>
