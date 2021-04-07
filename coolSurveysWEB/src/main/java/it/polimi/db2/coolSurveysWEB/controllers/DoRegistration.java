@@ -23,9 +23,9 @@ public class DoRegistration extends HttpServlet {
 
     //Form fields
     protected final static String USERNAME = "username";
-    protected final static String MAIL = "mail";
-    protected final static String PASSWORD = "pwd";
-    protected final static String CONF_PASSWORD = "confPwd";
+    protected final static String MAIL = "email";
+    protected final static String PASSWORD = "password";
+    protected final static String CONF_PASSWORD = "passwordConfirm";
 
     @EJB(name = "it.polimi.db2.coolsurveys.services/AuthService")
     private AuthService authService;

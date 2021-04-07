@@ -83,6 +83,26 @@ let app = new Vue ({
             this.explvl='';
             this.homepage = true;
             this.section2 = false;
+        },
+        submitRegisterRequest: function () {
+            axios.post("./DoRegistration", {
+                    params: {
+                        email: this.email,
+                        username: this.username,
+                        password: this.password,
+                        passwordConfirm: this.passwordConfirm
+                    }
+                })
+                .then(response => {
+                    this.login = true;
+                    this.registration = false;
+                    // (response || {}) means "request != null : request ? {}"
+                    // ... I think
+                    this.message = (response || {}).data;
+                })
+                .catch(response => {
+                    this.message = (response || {}).data;
+                });
         }
     }
 });
