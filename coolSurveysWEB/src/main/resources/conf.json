@@ -1,3 +1,4 @@
 {
-  "secretCode" : "\"Vero\" is a bad word"
+  "secretCode" : "\"Vero\" is a bad word",
+  "issuer" : "CoolSurveys"
 }

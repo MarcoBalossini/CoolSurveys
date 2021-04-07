@@ -1,7 +1,6 @@
 package it.polimi.db2.coolSurveysWEB.controllers;
 
 import it.polimi.db2.coolsurveys.entities.Credentials;
-import it.polimi.db2.coolsurveys.entities.User;
 import it.polimi.db2.coolsurveys.services.AuthService;
 
 import javax.ejb.EJB;
@@ -14,9 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Servlet managing registrations to CoolSurveys
- * Receives only POST requests
- *
+ * Servlet managing registrations to CoolSurveys<br>
+ * Receives only POST requests<br>
  * Respond to user registrations calling authentication services
  */
 @WebServlet(name = "DoRegistration", urlPatterns = "/DoRegistration")
@@ -24,10 +22,10 @@ import java.io.IOException;
 public class DoRegistration extends HttpServlet {
 
     //Form fields
-    private final static String USERNAME = "username";
-    private final static String MAIL = "mail";
-    private final static String PASSWORD = "pwd";
-    private final static String CONF_PASSWORD = "confPwd";
+    protected final static String USERNAME = "username";
+    protected final static String MAIL = "mail";
+    protected final static String PASSWORD = "pwd";
+    protected final static String CONF_PASSWORD = "confPwd";
 
     @EJB(name = "it.polimi.db2.coolsurveys.services/AuthService")
     private AuthService authService;
@@ -38,6 +36,13 @@ public class DoRegistration extends HttpServlet {
         response.getWriter().println("This servlet only takes POST requests");
     }
 
+    /**
+     * Handle registrations
+     * @param request The request containing registration form
+     * @param response The response
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 

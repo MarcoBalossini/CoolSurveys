@@ -16,6 +16,15 @@ public interface AuthService {
     Credentials checkCredentials(String username, String password) throws Exception;
 
     /**
+     * Find a user by its ID
+     *
+     * @param id The user id
+     * @return The corresponding Credentials object, if existing. Elsewhere null.
+     * @throws Exception When a database error occurs
+     */
+    Credentials tokenLogin(int id) throws Exception;
+
+    /**
      * Register a user in the database, if possible
      *
      * @param mail The user's mail
@@ -24,7 +33,7 @@ public interface AuthService {
      * @param isAdmin Whether the user is going to be an admin or not.
      * @return The newly created credentials, if existing. Elsewhere null.
      */
-    Credentials register(String mail, String username, String password, boolean isAdmin);
+    Credentials register(String mail, String username, String password, boolean isAdmin) throws Exception;
 
     //TODO: recupero password tramite email
 }

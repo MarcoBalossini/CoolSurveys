@@ -25,7 +25,15 @@ public class AuthServiceImpl implements AuthService {
      * {@inheritDoc}
      */
     @Override
-    public Credentials register(String mail, String username, String password, boolean isAdmin) {
+    public Credentials tokenLogin(int id) throws Exception {
+        return new Credentials();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Credentials register(String mail, String username, String password, boolean isAdmin) throws Exception {
         return new Credentials();
     }
 }

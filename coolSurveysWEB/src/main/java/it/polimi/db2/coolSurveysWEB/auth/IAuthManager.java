@@ -1,19 +1,22 @@
 package it.polimi.db2.coolSurveysWEB.auth;
 
+import it.polimi.db2.coolSurveysWEB.auth.exceptions.TokenException;
+
 public interface IAuthManager {
 
     /**
-     *
-     * @param hash
-     * @return
+     * Checks a token validity
+     * @param token The token to be checked
+     * @return The user id, if the token is valid
+     * @throws TokenException When the token is not valid
      */
-    boolean checkToken(String hash);
+    int checkToken(String token) throws TokenException;
 
     /**
-     *
-     * @param usrn
-     * @return
+     * Generate a token
+     * @param id The user id
+     * @return The token
      */
-    String generateToken(String usrn);
+    String generateToken(int id, long validity);
 
 }
