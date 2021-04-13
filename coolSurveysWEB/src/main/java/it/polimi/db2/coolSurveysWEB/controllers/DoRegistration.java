@@ -1,11 +1,12 @@
 package it.polimi.db2.coolSurveysWEB.controllers;
 
+import com.google.gson.JsonObject;
+import it.polimi.db2.coolSurveysWEB.utils.FormatUtils;
 import it.polimi.db2.coolsurveys.entities.Credentials;
-import it.polimi.db2.coolsurveys.services.AuthService;
+import it.polimi.db2.coolsurveys.services.IAuthService;
 
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -18,7 +19,6 @@ import java.io.IOException;
  * Respond to user registrations calling authentication services
  */
 @WebServlet(name = "DoRegistration", urlPatterns = "/DoRegistration")
-@MultipartConfig
 public class DoRegistration extends HttpServlet {
 
     //Form fields
@@ -28,7 +28,7 @@ public class DoRegistration extends HttpServlet {
     protected final static String CONF_PASSWORD = "passwordConfirm";
 
     @EJB(name = "it.polimi.db2.coolsurveys.services/AuthService")
-    private AuthService authService;
+    private IAuthService authService;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -46,10 +46,19 @@ public class DoRegistration extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String usrn = request.getParameter(USERNAME);
-        String email = request.getParameter(MAIL);
-        String pwd = request.getParameter(PASSWORD);
-        String confPwd = request.getParameter(CONF_PASSWORD);
+        JsonObject jsonObject;
+        try {
+            jsonObject = FormatUtils.getJSON(request);
+        } catch (IOException e) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().println("Error: empty request");
+            return;
+        }
+
+        String usrn = jsonObject.get(USERNAME).getAsString();
+        String email = jsonObject.get(MAIL).getAsString();
+        String pwd = jsonObject.get(PASSWORD).getAsString();
+        String confPwd = jsonObject.get(CONF_PASSWORD).getAsString();
 
         if (email == null || email.isEmpty() || usrn == null || usrn.isEmpty() ||
                 pwd == null || pwd.isEmpty() || confPwd == null || confPwd.isEmpty()) {

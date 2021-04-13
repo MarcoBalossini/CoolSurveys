@@ -1,7 +1,7 @@
 package it.polimi.db2.coolSurveysWEB.controllers;
 
 import it.polimi.db2.coolsurveys.entities.Credentials;
-import it.polimi.db2.coolsurveys.services.AuthService;
+import it.polimi.db2.coolsurveys.services.IAuthService;
 import org.junit.jupiter.api.Test;
 
 import javax.servlet.ServletException;
@@ -72,7 +72,7 @@ class DoRegistrationTest {
         HttpServletRequest request = mock(HttpServletRequest.class);
         HttpServletResponse response = mock(HttpServletResponse.class);
         HttpSession session = mock(HttpSession.class);
-        AuthService authenticationService = mock(AuthService.class);
+        IAuthService authenticationService = mock(IAuthService.class);
 
         //Use Reflection on check login class to mock injected service
         DoRegistration doRegistration = new DoRegistration();

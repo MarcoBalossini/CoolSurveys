@@ -1,9 +1,11 @@
 package it.polimi.db2.coolSurveysWEB.controllers;
 
+import com.google.gson.JsonObject;
 import it.polimi.db2.coolSurveysWEB.auth.AuthManager;
 import it.polimi.db2.coolSurveysWEB.auth.exceptions.TokenException;
+import it.polimi.db2.coolSurveysWEB.utils.FormatUtils;
 import it.polimi.db2.coolsurveys.entities.Credentials;
-import it.polimi.db2.coolsurveys.services.AuthService;
+import it.polimi.db2.coolsurveys.services.IAuthService;
 
 import javax.ejb.EJB;
 import javax.servlet.*;
@@ -47,7 +49,7 @@ public class CheckLogin extends HttpServlet {
     protected static final long EXPIRATION_TIME = 1000*60*60*24;
 
     @EJB(name = "it.polimi.db2.coolsurveys.services/AuthService")
-    private AuthService authService;
+    private IAuthService authService;
 
     /**
      * Handle token login
@@ -109,8 +111,17 @@ public class CheckLogin extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String pwd = request.getParameter(PASSWORD);
-        String usrn = request.getParameter(USERNAME);
+        JsonObject jsonObject;
+        try {
+            jsonObject = FormatUtils.getJSON(request);
+        } catch (IOException e) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().println("Error: empty request");
+            return;
+        }
+
+        String pwd = jsonObject.get(PASSWORD).getAsString();
+        String usrn = jsonObject.get(USERNAME).getAsString();;
 
         if (usrn == null || pwd == null || usrn.isEmpty() || pwd.isEmpty()) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);

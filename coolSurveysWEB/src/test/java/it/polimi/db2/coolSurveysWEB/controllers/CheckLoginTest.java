@@ -3,7 +3,7 @@ package it.polimi.db2.coolSurveysWEB.controllers;
 import it.polimi.db2.coolSurveysWEB.auth.AuthManager;
 import it.polimi.db2.coolSurveysWEB.auth.exceptions.TokenException;
 import it.polimi.db2.coolsurveys.entities.Credentials;
-import it.polimi.db2.coolsurveys.services.AuthService;
+import it.polimi.db2.coolsurveys.services.IAuthService;
 import org.junit.jupiter.api.Test;
 
 import javax.servlet.ServletException;
@@ -80,7 +80,7 @@ class CheckLoginTest {
      */
     private void testTokenMockDB(HttpServletRequest request, HttpServletResponse response,
                                Cookie[] cookies, String msg, int thrownExc, Credentials credentials) throws Exception {
-        AuthService authenticationService = mock(AuthService.class);
+        IAuthService authenticationService = mock(IAuthService.class);
         HttpSession session = mock(HttpSession.class);
 
         //Use Reflection on check login class to mock injected service
@@ -149,7 +149,7 @@ class CheckLoginTest {
         HttpServletRequest request = mock(HttpServletRequest.class);
         HttpServletResponse response = mock(HttpServletResponse.class);
         HttpSession session = mock(HttpSession.class);
-        AuthService authenticationService = mock(AuthService.class);
+        IAuthService authenticationService = mock(IAuthService.class);
 
         //Use Reflection on check login class to mock injected service
         CheckLogin checkLogin = new CheckLogin();

@@ -1,39 +1,38 @@
 package it.polimi.db2.coolsurveys.services;
 
+import it.polimi.db2.coolsurveys.dao.UserDAO;
 import it.polimi.db2.coolsurveys.entities.Credentials;
 
-public interface AuthService {
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
 
+@Stateless
+public class AuthService implements IAuthService {
 
-    /**
-     * Check that given credentials are correct
-     *
-     * @param username The username
-     * @param password The password
-     * @return The corresponding Credentials object, if existing. Elsewhere null.
-     * @throws Exception When a database error occurs
-     */
-    Credentials checkCredentials(String username, String password) throws Exception;
+    @EJB(name = "it.polimi.db2.coolsurveys.dao/UserDAO")
+    protected UserDAO dataAccess;
 
     /**
-     * Find a user by its ID
-     *
-     * @param id The user id
-     * @return The corresponding Credentials object, if existing. Elsewhere null.
-     * @throws Exception When a database error occurs
+     * {@inheritDoc}
      */
-    Credentials tokenLogin(int id) throws Exception;
+    @Override
+    public Credentials checkCredentials(String username, String password) throws Exception {
+        return new Credentials();
+    }
 
     /**
-     * Register a user in the database, if possible
-     *
-     * @param mail The user's mail
-     * @param username The chosen username
-     * @param password The chosen password
-     * @param isAdmin Whether the user is going to be an admin or not.
-     * @return The newly created credentials, if existing. Elsewhere null.
+     * {@inheritDoc}
      */
-    Credentials register(String mail, String username, String password, boolean isAdmin) throws Exception;
+    @Override
+    public Credentials tokenLogin(int id) throws Exception {
+        return new Credentials();
+    }
 
-    //TODO: recupero password tramite email
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Credentials register(String mail, String username, String password, boolean isAdmin) throws Exception {
+        return new Credentials();
+    }
 }
