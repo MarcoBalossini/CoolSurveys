@@ -23,18 +23,46 @@ DROP TABLE IF EXISTS `answer`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `answer` (
-                          `answer_id` int NOT NULL,
+                          `answer_id` int NOT NULL AUTO_INCREMENT,
                           `question_id` int NOT NULL,
                           `user_id` int NOT NULL,
-                          `questionnaire_id` int NOT NULL,
                           `answer` varchar(512) DEFAULT NULL,
-                          PRIMARY KEY (`answer_id`,`question_id`,`questionnaire_id`),
+                          PRIMARY KEY (`answer_id`),
                           KEY `answer/user_idx` (`user_id`),
-                          KEY `answer/question_idx` (`questionnaire_id`,`question_id`),
-                          CONSTRAINT `answer/question` FOREIGN KEY (`questionnaire_id`, `question_id`) REFERENCES `question` (`questionnaire_id`, `question_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+                          KEY `answer/question_idx` (`question_id`),
+                          CONSTRAINT `answer/question` FOREIGN KEY (`question_id`) REFERENCES `question` (`question_id`) ON DELETE CASCADE ON UPDATE CASCADE,
                           CONSTRAINT `answer/user` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `answer`
+--
+
+LOCK TABLES `answer` WRITE;
+/*!40000 ALTER TABLE `answer` DISABLE KEYS */;
+INSERT INTO `answer` VALUES (1,104,14,'u r my bitch'),(9,105,14,'ok i answer'),(10,106,14,'heyyy'),(11,107,14,'holaaaaa');
+/*!40000 ALTER TABLE `answer` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `answer_BEFORE_INSERT` BEFORE INSERT ON `answer` FOR EACH ROW BEGIN
+    IF EXISTS (SELECT word FROM bad_words WHERE new.answer LIKE concat('%', concat(word, '%'))) THEN
+        UPDATE `user` SET `blocked_until` = TIMESTAMPADD(MONTH, 1, `blocked_until`) WHERE `user_id` = new.`user_id`;
+    END IF;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `bad_words`
@@ -48,6 +76,16 @@ CREATE TABLE `bad_words` (
                              PRIMARY KEY (`word`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `bad_words`
+--
+
+LOCK TABLES `bad_words` WRITE;
+/*!40000 ALTER TABLE `bad_words` DISABLE KEYS */;
+INSERT INTO `bad_words` VALUES ('bitch'),('fuck'),('shit');
+/*!40000 ALTER TABLE `bad_words` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `credentials`
@@ -66,26 +104,44 @@ CREATE TABLE `credentials` (
                                UNIQUE KEY `user_id_UNIQUE` (`user_id`),
                                UNIQUE KEY `username_UNIQUE` (`username`),
                                UNIQUE KEY `mail_UNIQUE` (`mail`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `option`
+-- Dumping data for table `credentials`
 --
 
-DROP TABLE IF EXISTS `option`;
+LOCK TABLES `credentials` WRITE;
+/*!40000 ALTER TABLE `credentials` DISABLE KEYS */;
+INSERT INTO `credentials` VALUES (14,'pass','user','user@user.com',0);
+/*!40000 ALTER TABLE `credentials` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `options`
+--
+
+DROP TABLE IF EXISTS `options`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `option` (
-                          `option_id` int NOT NULL,
-                          `question_id` int NOT NULL,
-                          `questionnaire_id` int NOT NULL,
-                          `text` varchar(50) NOT NULL,
-                          PRIMARY KEY (`option_id`,`question_id`,`questionnaire_id`),
-                          KEY `option/question_idx` (`questionnaire_id`,`question_id`),
-                          CONSTRAINT `option/question` FOREIGN KEY (`questionnaire_id`, `question_id`) REFERENCES `question` (`questionnaire_id`, `question_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `options` (
+                           `option_id` int NOT NULL AUTO_INCREMENT,
+                           `question_id` int NOT NULL,
+                           `text` varchar(50) NOT NULL,
+                           PRIMARY KEY (`option_id`),
+                           KEY `option/question_idx` (`question_id`),
+                           CONSTRAINT `option/question` FOREIGN KEY (`question_id`) REFERENCES `question` (`question_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `options`
+--
+
+LOCK TABLES `options` WRITE;
+/*!40000 ALTER TABLE `options` DISABLE KEYS */;
+/*!40000 ALTER TABLE `options` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `question`
@@ -98,11 +154,21 @@ CREATE TABLE `question` (
                             `question_id` int NOT NULL AUTO_INCREMENT,
                             `questionnaire_id` int NOT NULL,
                             `question` varchar(512) NOT NULL,
-                            PRIMARY KEY (`question_id`,`questionnaire_id`),
+                            PRIMARY KEY (`question_id`),
                             KEY `questionnaire_idx` (`questionnaire_id`),
                             CONSTRAINT `questionnaire/question` FOREIGN KEY (`questionnaire_id`) REFERENCES `questionnaire` (`q_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=108 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `question`
+--
+
+LOCK TABLES `question` WRITE;
+/*!40000 ALTER TABLE `question` DISABLE KEYS */;
+INSERT INTO `question` VALUES (104,69,'question1?'),(105,69,'Nuova domanda hihihi'),(106,70,'Domanda1'),(107,70,'Domanda2');
+/*!40000 ALTER TABLE `question` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `questionnaire`
@@ -118,8 +184,18 @@ CREATE TABLE `questionnaire` (
                                  `date` datetime NOT NULL,
                                  PRIMARY KEY (`q_id`),
                                  UNIQUE KEY `name_UNIQUE` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=71 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `questionnaire`
+--
+
+LOCK TABLES `questionnaire` WRITE;
+/*!40000 ALTER TABLE `questionnaire` DISABLE KEYS */;
+INSERT INTO `questionnaire` VALUES (69,'questionaire_answer_test',_binary '\0\0\0','2021-04-11 11:23:59'),(70,'test2',_binary 'asd','2021-05-02 00:00:00');
+/*!40000 ALTER TABLE `questionnaire` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `submission`
@@ -144,6 +220,62 @@ CREATE TABLE `submission` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `submission`
+--
+
+LOCK TABLES `submission` WRITE;
+/*!40000 ALTER TABLE `submission` DISABLE KEYS */;
+INSERT INTO `submission` VALUES (14,69,1,22,1,3),(14,70,0,25,NULL,NULL);
+/*!40000 ALTER TABLE `submission` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `submission_BEFORE_UPDATE` BEFORE UPDATE ON `submission` FOR EACH ROW BEGIN
+    IF (OLD.`submitted` = 0 AND NEW.`submitted` = 1 AND
+        (SELECT count(*) FROM `answer` as A JOIN `question` as Q
+         WHERE A.`user_id` = NEW.`user_id` AND A.`question_id` = Q.`question_id` AND Q.`questionnaire_id` = OLD.`questionnaire_id`) <>
+        (SELECT count(*) FROM `question` WHERE `questionnaire_id` = OLD.`questionnaire_id`)) THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'User did not answer all mandatory questions';
+    END IF;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `submission_AFTER_UPDATE` AFTER UPDATE ON `submission` FOR EACH ROW BEGIN
+    IF (OLD.`submitted` = 0 and NEW.`submitted` = 1)
+    THEN
+        UPDATE `user` SET `points` = `points` +
+                                     (SELECT count(*) FROM `question` WHERE `questionnaire_id` = OLD.`questionnaire_id`) +
+                                     IF(NEW.`age` <> NULL, 2, 0) + IF(NEW.`sex` <> NULL, 2, 0) + IF(NEW.`expertise_level` <> NULL, 2, 0)
+        WHERE `user_id` = OLD.`user_id`;
+    END IF;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+
+--
 -- Table structure for table `user`
 --
 
@@ -158,6 +290,16 @@ CREATE TABLE `user` (
                         CONSTRAINT `user/credentials` FOREIGN KEY (`user_id`) REFERENCES `credentials` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user`
+--
+
+LOCK TABLES `user` WRITE;
+/*!40000 ALTER TABLE `user` DISABLE KEYS */;
+INSERT INTO `user` VALUES (14,6,'2021-05-11 11:23:59');
+/*!40000 ALTER TABLE `user` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -168,4 +310,4 @@ CREATE TABLE `user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-04-02 11:39:04
+-- Dump completed on 2021-04-14  9:43:08

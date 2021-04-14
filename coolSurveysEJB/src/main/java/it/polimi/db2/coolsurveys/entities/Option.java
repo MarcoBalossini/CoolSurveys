@@ -9,22 +9,31 @@ import java.io.Serializable;
 })
 
 @Entity
-@Table(name = "option")
+@Table(name = "options")
 public class Option implements Serializable {
 
-    @EmbeddedId
-    private OptionPK id;
+    /*@EmbeddedId
+    private OptionPK id;*/
+
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @Column(name = "option_id")
+    private Integer optionId;
 
     @Column(name = "text", nullable = false)
     private String text;
 
-    @MapsId("questionId")
+    //@MapsId("questionId")
     @ManyToOne (fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumns({
-            @JoinColumn(name = "question_id", referencedColumnName = "question_id"),
-            @JoinColumn(name = "questionnaire_id", referencedColumnName = "questionnaire_id")
-    })
+    @JoinColumn(name = "question_id", referencedColumnName = "question_id")
     private Question question;
+
+    public Option(String text) {
+        this.text = text;
+    }
+
+    public Option() {}
+
 
     public String getText() {
         return text;

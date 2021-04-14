@@ -29,7 +29,7 @@ public class UserDAO {
 
         if(em.createNamedQuery("User.selectByUsername")
                 .setParameter("username", username).getResultList().size() > 0)
-            throw new AlreadyExistsException();
+            throw new AlreadyExistsException("User already exists");
 
         System.out.println("Persisting user " + username);
 

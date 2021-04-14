@@ -15,27 +15,27 @@ import java.util.List;
 @Table(name = "question")
 public class Question implements Serializable {
 
-    @EmbeddedId
-    private QuestionPK id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "question_id")
+    private int questionId;
 
     @Column(name = "question", nullable = false)
     private String question;
 
-    @MapsId("questionnaireId")
     @ManyToOne (fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "questionnaire_id")
     private Questionnaire questionnaire;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "question")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "question", cascade = CascadeType.ALL)
     private List<Option> options = new ArrayList<>();
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "question")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "question", cascade = CascadeType.ALL)
     private List<Answer> answers = new ArrayList<>();
 
 
-    public Question(String question, Questionnaire questionnaire) {
+    public Question(String question) {
         this.question = question;
-        this.questionnaire = questionnaire;
 
     }
 
@@ -54,7 +54,11 @@ public class Question implements Serializable {
     }
 
     public void setOptions(List<Option> options) {
+
         this.options = options;
+
+        for (Option o : options)
+            o.setQuestion(this);
     }
 
     public Questionnaire getQuestionnaire() {

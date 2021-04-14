@@ -7,6 +7,7 @@ import java.io.Serializable;
 @Table(name = "submission")
 public class Submission implements Serializable {
 
+
     @EmbeddedId
     private SubmissionPK id;
 
@@ -31,6 +32,12 @@ public class Submission implements Serializable {
     @JoinColumn(name="user_id")
     private User user;
 
+
+    public Submission() {}
+    public Submission(User user, Questionnaire questionnaire) {
+        this.user = user;
+        this.questionnaire = questionnaire;
+    }
 
     public SubmissionPK getId() {
         return id;

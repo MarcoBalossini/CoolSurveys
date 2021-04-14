@@ -25,5 +25,4 @@ abstract public class DAOTest {
         emf.close();
     }
 
-    abstract public void clean();
 }

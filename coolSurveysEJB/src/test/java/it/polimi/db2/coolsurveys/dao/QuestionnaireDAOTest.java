@@ -1,8 +1,9 @@
 package it.polimi.db2.coolsurveys.dao;
 
 import it.polimi.db2.coolsurveys.dao.exceptions.AlreadyExistsException;
+import it.polimi.db2.coolsurveys.dao.exceptions.NotFoundException;
+import it.polimi.db2.coolsurveys.entities.Option;
 import it.polimi.db2.coolsurveys.entities.Question;
-import it.polimi.db2.coolsurveys.entities.QuestionPK;
 import it.polimi.db2.coolsurveys.entities.Questionnaire;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +16,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class QuestionnaireDAOTest extends DAOTest {
 
-    static Questionnaire questionnaire;
 
     @Test
     void insertQuestionnaire() {
@@ -25,11 +25,13 @@ public class QuestionnaireDAOTest extends DAOTest {
 
         byte[] smallPhoto = {0, 0, 0};
 
+        List<Question> questionList = new ArrayList<>();
 
-        List<String> questionList = List.of("question1?", "question2?");
+        questionList.add(new Question("question1?"));
+        questionList.add(new Question("question2?"));
 
         try {
-            questionnaire = dao.insertQuestionnaire("questionnaire1", smallPhoto, questionList);
+            Questionnaire questionnaire = dao.insertQuestionnaire("questionnaire1", smallPhoto, questionList);
             em.getTransaction().commit();
 
         } catch (AlreadyExistsException e) {
@@ -48,14 +50,44 @@ public class QuestionnaireDAOTest extends DAOTest {
 
         em.getTransaction().begin();
 
-        Questionnaire questionnaire = em.createNamedQuery("Questionnaire.selectByName", Questionnaire.class).setParameter("name", "questionnaire1").getSingleResult();
-        em.remove(questionnaire);
+        QuestionnaireDAO dao = new QuestionnaireDAO(em);
+
+        Questionnaire questionnaire = null;
+        try {
+            questionnaire = dao.getByName("questionnaire1");
+        } catch (NotFoundException e) {
+            System.out.println(e.getMessage());
+            fail();
+        }
+        dao.removeQuestionnaire(questionnaire);
 
         em.getTransaction().commit();
     }
 
+    @Test
+    void questionsWithOptions() {
+        em.getTransaction().begin();
 
-    @Override
+        QuestionnaireDAO dao = new QuestionnaireDAO(em);
+
+        byte[] smallPhoto = {0,0,0};
+
+        Question q1 = new Question("questionWithOption1?");
+        q1.setOptions(List.of(new Option("option1"), new Option("option2")));
+
+        try {
+            Questionnaire questionnaire = dao.insertQuestionnaire("questionnaire1", smallPhoto, List.of(q1));
+            em.getTransaction().commit();
+
+        } catch (AlreadyExistsException e) {
+            System.out.println("Questionnaire already exists");
+            em.getTransaction().rollback();
+            fail();
+        }
+
+    }
+
+
     @BeforeEach
     @AfterEach
     public void clean() {

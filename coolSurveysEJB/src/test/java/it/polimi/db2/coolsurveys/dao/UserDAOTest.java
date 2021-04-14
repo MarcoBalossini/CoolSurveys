@@ -24,7 +24,6 @@ public class UserDAOTest extends DAOTest{
 
     }
 
-    @Override
     @AfterEach
     @BeforeEach
     public void clean() {
