@@ -17,7 +17,6 @@ public class FormatUtils {
         while ((line = reader.readLine()) != null)
             jb.append(line);
 
-
         return new Gson().fromJson(jb.toString(), JsonElement.class).getAsJsonObject();
     }
 

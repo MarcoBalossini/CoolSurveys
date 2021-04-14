@@ -24,7 +24,7 @@ public class Questionnaire implements Serializable {
     private String name;
 
     @Column(name = "date", nullable = false)
-    private final LocalDateTime date = LocalDateTime.now();
+    private LocalDateTime date = LocalDateTime.now();
 
     /**
      * Photo_path not unique since a questionnaire may be re-proposed
@@ -43,9 +43,23 @@ public class Questionnaire implements Serializable {
     public Questionnaire() {
     }
 
+    public Questionnaire(String name, byte[] photo) {
+        this.name = name;
+        this.photo = photo;
+    }
+
+    public Questionnaire(String name, byte[] photo, LocalDateTime date) {
+        this.name = name;
+        this.photo = photo;
+        this.date = date;
+    }
 
     public LocalDateTime getDate() {
         return date;
+    }
+
+    public void setDate(LocalDateTime date) {
+        this.date = date;
     }
 
     public String getName() {
@@ -107,6 +121,7 @@ public class Questionnaire implements Serializable {
 
         return submission;
     }
+
     public Integer getQId() {
         return qId;
     }

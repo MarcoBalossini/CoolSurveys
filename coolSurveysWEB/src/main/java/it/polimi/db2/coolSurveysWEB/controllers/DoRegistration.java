@@ -22,10 +22,10 @@ import java.io.IOException;
 public class DoRegistration extends HttpServlet {
 
     //Form fields
-    protected final static String USERNAME = "username";
-    protected final static String MAIL = "email";
-    protected final static String PASSWORD = "password";
-    protected final static String CONF_PASSWORD = "passwordConfirm";
+    public final static String USERNAME = "username";
+    public final static String MAIL = "email";
+    public final static String PASSWORD = "password";
+    public final static String CONF_PASSWORD = "passwordConfirm";
 
     @EJB(name = "it.polimi.db2.coolsurveys.services/AuthService")
     private IAuthService authService;
@@ -46,22 +46,26 @@ public class DoRegistration extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+        String usrn;
+        String email;
+        String pwd;
+        String confPwd;
+
         JsonObject jsonObject;
         try {
             jsonObject = FormatUtils.getJSON(request);
-        } catch (IOException e) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().println("Error: empty request");
-            return;
-        }
+            usrn = jsonObject.get(USERNAME).getAsString();
+            email = jsonObject.get(MAIL).getAsString();
+            pwd = jsonObject.get(PASSWORD).getAsString();
+            confPwd = jsonObject.get(CONF_PASSWORD).getAsString();
 
-        String usrn = jsonObject.get(USERNAME).getAsString();
-        String email = jsonObject.get(MAIL).getAsString();
-        String pwd = jsonObject.get(PASSWORD).getAsString();
-        String confPwd = jsonObject.get(CONF_PASSWORD).getAsString();
-
-        if (email == null || email.isEmpty() || usrn == null || usrn.isEmpty() ||
-                pwd == null || pwd.isEmpty() || confPwd == null || confPwd.isEmpty()) {
+            if (email == null || email.isEmpty() || usrn == null || usrn.isEmpty() ||
+                    pwd == null || pwd.isEmpty() || confPwd == null || confPwd.isEmpty()) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.getWriter().println("Please, fill all the fields");
+                return;
+            }
+        } catch (Exception e) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().println("Please, fill all the fields");
             return;

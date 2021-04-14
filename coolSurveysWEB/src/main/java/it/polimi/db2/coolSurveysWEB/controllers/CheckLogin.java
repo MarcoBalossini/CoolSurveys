@@ -111,19 +111,21 @@ public class CheckLogin extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+        String usrn;
+        String pwd;
+
         JsonObject jsonObject;
         try {
             jsonObject = FormatUtils.getJSON(request);
-        } catch (IOException e) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().println("Error: empty request");
-            return;
-        }
+            pwd = jsonObject.get(PASSWORD).getAsString();
+            usrn = jsonObject.get(USERNAME).getAsString();
 
-        String pwd = jsonObject.get(PASSWORD).getAsString();
-        String usrn = jsonObject.get(USERNAME).getAsString();;
-
-        if (usrn == null || pwd == null || usrn.isEmpty() || pwd.isEmpty()) {
+            if (usrn.isEmpty() || pwd.isEmpty()) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.getWriter().println("Missing credential value");
+                return;
+            }
+        } catch (Exception e) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().println("Missing credential value");
             return;

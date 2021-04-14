@@ -33,13 +33,20 @@ public class Question implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "question", cascade = CascadeType.ALL)
     private List<Answer> answers = new ArrayList<>();
 
+    public Question() {}
 
     public Question(String question) {
         this.question = question;
-
     }
 
-    public Question() {}
+    public Question(int id, String question) {
+        this.questionId = id;
+        this.question = question;
+    }
+
+    public int getId() {
+        return questionId;
+    }
 
     public List<Answer> getAnswers() {
         return answers;

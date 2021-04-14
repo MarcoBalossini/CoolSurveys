@@ -28,12 +28,20 @@ public class Option implements Serializable {
     @JoinColumn(name = "question_id", referencedColumnName = "question_id")
     private Question question;
 
+    public Option() {}
+
     public Option(String text) {
         this.text = text;
     }
 
-    public Option() {}
+    public Option(int id, String text) {
+        this.text = text;
+        this.optionId = id;
+    }
 
+    public int getId() {
+        return optionId;
+    }
 
     public String getText() {
         return text;
@@ -50,6 +58,5 @@ public class Option implements Serializable {
     public void setQuestion(Question question) {
         this.question = question;
     }
-
 
 }

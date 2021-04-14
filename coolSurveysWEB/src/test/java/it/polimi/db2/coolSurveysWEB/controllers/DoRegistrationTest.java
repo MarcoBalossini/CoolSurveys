@@ -8,14 +8,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.io.*;
 import java.lang.reflect.Field;
 
-import static it.polimi.db2.coolSurveysWEB.controllers.CheckLogin.PASSWORD;
-import static it.polimi.db2.coolSurveysWEB.controllers.CheckLogin.USERNAME;
 import static it.polimi.db2.coolSurveysWEB.controllers.DoRegistration.*;
+import static it.polimi.db2.coolSurveysWEB.controllers.DoRegistration.CONF_PASSWORD;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.atLeast;
@@ -56,11 +53,6 @@ class DoRegistrationTest {
 
         new DoRegistration().doPost(request, response);
 
-        verify(request, atLeast(1)).getParameter(PASSWORD);
-        verify(request, atLeast(1)).getParameter(USERNAME);
-        verify(request, atLeast(1)).getParameter(MAIL);
-        verify(request, atLeast(1)).getParameter(CONF_PASSWORD);
-
         writer.flush();
 
         assertTrue(stringWriter.toString().contains(msg));
@@ -95,8 +87,6 @@ class DoRegistrationTest {
 
         doRegistration.doPost(request, response);
 
-        verify(request, atLeast(1)).getParameter(PASSWORD);
-        verify(request, atLeast(1)).getParameter(USERNAME);
         writer.flush();
 
         assertTrue(stringWriter.toString().contains(msg));
@@ -117,11 +107,36 @@ class DoRegistrationTest {
         assertTrue(stringWriter.toString().contains("This servlet only takes POST requests"));
     }
 
-    private void mockParams(String mail, String usrn, String pwd, String pwdConf, HttpServletRequest request) {
-        when(request.getParameter(MAIL)).thenReturn(mail);
-        when(request.getParameter(USERNAME)).thenReturn(usrn);
-        when(request.getParameter(PASSWORD)).thenReturn(pwd);
-        when(request.getParameter(CONF_PASSWORD)).thenReturn(pwdConf);
+    public static void mockParams(String mail, String usrn, String pwd, String pwdConf, HttpServletRequest request) throws IOException {
+
+        boolean putComma = false;
+        String json = "{";
+        if (mail != null) {
+            json += "\"" + MAIL + "\": \"" + mail + "\"";
+            putComma = true;
+        }
+        if (usrn != null) {
+            if (putComma)
+                json += ", ";
+            json += "\"" + USERNAME + "\": \"" + usrn + "\"";
+            putComma = true;
+        }
+        if (pwd != null) {
+            if (putComma)
+                json += ", ";
+            json += "\"" + PASSWORD + "\": \"" + pwd + "\"";
+            putComma = true;
+        }
+        if (pwdConf != null) {
+            if (putComma)
+                json += ", ";
+            json += "\"" + CONF_PASSWORD + "\": \"" + pwdConf + "\"";
+        }
+        json += "}";
+
+        Reader inputString = new StringReader(json);
+        BufferedReader reader = new BufferedReader(inputString);
+        when(request.getReader()).thenReturn(reader);
     }
 
 }

@@ -12,9 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.io.*;
 import java.lang.reflect.Field;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -128,8 +126,7 @@ class CheckLoginTest {
         HttpServletRequest request = mock(HttpServletRequest.class);
         HttpServletResponse response = mock(HttpServletResponse.class);
 
-        when(request.getParameter(USERNAME)).thenReturn(usrn);
-        when(request.getParameter(PASSWORD)).thenReturn(pwd);
+        mockParams(usrn, pwd, request);
 
         StringWriter stringWriter = new StringWriter();
         PrintWriter writer = new PrintWriter(stringWriter);
@@ -137,8 +134,6 @@ class CheckLoginTest {
 
         new CheckLogin().doPost(request, response);
 
-        verify(request, atLeast(1)).getParameter(PASSWORD);
-        verify(request, atLeast(1)).getParameter(USERNAME);
         writer.flush();
 
         assertTrue(stringWriter.toString().contains(msg));
@@ -158,8 +153,7 @@ class CheckLoginTest {
         authServiceField.set(checkLogin, authenticationService);
 
         //Mocks' responses
-        when(request.getParameter(USERNAME)).thenReturn(usrn);
-        when(request.getParameter(PASSWORD)).thenReturn(pwd);
+        mockParams(usrn, pwd, request);
         when(request.getSession()).thenReturn(session);
 
         if (!throwException)
@@ -173,8 +167,6 @@ class CheckLoginTest {
 
         checkLogin.doPost(request, response);
 
-        verify(request, atLeast(1)).getParameter(PASSWORD);
-        verify(request, atLeast(1)).getParameter(USERNAME);
         writer.flush();
 
         assertTrue(stringWriter.toString().contains(msg));
@@ -200,6 +192,27 @@ class CheckLoginTest {
         response.addCookie(cookie);
 
         return new Cookie[]{cookie};
+    }
+
+    public static void mockParams(String usrn, String pwd, HttpServletRequest request) throws IOException {
+
+        boolean putComma = false;
+        String json = "{";
+        if (usrn != null) {
+            json += "\"" + USERNAME + "\": \"" + usrn + "\"";
+            putComma = true;
+        }
+        if (pwd != null) {
+            if (putComma)
+                json += ", ";
+            json += "\"" + PASSWORD + "\": \"" + pwd + "\"";
+            putComma = true;
+        }
+        json += "}";
+
+        Reader inputString = new StringReader(json);
+        BufferedReader reader = new BufferedReader(inputString);
+        when(request.getReader()).thenReturn(reader);
     }
 
 }
