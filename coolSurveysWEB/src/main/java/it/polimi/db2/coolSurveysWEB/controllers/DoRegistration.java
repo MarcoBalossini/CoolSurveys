@@ -7,6 +7,7 @@ import it.polimi.db2.coolsurveys.services.IAuthService;
 
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -18,6 +19,7 @@ import java.io.IOException;
  * Receives only POST requests<br>
  * Respond to user registrations calling authentication services
  */
+@MultipartConfig
 @WebServlet(name = "DoRegistration", urlPatterns = "/DoRegistration")
 public class DoRegistration extends HttpServlet {
 
@@ -59,8 +61,7 @@ public class DoRegistration extends HttpServlet {
             pwd = jsonObject.get(PASSWORD).getAsString();
             confPwd = jsonObject.get(CONF_PASSWORD).getAsString();
 
-            if (email == null || email.isEmpty() || usrn == null || usrn.isEmpty() ||
-                    pwd == null || pwd.isEmpty() || confPwd == null || confPwd.isEmpty()) {
+            if (email.isEmpty() || usrn.isEmpty() || pwd.isEmpty() || confPwd.isEmpty()) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 response.getWriter().println("Please, fill all the fields");
                 return;
@@ -86,6 +87,7 @@ public class DoRegistration extends HttpServlet {
             }
 
             response.setStatus(HttpServletResponse.SC_CREATED);
+            response.setContentType("text/plain");
             response.getWriter().println("Successful registration");
 
         } catch (Exception e) {

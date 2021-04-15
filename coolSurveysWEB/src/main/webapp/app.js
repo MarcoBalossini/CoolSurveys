@@ -32,7 +32,7 @@ let app = new Vue ({
     },
     methods:{
         charCount: function(index){
-        this.totalCharacters = this.answers[index].length;
+            this.totalCharacters = this.answers[index].length;
         },
         resetAll: function() {
             this.username = '';
@@ -93,12 +93,27 @@ let app = new Vue ({
                 }).then(response => {
                     this.login = true;
                     this.registration = false;
-                    // (response || {}) means "request != null : request ? {}"
-                    // ... I think
-                    this.message = (response || {}).data;
+                    this.message = response.data;
+                    this.email = '';
+                    this.password = '';
+                    this.passwordConfirm = '';
                 }).catch(response => {
-                    this.message = (response || {}).data;
+                    this.message = response.data;
+                    this.password = '';
+                    this.passwordConfirm = '';
                 });
+        },
+        submitFormLoginRequest: function() {
+            axios.post("./CheckLogin", {
+                username: this.username,
+                password: this.password
+            }).then(response => {
+                console.log(response.data)
+                //To change html file:
+                //window.location.href = "/nome.html";
+            }).catch(response => {
+                console.log(response.data)
+            });
         }
     }
 });

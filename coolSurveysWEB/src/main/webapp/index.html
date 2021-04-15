@@ -23,7 +23,7 @@
             </div>
 
             <div id="loginView" v-if = "login">
-                <form v-on:reset="resetLoginForm" v-on:submit="()=>{homepage = true; login = false}">
+                <form v-on:reset="resetLoginForm" v-on:submit.prevent="()=>{homepage = true; login = false}">
                     <h2>Login to start your daily survey!</h2>
                     <div class="form-field">
                         <!-- .trim to remove spaces from beginning and end of a field value-->
@@ -43,7 +43,7 @@
             </div>
 
             <div id="registrationView" v-if = "registration">
-                <form v-on:reset="resetRegistrationForm" v-on:submit="submitRegisterRequest">
+                <form v-on:reset.prevent="resetRegistrationForm" v-on:submit.prevent="submitRegisterRequest">
                     <h2>Registration</h2>
                     <div class="form-field">
                         <label class="question" for="email">Email</label>
