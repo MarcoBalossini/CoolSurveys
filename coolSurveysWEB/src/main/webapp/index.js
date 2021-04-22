@@ -1,26 +1,14 @@
-let app = new Vue ({
-    el : "#vueApp",
+let index = new Vue ({
+    el : "#indexApp",
     data: {
         username: '',
         password: '',
         passwordConfirm: '',
         email: '',
-        answers: [],
-        questions: ['Do you like the daily product?', 'Do you find it comfortable?', 'Do you think it is durable?'],
-        options: [['yes', 'no'], null, [0,1]],
-        age: 0,
-        sex: 0,
-        explvl: '',
-        scores:[['Michele', 0], ['Gigi', 9] ],
         message: '',
         welcome:true,
-        homepage:false,
         login:false,
-        registration:false,
-        section1:false,
-        section2:false,
-        leaderboard:false,
-        totalCharacters: 0
+        registration:false
     },
 
     //computed properties: dynamic data based on other dynamic data
@@ -31,30 +19,16 @@ let app = new Vue ({
         }
     },
     methods:{
-        charCount: function(index){
-            this.totalCharacters = this.answers[index].length;
-        },
         resetAll: function() {
             this.username = '';
             this.password = '';
             this.passwordConfirm= '';
             this.email = '';
-            this.answers= [];
-            this.questions= [];
-            this.options= null;
-            this.sex = 0;
-            this.age = 0;
-            this.explvl = '';
-            this.scores = [];
             this.message = '';
             this.welcome = true;
             this.homepage = false;
             this.login = false;
             this.registration = false;
-            this.section1 = false;
-            this.section2 = false;
-            this.leaderboard = false;
-            this.totalCharacters = 0;
         },
         resetLoginForm: function () {
             this.username='';
@@ -108,12 +82,17 @@ let app = new Vue ({
                 username: this.username,
                 password: this.password
             }).then(response => {
-                console.log(response.data)
-                //To change html file:
-                //window.location.href = "/nome.html";
+                this.login = false;
+                this.homepage = true;
+                console.log(response.data);
+                window.location.href = "./userHome.html";
             }).catch(response => {
                 console.log(response.data)
             });
+        },
+        advanceSurveySection: function() {
+            this.section1 = false;
+            this.section2 = true;
         }
     }
 });

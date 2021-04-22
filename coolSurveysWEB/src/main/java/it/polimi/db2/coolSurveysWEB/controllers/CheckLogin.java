@@ -30,7 +30,7 @@ public class CheckLogin extends HttpServlet {
     /**
      * Password form field name
      */
-    protected final static String PASSWORD = "pwd";
+    protected final static String PASSWORD = "password";
 
     /**
      * Username form field name

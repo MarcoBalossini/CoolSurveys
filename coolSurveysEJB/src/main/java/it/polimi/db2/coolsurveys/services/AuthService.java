@@ -17,7 +17,7 @@ public class AuthService implements IAuthService {
      */
     @Override
     public Credentials checkCredentials(String username, String password) throws Exception {
-        return new Credentials();
+        return new Credentials(1,"username",null,"ciao@user", false);
     }
 
     /**
@@ -25,7 +25,7 @@ public class AuthService implements IAuthService {
      */
     @Override
     public Credentials tokenLogin(int id) throws Exception {
-        return new Credentials();
+        return new Credentials(1,"username",null,"ciao@user", false);
     }
 
     /**
@@ -33,6 +33,6 @@ public class AuthService implements IAuthService {
      */
     @Override
     public Credentials register(String mail, String username, String password, boolean isAdmin) throws Exception {
-        return new Credentials();
+        return new Credentials(1,"username",null,"ciao@user", false);
     }
 }

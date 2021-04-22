@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-on="http://java.sun.com/jsf/composite">
+<head>
+    <meta charset="UTF-8">
+    <title>Cool Surveys - Home</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js" defer></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js" type="text/javascript"></script>
+    <script src= "./home.js" defer></script>
+    <link rel="stylesheet" type="text/css" href="./style.css">
+</head>
+<body>
+    <div id="homeApp">
+        <div id="homePage" v-if = "homepage">
+            <h1>HomePage</h1>
+            <div class="buttons">
+                <button v-on:click="()=>{leaderboard = true; homepage = false}">LeaderBoard</button>
+                <button v-on:click="()=>{section1 = true; homepage = false}">StartSurvey</button>
+            </div>
+        </div>
+
+        <div id="formView">
+            <div id="section1" v-if = "section1">
+                <form v-on:reset.prevent="resetSection1Form" v-on:submit.prevent="advanceSurveySection">
+                    <h2>What about today product?</h2>
+                    <div class="form-field" v-for="(question,index) in questions">
+                        <label class="question" for="answer">{{question}}</label>
+
+                        <div class="multipleChoiceQuestion" v-if="options[index]" v-for="option in options[index]">
+                            <input type="radio" v-model="answers[index]" :value="option" :id="option" required>
+                            <label :for="option">{{option}}</label>
+                        </div>
+
+                        <div class="productOpenQuestion" v-if="!options[index]">
+                                            <textarea id="answer" v-model="answers[index]" v-on:keyup="charCount(index)"
+                                                      rows="5" cols="30" minlength="2" maxlength="100" required></textarea>
+                            <div id="the-count">
+                                <span id="current"> {{ totalCharacters }}</span>
+                                <span id="maximum">/ 150</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="buttons">
+                        <button type="reset" class="reset">Cancel</button>
+                        <button type="submit">Next</button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="section2" v-if = "section2">
+                <form v-on:reset.prevent="resetSection2Form" v-on:submit.prevent="submitSurvey">
+
+                    <h2>Tell us something about you!</h2>
+
+                    <div class="form-field">
+                        <label class="question" for="age">What's your age?</label>
+                        <input v-model.number="age" type="number" min="0" max="99" id="age"/>
+                    </div>
+
+                    <div class="form-field">
+                        <label class="question">What's your sex? </label> <br>
+                        <div class ="multipleChoiceQuestion">
+                            <input type="radio" id="male" v-model="sex" value=0>
+                            <label for="male">Male</label>
+                            <br>
+                            <input type="radio" id="female" v-model="sex" value=1>
+                            <label for="female">Female</label>
+                        </div>
+                    </div>
+
+                    <div class="form-field">
+                        <label class="question" for="expertiseLevel">Select your expertise level</label>
+                        <select id="expertiseLevel" v-model="explvl">
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+
+                    <div class="buttons">
+                        <button type="reset" class="reset">Cancel</button>
+                        <button v-on:click="()=>{section1 = true; section2 = false}">Previous</button>
+                        <button type="submit">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="leaderBoard"  v-if = "leaderboard">
+            <header>
+                <h1>LeaderBoard</h1>
+            </header>
+            <div class="scores">
+                <table>
+                    <th>Position</th>
+                    <th scope="col">Username</th>
+                    <th scope="col">Score</th>
+                    <tr class="score" v-for="score in scores">
+                        <td></td>
+                        <td>{{ score[0] }}</td>
+                        <td>{{ score[1] }}</td>
+                    </tr>
+                </table>
+                <div class="buttons">
+                    <button v-on:click="()=>{homepage = true; leaderboard = false}">Back</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
