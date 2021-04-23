@@ -1,6 +1,10 @@
 package it.polimi.db2.coolSurveysWEB.controllers;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import it.polimi.db2.coolSurveysWEB.utils.ResponseQuestionnaire;
 import it.polimi.db2.coolsurveys.entities.Question;
 import it.polimi.db2.coolsurveys.entities.Questionnaire;
@@ -13,6 +17,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -96,7 +102,7 @@ public class HandleSurvey extends HttpServlet {
 
         //Create questions
         List<ResponseQuestionnaire.ResponseQuestion> questions = q.getQuestions().stream().map(
-                question -> new ResponseQuestionnaire.ResponseQuestion(question.getId(), question.getQuestion())
+                question -> new ResponseQuestionnaire.ResponseQuestion(question.getId(), question.getQuestion(), 1)
         ).collect(Collectors.toList());
 
         //Renumber questions from 1 on
@@ -115,6 +121,9 @@ public class HandleSurvey extends HttpServlet {
         //Add questions to questionnaire
         questionnaire.setQuestions(questions);
 
+        //Add permanent questions
+        addPermanentQuestions(questionnaire);
+
         return questionnaire;
     }
 
@@ -125,6 +134,37 @@ public class HandleSurvey extends HttpServlet {
                         .filter(q -> q.getQuestion().equals(responseQuestion.getQuestion()))
                         .collect(Collectors.toList())
                         .get(0);
+    }
+
+    protected void addPermanentQuestions(ResponseQuestionnaire questionnaire) {
+
+        Reader reader = new InputStreamReader(this.getClass().getResourceAsStream("/permanentQuestions.json"));
+        Gson gson = new Gson();
+        JsonArray jsonArray = gson.fromJson(reader, JsonArray.class);
+
+        List<JsonObject> jsonQuestions = new ArrayList<>();
+        jsonArray.forEach((question) -> jsonQuestions.add(question.getAsJsonObject()));
+
+        List<ResponseQuestionnaire.ResponseQuestion> questions = new ArrayList<>();
+        int i = questionnaire.getNumberOfQuestions();
+        for (JsonObject q : jsonQuestions) {
+            i++;
+            ResponseQuestionnaire.ResponseQuestion question = new ResponseQuestionnaire.ResponseQuestion(i, q.get("question").getAsString(), 2);
+            List<String> stringOptions = new ArrayList<>();
+            q.get("options").getAsJsonArray().forEach((option) -> stringOptions.add(option.getAsString()));
+
+            int j = 1;
+            List<ResponseQuestionnaire.ResponseOption> options = new ArrayList<>();
+            for(String optionText : stringOptions) {
+                options.add(new ResponseQuestionnaire.ResponseOption(j, optionText));
+                j++;
+            }
+            question.setOptions(options);
+
+            questions.add(question);
+        }
+
+        questionnaire.addQuestions(questions);
     }
 
 }

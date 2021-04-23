@@ -50,8 +50,8 @@ class HandleSurveyTest {
         questionnaire.setQuestions(List.of(question, question2));
 
         ResponseQuestionnaire responseQuestionnaire = new ResponseQuestionnaire(questionnaireName, photo, null);
-        ResponseQuestionnaire.ResponseQuestion responseQuestion = new ResponseQuestionnaire.ResponseQuestion(1, questionText);
-        ResponseQuestionnaire.ResponseQuestion responseQuestion2 = new ResponseQuestionnaire.ResponseQuestion(2, question2Text);
+        ResponseQuestionnaire.ResponseQuestion responseQuestion = new ResponseQuestionnaire.ResponseQuestion(1, questionText, 1);
+        ResponseQuestionnaire.ResponseQuestion responseQuestion2 = new ResponseQuestionnaire.ResponseQuestion(2, question2Text, 1);
         ResponseQuestionnaire.ResponseOption responseOption = new ResponseQuestionnaire.ResponseOption(1, optionText);
         ResponseQuestionnaire.ResponseOption responseOption2 = new ResponseQuestionnaire.ResponseOption(2, option2Text);
         responseQuestion.setOptions(List.of(responseOption, responseOption2));
@@ -80,6 +80,7 @@ class HandleSurveyTest {
         handleSurvey.doGet(request, response);
 
         if (responseQuestionnaire != null) {
+            handleSurvey.addPermanentQuestions(responseQuestionnaire);
 //            String responseQuestionnaireJson = new Gson().toJson(responseQuestionnaire);
 //            assertEquals(responseQuestionnaireJson.trim(), stringWriter.toString().trim());
             ResponseQuestionnaire createdResponse = new Gson().fromJson(stringWriter.toString(), ResponseQuestionnaire.class);

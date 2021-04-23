@@ -75,8 +75,6 @@ let index = new Vue ({
             }
             let object = mapToObj(questionsAnswersMap);
 
-            let json = JSON.stringify(object);
-
             axios.post("./HandleSurvey", {
                 questions: object
             }).then(response => {

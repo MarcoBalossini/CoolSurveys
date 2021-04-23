@@ -1,0 +1,23 @@
+[
+  {
+    "question": "What is your age?",
+    "options": []
+  },
+  {
+    "question": "What is your sex?",
+    "options": [
+      "Male",
+      "Female",
+      "Non-binary",
+      "Dunno ・_・"
+    ]
+  },
+  {
+    "question": "What is your expertise level (whatever it means)?",
+    "options": [
+      "Low",
+      "Medium",
+      "High"
+    ]
+  }
+]

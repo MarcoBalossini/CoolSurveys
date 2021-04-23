@@ -13,10 +13,12 @@ public class ResponseQuestionnaire {
         private int number;
         private String question;
         private List<ResponseOption> options = new ArrayList<>();
+        int section;
 
-        public ResponseQuestion(int number, String question) {
+        public ResponseQuestion(int number, String question, int section) {
             this.number = number;
             this.question = question;
+            this.section = section;
         }
 
         public void setOptions(List<ResponseOption> options) {
@@ -47,7 +49,7 @@ public class ResponseQuestionnaire {
     public static class ResponseOption {
 
         private int optionNumber;
-        private String text;
+        private final String text;
 
         public ResponseOption(int optionNumber, String text) {
             this.optionNumber = optionNumber;
@@ -84,6 +86,17 @@ public class ResponseQuestionnaire {
 
     public void setQuestions(List<ResponseQuestion> questions) {
         this.questions = questions;
+    }
+
+    public void addQuestions(List<ResponseQuestion> questions) {
+        List<ResponseQuestion> list = new ArrayList<>();
+        list.addAll(this.questions);
+        list.addAll(questions);
+        this.questions = list;
+    }
+
+    public int getNumberOfQuestions() {
+        return questions.size();
     }
 
     @Override
