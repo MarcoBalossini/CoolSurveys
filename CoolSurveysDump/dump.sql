@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: cool_surveys
 -- ------------------------------------------------------
--- Server version       8.0.21
+-- Server version	8.0.21
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -32,7 +32,7 @@ CREATE TABLE `answer` (
                           KEY `answer/question_idx` (`question_id`),
                           CONSTRAINT `answer/question` FOREIGN KEY (`question_id`) REFERENCES `question` (`question_id`) ON DELETE CASCADE ON UPDATE CASCADE,
                           CONSTRAINT `answer/user` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -41,7 +41,6 @@ CREATE TABLE `answer` (
 
 LOCK TABLES `answer` WRITE;
 /*!40000 ALTER TABLE `answer` DISABLE KEYS */;
-INSERT INTO `answer` VALUES (1,104,14,'u r my bitch'),(9,105,14,'ok i answer'),(10,106,14,'heyyy'),(11,107,14,'holaaaaa');
 /*!40000 ALTER TABLE `answer` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -55,7 +54,8 @@ UNLOCK TABLES;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `answer_BEFORE_INSERT` BEFORE INSERT ON `answer` FOR EACH ROW BEGIN
     IF EXISTS (SELECT word FROM bad_words WHERE new.answer LIKE concat('%', concat(word, '%'))) THEN
-        UPDATE `user` SET `blocked_until` = TIMESTAMPADD(MONTH, 1, `blocked_until`) WHERE `user_id` = new.`user_id`;
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = "Bad Word Found";
     END IF;
 END */;;
 DELIMITER ;
@@ -104,7 +104,7 @@ CREATE TABLE `credentials` (
                                UNIQUE KEY `user_id_UNIQUE` (`user_id`),
                                UNIQUE KEY `username_UNIQUE` (`username`),
                                UNIQUE KEY `mail_UNIQUE` (`mail`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -113,7 +113,6 @@ CREATE TABLE `credentials` (
 
 LOCK TABLES `credentials` WRITE;
 /*!40000 ALTER TABLE `credentials` DISABLE KEYS */;
-INSERT INTO `credentials` VALUES (14,'pass','user','user@user.com',0);
 /*!40000 ALTER TABLE `credentials` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -131,7 +130,7 @@ CREATE TABLE `options` (
                            PRIMARY KEY (`option_id`),
                            KEY `option/question_idx` (`question_id`),
                            CONSTRAINT `option/question` FOREIGN KEY (`question_id`) REFERENCES `question` (`question_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -157,7 +156,7 @@ CREATE TABLE `question` (
                             PRIMARY KEY (`question_id`),
                             KEY `questionnaire_idx` (`questionnaire_id`),
                             CONSTRAINT `questionnaire/question` FOREIGN KEY (`questionnaire_id`) REFERENCES `questionnaire` (`q_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=108 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=167 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -166,7 +165,6 @@ CREATE TABLE `question` (
 
 LOCK TABLES `question` WRITE;
 /*!40000 ALTER TABLE `question` DISABLE KEYS */;
-INSERT INTO `question` VALUES (104,69,'question1?'),(105,69,'Nuova domanda hihihi'),(106,70,'Domanda1'),(107,70,'Domanda2');
 /*!40000 ALTER TABLE `question` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -181,10 +179,10 @@ CREATE TABLE `questionnaire` (
                                  `q_id` int NOT NULL AUTO_INCREMENT,
                                  `name` varchar(32) NOT NULL,
                                  `photo` blob NOT NULL COMMENT 'Photo_path non è unica in quanto si potrebbe riproporre un questionario',
-                                 `date` datetime NOT NULL,
+                                 `date` date NOT NULL,
                                  PRIMARY KEY (`q_id`),
                                  UNIQUE KEY `name_UNIQUE` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=71 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=118 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -193,7 +191,6 @@ CREATE TABLE `questionnaire` (
 
 LOCK TABLES `questionnaire` WRITE;
 /*!40000 ALTER TABLE `questionnaire` DISABLE KEYS */;
-INSERT INTO `questionnaire` VALUES (69,'questionaire_answer_test',_binary '\0\0\0','2021-04-11 11:23:59'),(70,'test2',_binary 'asd','2021-05-02 00:00:00');
 /*!40000 ALTER TABLE `questionnaire` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -225,7 +222,6 @@ CREATE TABLE `submission` (
 
 LOCK TABLES `submission` WRITE;
 /*!40000 ALTER TABLE `submission` DISABLE KEYS */;
-INSERT INTO `submission` VALUES (14,69,1,22,1,3),(14,70,0,25,NULL,NULL);
 /*!40000 ALTER TABLE `submission` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -260,12 +256,12 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `submission_AFTER_UPDATE` AFTER UPDATE ON `submission` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `user submits` AFTER UPDATE ON `submission` FOR EACH ROW BEGIN
     IF (OLD.`submitted` = 0 and NEW.`submitted` = 1)
     THEN
         UPDATE `user` SET `points` = `points` +
-                                     (SELECT count(*) FROM `question` WHERE `questionnaire_id` = OLD.`questionnaire_id`) +
-                                     IF(NEW.`age` <> NULL, 2, 0) + IF(NEW.`sex` <> NULL, 2, 0) + IF(NEW.`expertise_level` <> NULL, 2, 0)
+                                     ((SELECT count(*) FROM `question` WHERE `questionnaire_id` = OLD.`questionnaire_id`) +
+                                      IF(NEW.`age` <> NULL, 2, 0) + IF(NEW.`sex` <> NULL, 2, 0) + IF(NEW.`expertise_level` <> NULL, 2, 0))
         WHERE `user_id` = OLD.`user_id`;
     END IF;
 END */;;
@@ -297,7 +293,6 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (14,6,'2021-05-11 11:23:59');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -310,4 +305,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-04-14  9:43:08
+-- Dump completed on 2021-04-28 16:43:28

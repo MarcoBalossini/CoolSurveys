@@ -9,6 +9,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class QuestionnaireDAOTest extends DAOTest {
         questionList.add(new Question("question2?"));
 
         try {
-            Questionnaire questionnaire = dao.insertQuestionnaire("questionnaire1", smallPhoto, questionList);
+            Questionnaire questionnaire = dao.insertQuestionnaire(LocalDate.now(), "questionnaire1", smallPhoto, questionList);
             em.getTransaction().commit();
 
         } catch (AlreadyExistsException e) {
@@ -76,7 +77,7 @@ public class QuestionnaireDAOTest extends DAOTest {
         q1.setOptions(List.of(new Option("option1"), new Option("option2")));
 
         try {
-            Questionnaire questionnaire = dao.insertQuestionnaire("questionnaire1", smallPhoto, List.of(q1));
+            Questionnaire questionnaire = dao.insertQuestionnaire(LocalDate.now(), "questionnaire1", smallPhoto, List.of(q1));
             em.getTransaction().commit();
 
         } catch (AlreadyExistsException e) {

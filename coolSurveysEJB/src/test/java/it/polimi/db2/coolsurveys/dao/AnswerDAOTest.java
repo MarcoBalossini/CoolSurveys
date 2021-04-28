@@ -9,9 +9,13 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import javax.persistence.PersistenceException;
+import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class AnswerDAOTest extends DAOTest {
@@ -26,6 +30,7 @@ public class AnswerDAOTest extends DAOTest {
     private static final String MAIL = "user@user.com";
     private static final String TEXT1 = "my answer";
     private static final String TEXT2 = "my modified answer";
+    private static final String BAD_TEXT = "bitch";
 
 
     @Test
@@ -40,7 +45,7 @@ public class AnswerDAOTest extends DAOTest {
 
         try {
 
-            Questionnaire q = questionnaireDAO.insertQuestionnaire(QUESTIONNAIRE, smallPhoto, questionList);
+            Questionnaire q = questionnaireDAO.insertQuestionnaire(LocalDate.now(), QUESTIONNAIRE, smallPhoto, questionList);
 
             answerDAO.insertAnswer(q.getQuestions().get(0), TEXT1, userDAO.insertUser(USER, PASSWORD, MAIL));
             em.getTransaction().commit();
@@ -71,6 +76,33 @@ public class AnswerDAOTest extends DAOTest {
             System.out.println(e.getMessage());
             fail();
         }
+
+    }
+
+    @Test
+    public void badWordTest() {
+        em.getTransaction().begin();
+
+        byte[] smallPhoto = {0, 0, 0};
+
+        List<Question> questionList = new ArrayList<>();
+
+        questionList.add(new Question("question1?"));
+
+        try {
+
+            Questionnaire q = questionnaireDAO.insertQuestionnaire(LocalDate.now(), QUESTIONNAIRE, smallPhoto, questionList);
+
+            assertThrows(PersistenceException.class, () -> answerDAO.insertAnswer(q.getQuestions().get(0), BAD_TEXT, userDAO.insertUser(USER, PASSWORD, MAIL)));
+            //answerDAO.insertAnswer(q.getQuestions().get(0), BAD_TEXT, userDAO.insertUser(USER, PASSWORD, MAIL));
+            em.getTransaction().rollback();
+
+        } catch (AlreadyExistsException e) {
+            System.out.println(e.getMessage());
+            em.getTransaction().rollback();
+            fail();
+        }
+
 
     }
 

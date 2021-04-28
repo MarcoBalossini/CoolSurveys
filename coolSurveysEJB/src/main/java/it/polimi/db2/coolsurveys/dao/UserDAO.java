@@ -5,6 +5,8 @@ import it.polimi.db2.coolsurveys.dao.exceptions.NotFoundException;
 import it.polimi.db2.coolsurveys.entities.Credentials;
 import it.polimi.db2.coolsurveys.entities.User;
 
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -12,6 +14,8 @@ import javax.persistence.PersistenceContext;
 public class UserDAO {
     @PersistenceContext(unitName = "coolSurveys")
     private EntityManager em;
+
+    private static final int monthsToBeBanned = 1;
 
     protected UserDAO(EntityManager em) {
         this.em = em;
@@ -77,6 +81,11 @@ public class UserDAO {
         return user;
     }
 
+    public User banUser(User user) {
+        user.setBlockedUntil(user.getBlockedUntil().plusMonths(monthsToBeBanned));
+        em.merge(user);
 
+        return user;
+    }
 
 }

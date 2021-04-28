@@ -7,7 +7,7 @@ import it.polimi.db2.coolsurveys.entities.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.transaction.UserTransaction;
+import javax.transaction.Transactional;
 import java.util.List;
 
 public class AnswerDAO {
@@ -39,6 +39,8 @@ public class AnswerDAO {
         }
 
         em.persist(answer);
+
+        em.flush();
 
         return answer;
     }

@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import it.polimi.db2.coolSurveysWEB.utils.ResponseQuestionnaire;
+import it.polimi.db2.coolsurveys.dao.exceptions.AlreadyExistsException;
+import it.polimi.db2.coolsurveys.dao.exceptions.BlockedAccountException;
 import it.polimi.db2.coolsurveys.entities.Question;
 import it.polimi.db2.coolsurveys.entities.Questionnaire;
 import it.polimi.db2.coolsurveys.services.ISurveysService;
@@ -39,7 +41,14 @@ public class HandleSurvey extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Questionnaire questionnaire = surveysService.retrieveDailySurvey();
+        Questionnaire questionnaire = null;
+        try {
+            questionnaire = surveysService.retrieveDailySurvey((String) request.getSession().getAttribute("user"));
+        } catch (AlreadyExistsException e) {
+            e.printStackTrace();
+        } catch (BlockedAccountException e) {
+            e.printStackTrace();
+        }
 
         if (questionnaire == null) {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

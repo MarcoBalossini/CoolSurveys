@@ -2,13 +2,15 @@ package it.polimi.db2.coolsurveys.entities;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 @NamedQueries({
         @NamedQuery(name = "Questionnaire.selectByName",
-                query = "select q from Questionnaire q where q.name = :name")
+                query = "select q from Questionnaire q where q.name = :name"),
+        @NamedQuery(name = "Questionnaire.selectByDate",
+                query = "select q from Questionnaire q where q.date = :date")
 })
 
 @Entity
@@ -24,7 +26,7 @@ public class Questionnaire implements Serializable {
     private String name;
 
     @Column(name = "date", nullable = false)
-    private LocalDateTime date = LocalDateTime.now();
+    private LocalDate date;
 
     /**
      * Photo_path not unique since a questionnaire may be re-proposed
@@ -48,17 +50,17 @@ public class Questionnaire implements Serializable {
         this.photo = photo;
     }
 
-    public Questionnaire(String name, byte[] photo, LocalDateTime date) {
+    public Questionnaire(String name, byte[] photo, LocalDate date) {
         this.name = name;
         this.photo = photo;
         this.date = date;
     }
 
-    public LocalDateTime getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(LocalDateTime date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

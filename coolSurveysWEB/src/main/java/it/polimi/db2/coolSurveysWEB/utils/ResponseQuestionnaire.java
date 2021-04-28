@@ -1,5 +1,6 @@
 package it.polimi.db2.coolSurveysWEB.utils;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -74,11 +75,11 @@ public class ResponseQuestionnaire {
     }
 
     private String name;
-    private LocalDateTime date;
+    private LocalDate date;
     private byte[] photo;
     private List<ResponseQuestion> questions = new ArrayList<>();
 
-    public ResponseQuestionnaire(String name, byte[] photo, LocalDateTime date) {
+    public ResponseQuestionnaire(String name, byte[] photo, LocalDate date) {
         this.name = name;
         this.photo = photo;
         this.date = date;

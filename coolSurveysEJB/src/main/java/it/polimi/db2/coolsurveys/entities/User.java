@@ -25,7 +25,7 @@ public class User implements Serializable {
     private Integer points = 0;
 
     @Column(name = "blocked_until")
-    private LocalDateTime blocked_until = LocalDateTime.now();
+    private LocalDateTime blockedUntil = LocalDateTime.now();
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
     private List<Answer> answers;
@@ -77,12 +77,12 @@ public class User implements Serializable {
         this.points = points;
     }
 
-    public LocalDateTime getBlocked_until() {
-        return blocked_until;
+    public LocalDateTime getBlockedUntil() {
+        return blockedUntil;
     }
 
-    public void setBlocked_until(LocalDateTime blocked_until) {
-        this.blocked_until = blocked_until;
+    public void setBlockedUntil(LocalDateTime blocked_until) {
+        this.blockedUntil = blocked_until;
     }
 
 }

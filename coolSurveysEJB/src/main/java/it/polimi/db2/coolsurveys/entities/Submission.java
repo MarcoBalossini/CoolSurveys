@@ -3,6 +3,10 @@ package it.polimi.db2.coolsurveys.entities;
 import javax.persistence.*;
 import java.io.Serializable;
 
+@NamedQueries({
+        @NamedQuery(name = "Submission.get", query = "Select s from Submission s where s.id.userId = :userId and s.id.questionnaireId = :questionnaireId")
+})
+
 @Entity
 @Table(name = "submission")
 public class Submission implements Serializable {

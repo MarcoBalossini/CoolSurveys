@@ -1,5 +1,6 @@
 package it.polimi.db2.coolsurveys.dao;
 
+import it.polimi.db2.coolsurveys.dao.exceptions.AlreadyExistsException;
 import it.polimi.db2.coolsurveys.dao.exceptions.BlockedAccountException;
 import it.polimi.db2.coolsurveys.entities.Questionnaire;
 import it.polimi.db2.coolsurveys.entities.Submission;
@@ -17,19 +18,21 @@ public class SubmissionDAO {
         this.em = em;
     }
 
-    public Submission insert(User user, Questionnaire questionnaire) throws BlockedAccountException {
+    public Submission insert(User user, Questionnaire questionnaire) throws BlockedAccountException, AlreadyExistsException {
         if(user == null || questionnaire == null)
             throw new IllegalArgumentException();
 
-        LocalDateTime banTime = user.getBlocked_until();
+        LocalDateTime banTime = user.getBlockedUntil();
 
         if(banTime.isAfter(LocalDateTime.now()))
             throw new BlockedAccountException(banTime);
 
 
-        //TODO: check if this submission already exists? if yes current behaviour erases statistical data
-        Submission submission = new Submission(user, questionnaire);
+        if(em.createNamedQuery("Submission.get", Submission.class).setParameter("userId", user.getCredentials().getUser_id())
+            .setParameter("questionnaireId", questionnaire.getQId()).getResultList().size() > 0)
+            throw new AlreadyExistsException("Submission already started");
 
+        Submission submission = new Submission(user, questionnaire);
         em.persist(submission);
 
         return submission;
@@ -41,7 +44,7 @@ public class SubmissionDAO {
 
     public void submit(Submission submission) throws BlockedAccountException {
 
-        LocalDateTime banTime = submission.getUser().getBlocked_until();
+        LocalDateTime banTime = submission.getUser().getBlockedUntil();
 
         if(banTime.isAfter(LocalDateTime.now()))
             throw new BlockedAccountException(banTime);

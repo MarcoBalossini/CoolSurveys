@@ -1,8 +1,9 @@
 package it.polimi.db2.coolSurveysWEB.controllers;
 
 import com.google.gson.Gson;
-import it.polimi.db2.coolSurveysWEB.utils.FormatUtils;
 import it.polimi.db2.coolSurveysWEB.utils.ResponseQuestionnaire;
+import it.polimi.db2.coolsurveys.dao.exceptions.AlreadyExistsException;
+import it.polimi.db2.coolsurveys.dao.exceptions.BlockedAccountException;
 import it.polimi.db2.coolsurveys.entities.Option;
 import it.polimi.db2.coolsurveys.entities.Question;
 import it.polimi.db2.coolsurveys.entities.Questionnaire;
@@ -13,12 +14,12 @@ import org.junit.jupiter.api.Test;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -66,12 +67,23 @@ class HandleSurveyTest {
         HttpServletResponse response = mock(HttpServletResponse.class);
         ISurveysService surveysService = mock(SurveysService.class);
 
+        HttpSession session = mock(HttpSession.class);
+
         HandleSurvey handleSurvey = new HandleSurvey();
         Field surveyServiceField = handleSurvey.getClass().getDeclaredField("surveysService");
         surveyServiceField.setAccessible(true);
         surveyServiceField.set(handleSurvey, surveysService);
 
-        when(surveysService.retrieveDailySurvey()).thenReturn(questionnaire);
+        when(request.getSession()).thenReturn(session);
+        when(session.getAttribute("user")).thenReturn("user");
+
+        try {
+            when(surveysService.retrieveDailySurvey("user")).thenReturn(questionnaire);
+        } catch (AlreadyExistsException e) {
+            e.printStackTrace();
+        } catch (BlockedAccountException e) {
+            e.printStackTrace();
+        }
 
         StringWriter stringWriter = new StringWriter();
         PrintWriter writer = new PrintWriter(stringWriter);

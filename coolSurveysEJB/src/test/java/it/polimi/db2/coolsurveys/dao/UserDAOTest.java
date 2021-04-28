@@ -1,6 +1,7 @@
 package it.polimi.db2.coolsurveys.dao;
 
 import it.polimi.db2.coolsurveys.dao.exceptions.AlreadyExistsException;
+import it.polimi.db2.coolsurveys.dao.exceptions.NotFoundException;
 import it.polimi.db2.coolsurveys.entities.User;
 
 import org.junit.jupiter.api.AfterEach;
@@ -18,10 +19,33 @@ public class UserDAOTest extends DAOTest{
         try {
             User u = dao.insertUser("user1", "user1password", "user1@user.com");
         } catch (AlreadyExistsException e) {
+            System.out.println(e.getMessage());
             fail();
         }
         em.getTransaction().commit();
 
+    }
+
+    @Test
+    public void banUser() {
+
+        insertUser();
+
+        em.getTransaction().begin();
+
+        UserDAO dao = new UserDAO(em);
+
+        try {
+            User u = dao.retrieveUserByUsername("user1");
+
+            dao.banUser(u);
+
+        } catch (NotFoundException e) {
+            System.out.println(e.getMessage());
+            fail();
+        }
+
+        em.getTransaction().commit();
     }
 
     @AfterEach

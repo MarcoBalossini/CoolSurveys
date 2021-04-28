@@ -7,7 +7,7 @@ import it.polimi.db2.coolsurveys.entities.*;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.List;
 
 public class QuestionnaireDAO {
@@ -18,7 +18,7 @@ public class QuestionnaireDAO {
         this.em = em;
     }
 
-    public Questionnaire insertQuestionnaire (String name, byte[] photo, List<Question> questionList) throws AlreadyExistsException {
+    public Questionnaire insertQuestionnaire (LocalDate date, String name, byte[] photo, List<Question> questionList) throws AlreadyExistsException {
 
         if(name == null || photo == null || questionList == null || name.isEmpty() || questionList.isEmpty() || photo.length == 0)
             throw new IllegalArgumentException();
@@ -28,6 +28,7 @@ public class QuestionnaireDAO {
             throw new AlreadyExistsException("Questionnaire already exists");
 
         Questionnaire questionnaire = new Questionnaire();
+        questionnaire.setDate(date);
         questionnaire.setName(name);
         questionnaire.setPhoto(photo);
 
@@ -52,6 +53,17 @@ public class QuestionnaireDAO {
             return em.createNamedQuery("Questionnaire.selectByName", Questionnaire.class).setParameter("name", name).getSingleResult();
         } catch (NoResultException e) {
             throw new NotFoundException("Questionnaire \"" + name + "\" not found");
+        }
+    }
+
+    public Questionnaire getByDate(LocalDate date) throws NotFoundException {
+        if(date == null)
+            throw new IllegalArgumentException();
+
+        try {
+            return em.createNamedQuery("Questionnaire.selectByDate", Questionnaire.class).setParameter("date", date).getSingleResult();
+        } catch (NoResultException e) {
+            throw new NotFoundException("No Questionnaire defined for the date " + date.toString());
         }
     }
 
