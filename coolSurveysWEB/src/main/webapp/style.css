@@ -17,7 +17,9 @@ body {
     display: inline-block;
     margin-right: 1em;
     margin-bottom: 6px;
+    margin-top: 6px;
 }
+
 
 .multipleChoiceQuestion label {
     margin-left: 1em;
@@ -97,7 +99,7 @@ span {
     font-size: inherit;
 }
 
-#expertiseLevel {
+#answer2Options {
     display: block;
     padding: .375rem .75rem;
     font-size: 1rem;
@@ -150,7 +152,7 @@ button:hover{
     }
 }
 
-button, input, optgroup, select {
+button, input, optgroup, select, option {
     margin: 0;
     font-family: inherit;
     font-size: inherit;

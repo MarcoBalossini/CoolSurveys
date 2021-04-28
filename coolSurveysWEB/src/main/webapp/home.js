@@ -1,9 +1,13 @@
 let index = new Vue ({
     el : "#homeApp",
     data: {
-        answers: [],
-        questions: ['Do you like the daily product?', 'Do you find it comfortable?', 'Do you think it is durable?'],
-        options: [['yes', 'no'], null, [0,1]],
+        answers1: [],
+        answers2: [],
+        questions1: ["Do you like it?", "hello write here."],
+        questions2: ["What's your age?", "ExpLvl", "What's your sex?"],
+        questions2Type: ["number", "options", "radio"],
+        options1: [["No", "Bleah"]],
+        options2: [[], ["low", "medium", "high"], ["male", "female"]],
         age: 0,
         sex: 0,
         explvl: '',
@@ -22,12 +26,19 @@ let index = new Vue ({
     },
     methods:{
         charCount: function(index){
-            this.totalCharacters = this.answers[index].length;
+            this.totalCharacters = this.answers1[index].length;
+        },
+        resetSurvey: function() {
+            this.answers1= [];
+            this.answers2= [];
+            this.questions1= [];
+            this.questions2= [];
+            this.options1= [];
+            this.options2= [];
+            this.questions2Type= [];
         },
         resetAll: function() {
-            this.answers= [];
-            this.questions= [];
-            this.options= null;
+            this.resetSurvey();
             this.sex = 0;
             this.age = 0;
             this.explvl = '';
@@ -53,6 +64,44 @@ let index = new Vue ({
             this.homepage = true;
             this.section2 = false;
         },
+
+        receiveSurvey: function() {
+
+            this.resetSurvey();
+            axios.get("./HandleSurvey")
+                .then(response => {
+                    const survey = response.data;
+                    const questions = survey.questions;
+                    questions.forEach((question)=> {
+                        if (question.section === 1) {
+                            this.questions1.push(question.question);
+                            let tmp = [];
+                            question.options.forEach((option)=> {
+                                tmp.push(option.text);
+                            })
+                            this.options1.push(tmp);
+                        }
+                        else if (question.section === 2) {
+                            this.questions2.push(question.question);
+
+                            //TODO
+                            //this.questions2Type.push(question.type);
+
+                            let tmp = [];
+                            question.options.forEach((option)=> {
+                                tmp.push(option.text);
+                            })
+                            this.options2.push(tmp);
+                        }
+                        else
+                            console.log("Section not found for question n." + question.number);
+                    });
+                })
+                .catch(error => {})
+            this.homepage = false;
+            this.section1 = true;
+        },
+
         advanceSurveySection: function() {
             this.section1 = false;
             this.section2 = true;
@@ -60,8 +109,12 @@ let index = new Vue ({
         submitSurvey: function() {
             let i;
             let questionsAnswersMap = new Map();
-            for (i=0; i < this.questions.length; i++) {
-                questionsAnswersMap.set(this.questions[i], this.answers[i]);
+            for (i=0; i < this.questions1.length; i++) {
+                questionsAnswersMap.set(this.questions1[i], this.answers1[i]);
+            }
+
+            for (i=0; i < this.questions2.length; i++) {
+                questionsAnswersMap.set(this.questions2[i], this.answers2[i]);
             }
 
             function mapToObj(inputMap) {
@@ -86,7 +139,9 @@ let index = new Vue ({
             }).catch(response => {
                 console.log(response.data)
             });
-            //inviare age, sex, explvl, answers
+        },
+        receiveLeaderboard: function() {
+
         }
     }
 });

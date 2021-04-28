@@ -14,7 +14,7 @@
             <h1>HomePage</h1>
             <div class="buttons">
                 <button v-on:click="()=>{leaderboard = true; homepage = false}">LeaderBoard</button>
-                <button v-on:click="()=>{section1 = true; homepage = false}">StartSurvey</button>
+                <button v-on:click="receiveSurvey">StartSurvey</button>
             </div>
         </div>
 
@@ -22,16 +22,15 @@
             <div id="section1" v-if = "section1">
                 <form v-on:reset.prevent="resetSection1Form" v-on:submit.prevent="advanceSurveySection">
                     <h2>What about today product?</h2>
-                    <div class="form-field" v-for="(question,index) in questions">
+                    <div class="form-field" v-for="(question,index) in questions1">
                         <label class="question" for="answer">{{question}}</label>
-
-                        <div class="multipleChoiceQuestion" v-if="options[index]" v-for="option in options[index]">
-                            <input type="radio" v-model="answers[index]" :value="option" :id="option" required>
+                        <div class="multipleChoiceQuestion" v-if="options1[index]" v-for="option in options1[index]">
+                            <input type="radio" v-model="answers1[index]" :value="option" :id="option" required>
                             <label :for="option">{{option}}</label>
                         </div>
 
-                        <div class="productOpenQuestion" v-if="!options[index]">
-                                            <textarea id="answer" v-model="answers[index]" v-on:keyup="charCount(index)"
+                        <div class="productOpenQuestion" v-if="!options1[index]">
+                                            <textarea id="answer" v-model="answers1[index]" v-on:keyup="charCount(index)"
                                                       rows="5" cols="30" minlength="2" maxlength="100" required></textarea>
                             <div id="the-count">
                                 <span id="current"> {{ totalCharacters }}</span>
@@ -51,29 +50,22 @@
 
                     <h2>Tell us something about you!</h2>
 
-                    <div class="form-field">
-                        <label class="question" for="age">What's your age?</label>
-                        <input v-model.number="age" type="number" min="0" max="99" id="age"/>
-                    </div>
+                    <div class="form-field" v-for="(question,index) in questions2">
 
-                    <div class="form-field">
-                        <label class="question">What's your sex? </label> <br>
-                        <div class ="multipleChoiceQuestion">
-                            <input type="radio" id="male" v-model="sex" value=0>
-                            <label for="male">Male</label>
-                            <br>
-                            <input type="radio" id="female" v-model="sex" value=1>
-                            <label for="female">Female</label>
+                        <label v-if= "questions2Type[index] === 'radio'" class="question">{{question}}</label>
+                        <div class="multipleChoiceQuestion" v-if="questions2Type[index] === 'radio'" v-for="option in options2[index]">
+                            <input type="radio" v-model="answers2[index]" :value="option" :id="answer2Radio">
+                            <label :for="answer2Radio">{{option}}</label>
                         </div>
-                    </div>
 
-                    <div class="form-field">
-                        <label class="question" for="expertiseLevel">Select your expertise level</label>
-                        <select id="expertiseLevel" v-model="explvl">
-                            <option value="low">Low</option>
-                            <option value="medium">Medium</option>
-                            <option value="high">High</option>
+                        <label v-if= "questions2Type[index] === 'number'" class="question" for="answer2Num">{{question}}</label>
+                        <input v-model.number="answers2[index]" v-if="questions2Type[index] === 'number'" type="number" min="0" max="99" id="answer2Num"/>
+
+                        <label v-if= "questions2Type[index] === 'options'" class="question" for="answer2Options">{{question}}</label>
+                        <select v-if= "questions2Type[index] === 'options'" id="answer2Options" v-model="answers2[index]">
+                            <option v-for="option in options2[index]" :value="option">{{option}}</option>
                         </select>
+
                     </div>
 
                     <div class="buttons">

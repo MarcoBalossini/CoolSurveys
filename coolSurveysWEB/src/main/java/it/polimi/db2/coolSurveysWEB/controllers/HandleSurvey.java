@@ -2,20 +2,16 @@ package it.polimi.db2.coolSurveysWEB.controllers;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
 import it.polimi.db2.coolSurveysWEB.utils.ResponseQuestionnaire;
 import it.polimi.db2.coolsurveys.entities.Question;
 import it.polimi.db2.coolsurveys.entities.Questionnaire;
-import it.polimi.db2.coolsurveys.services.SurveysService;
+import it.polimi.db2.coolsurveys.services.ISurveysService;
 
 import javax.ejb.EJB;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -25,11 +21,12 @@ import java.util.stream.Collectors;
 /**
  * This servlet handles surveys requests and submissions
  */
-@WebServlet(name = "HandleSurvey", urlPatterns = {"/HandleSurvey"})
+@WebServlet(name = "HandleSurvey", urlPatterns = "/HandleSurvey")
+@MultipartConfig
 public class HandleSurvey extends HttpServlet {
 
-    @EJB(name = "it.polimi.db2.coolsurveys.services/SurveyService")
-    private SurveysService surveysService;
+    @EJB(name = "it.polimi.db2.coolsurveys.services/SurveysService")
+    private ISurveysService surveysService;
 
     /**
      * Respond to daily surveys requests
