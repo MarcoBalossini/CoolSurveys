@@ -11,9 +11,8 @@ public interface IAuthService {
      * @param username The username
      * @param password The password
      * @return The corresponding Credentials object, if existing. Elsewhere null.
-     * @throws Exception When a database error occurs
      */
-    Credentials checkCredentials(String username, String password) throws Exception;
+    Credentials checkCredentials(String username, String password);
 
     /**
      * Find a user by its ID

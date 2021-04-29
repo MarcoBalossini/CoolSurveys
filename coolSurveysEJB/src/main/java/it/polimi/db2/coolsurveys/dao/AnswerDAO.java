@@ -1,15 +1,15 @@
 package it.polimi.db2.coolsurveys.dao;
 
-import it.polimi.db2.coolsurveys.dao.exceptions.AlreadyExistsException;
 import it.polimi.db2.coolsurveys.entities.Answer;
 import it.polimi.db2.coolsurveys.entities.Question;
 import it.polimi.db2.coolsurveys.entities.User;
 
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
 import java.util.List;
 
+@Stateless
 public class AnswerDAO {
     @PersistenceContext(unitName = "coolSurveys")
     private EntityManager em;
@@ -17,6 +17,8 @@ public class AnswerDAO {
     public AnswerDAO(EntityManager em) {
         this.em = em;
     }
+
+    public AnswerDAO() {}
 
     public Answer insertAnswer(Question question, String text, User user) {
 

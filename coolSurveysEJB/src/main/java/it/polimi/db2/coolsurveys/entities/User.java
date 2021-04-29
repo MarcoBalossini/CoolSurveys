@@ -27,7 +27,7 @@ public class User implements Serializable {
     @Column(name = "blocked_until")
     private LocalDateTime blockedUntil = LocalDateTime.now();
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Answer> answers;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")

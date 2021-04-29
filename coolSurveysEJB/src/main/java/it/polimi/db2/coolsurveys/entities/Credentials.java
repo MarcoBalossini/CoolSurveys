@@ -30,13 +30,14 @@ public class Credentials implements Serializable {
     @OneToOne(fetch = FetchType.EAGER, mappedBy = "credentials", orphanRemoval = true)
     private User user;
 
-    public Credentials(int userId, String username, String passwordHash, String mail, boolean admin) {
-        this.userId = userId;
+    public Credentials(String username, String passwordHash, String mail, boolean admin) {
         this.username = username;
         this.passwordHash = passwordHash;
         this.mail = mail;
         this.admin = admin;
     }
+
+
 
     public Credentials() {}
 
@@ -75,4 +76,6 @@ public class Credentials implements Serializable {
     public Integer getUser_id() {
         return userId;
     }
+
+    public void setUserId(int id) {this.userId = id;}
 }

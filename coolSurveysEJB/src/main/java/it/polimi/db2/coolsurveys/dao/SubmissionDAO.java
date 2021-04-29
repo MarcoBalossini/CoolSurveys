@@ -6,10 +6,12 @@ import it.polimi.db2.coolsurveys.entities.Questionnaire;
 import it.polimi.db2.coolsurveys.entities.Submission;
 import it.polimi.db2.coolsurveys.entities.User;
 
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.time.LocalDateTime;
 
+@Stateless
 public class SubmissionDAO {
     @PersistenceContext(unitName = "coolSurveys")
     private EntityManager em;
@@ -17,6 +19,8 @@ public class SubmissionDAO {
     public SubmissionDAO(EntityManager em) {
         this.em = em;
     }
+
+    public SubmissionDAO() {}
 
     public Submission insert(User user, Questionnaire questionnaire) throws BlockedAccountException, AlreadyExistsException {
         if(user == null || questionnaire == null)

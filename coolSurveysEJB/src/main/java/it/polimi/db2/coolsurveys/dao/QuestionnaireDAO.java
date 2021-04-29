@@ -4,12 +4,14 @@ import it.polimi.db2.coolsurveys.dao.exceptions.AlreadyExistsException;
 import it.polimi.db2.coolsurveys.dao.exceptions.NotFoundException;
 import it.polimi.db2.coolsurveys.entities.*;
 
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import java.time.LocalDate;
 import java.util.List;
 
+@Stateless
 public class QuestionnaireDAO {
     @PersistenceContext(unitName = "coolSurveys")
     private EntityManager em;
@@ -17,6 +19,8 @@ public class QuestionnaireDAO {
     public QuestionnaireDAO(EntityManager em) {
         this.em = em;
     }
+
+    public QuestionnaireDAO() {}
 
     public Questionnaire insertQuestionnaire (LocalDate date, String name, byte[] photo, List<Question> questionList) throws AlreadyExistsException {
 

@@ -5,12 +5,12 @@ import it.polimi.db2.coolsurveys.dao.exceptions.NotFoundException;
 import it.polimi.db2.coolsurveys.entities.Credentials;
 import it.polimi.db2.coolsurveys.entities.User;
 
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
+@Stateless
 public class UserDAO {
     @PersistenceContext(unitName = "coolSurveys")
     private EntityManager em;
@@ -23,7 +23,7 @@ public class UserDAO {
 
     public UserDAO() {}
 
-    public User insertUser(String username, String password, String mail) throws AlreadyExistsException {
+    public User insertUser(String username, String password, String mail, boolean admin) throws AlreadyExistsException {
 
 
         System.out.println("Adding user " + username);
@@ -41,6 +41,7 @@ public class UserDAO {
         Credentials newCredentials = new Credentials();
         newUser.setCredentials(newCredentials);
         newCredentials.setUsername(username);
+        newCredentials.setAdmin(admin);
 
         newCredentials.setPassword_hash(password);
         newCredentials.setMail(mail);
@@ -81,11 +82,15 @@ public class UserDAO {
         return user;
     }
 
-    public User banUser(User user) {
+    public void banUser(User user) {
         user.setBlockedUntil(user.getBlockedUntil().plusMonths(monthsToBeBanned));
         em.merge(user);
 
-        return user;
+
+    }
+
+    public User find(int id) {
+        return em.find(User.class, id);
     }
 
 }

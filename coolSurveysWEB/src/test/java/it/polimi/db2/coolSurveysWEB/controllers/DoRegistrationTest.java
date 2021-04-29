@@ -34,7 +34,8 @@ class DoRegistrationTest {
         testMockDB("usrn", "mail@mail", "pwd", "pwd", "Failed registration", null, false);
 
         // Test existing credentials
-        Credentials credentials = new Credentials(1, "a", "b", "c", false);
+        Credentials credentials = new Credentials("a", "b", "c", false);
+        credentials.setUserId(1);
         testMockDB("usrn", "mail@mail", "pwd", "pwd", "Successful registration", credentials, false);
 
         // Test thrown exception

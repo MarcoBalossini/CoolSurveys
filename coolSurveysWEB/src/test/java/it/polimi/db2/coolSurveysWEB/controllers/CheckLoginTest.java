@@ -38,7 +38,8 @@ class CheckLoginTest {
         testFormMockDB("usrn", "pwd", "Invalid credentials", null, false);
 
         //Test correct credentials
-        Credentials credentials = new Credentials(1, "a", "b", "c", false);
+        Credentials credentials = new Credentials("a", "b", "c", false);
+        credentials.setUserId(1);
         testFormMockDB("usrn", "pwd", credentials.getUsername(), credentials, false);
 
         //Test catch
@@ -50,7 +51,8 @@ class CheckLoginTest {
         HttpServletRequest request = mock(HttpServletRequest.class);
         HttpServletResponse response = mock(HttpServletResponse.class);
 
-        Credentials credentials = new Credentials(1, "a", "b", "c", false);
+        Credentials credentials = new Credentials("a", "b", "c", false);
+        credentials.setUserId(1);
         Cookie[] cookiesNoAuth = createTokenCookie(credentials, response, false);
         Cookie[] cookiesWithAuth = createTokenCookie(credentials, response, true);
 

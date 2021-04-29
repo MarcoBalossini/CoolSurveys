@@ -36,7 +36,7 @@ public class SurveysService implements ISurveysService {
     @EJB(name = "it.polimi.db2.coolsurveys.dao/SubmissionDAO")
     protected SubmissionDAO submissionDAO;
 
-    @PersistenceContext(unitName = "coolsurveys")
+    @PersistenceContext(unitName = "coolSurveys")
     protected EntityManager em;
 
     /**

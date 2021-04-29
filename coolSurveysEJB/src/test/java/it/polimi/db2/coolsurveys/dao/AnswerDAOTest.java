@@ -10,7 +10,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javax.persistence.PersistenceException;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +46,7 @@ public class AnswerDAOTest extends DAOTest {
 
             Questionnaire q = questionnaireDAO.insertQuestionnaire(LocalDate.now(), QUESTIONNAIRE, smallPhoto, questionList);
 
-            answerDAO.insertAnswer(q.getQuestions().get(0), TEXT1, userDAO.insertUser(USER, PASSWORD, MAIL));
+            answerDAO.insertAnswer(q.getQuestions().get(0), TEXT1, userDAO.insertUser(USER, PASSWORD, MAIL, false));
             em.getTransaction().commit();
 
         } catch (AlreadyExistsException e) {
@@ -93,7 +92,7 @@ public class AnswerDAOTest extends DAOTest {
 
             Questionnaire q = questionnaireDAO.insertQuestionnaire(LocalDate.now(), QUESTIONNAIRE, smallPhoto, questionList);
 
-            assertThrows(PersistenceException.class, () -> answerDAO.insertAnswer(q.getQuestions().get(0), BAD_TEXT, userDAO.insertUser(USER, PASSWORD, MAIL)));
+            assertThrows(PersistenceException.class, () -> answerDAO.insertAnswer(q.getQuestions().get(0), BAD_TEXT, userDAO.insertUser(USER, PASSWORD, MAIL, false)));
             //answerDAO.insertAnswer(q.getQuestions().get(0), BAD_TEXT, userDAO.insertUser(USER, PASSWORD, MAIL));
             em.getTransaction().rollback();
 

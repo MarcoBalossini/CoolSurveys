@@ -17,7 +17,7 @@ public class UserDAOTest extends DAOTest{
 
         UserDAO dao = new UserDAO(em);
         try {
-            User u = dao.insertUser("user1", "user1password", "user1@user.com");
+            User u = dao.insertUser("user1", "user1password", "user1@user.com", false);
         } catch (AlreadyExistsException e) {
             System.out.println(e.getMessage());
             fail();
