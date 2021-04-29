@@ -3,7 +3,7 @@ package it.polimi.db2.coolSurveysWEB.controllers;
 import com.google.gson.JsonObject;
 import it.polimi.db2.coolSurveysWEB.auth.AuthManager;
 import it.polimi.db2.coolSurveysWEB.auth.exceptions.TokenException;
-import it.polimi.db2.coolSurveysWEB.utils.FormatUtils;
+import it.polimi.db2.coolSurveysWEB.utils.JsonUtils;
 import it.polimi.db2.coolsurveys.entities.Credentials;
 import it.polimi.db2.coolsurveys.services.IAuthService;
 
@@ -116,7 +116,7 @@ public class CheckLogin extends HttpServlet {
 
         JsonObject jsonObject;
         try {
-            jsonObject = FormatUtils.getJSON(request);
+            jsonObject = JsonUtils.getJsonFromRequest(request);
             pwd = jsonObject.get(PASSWORD).getAsString();
             usrn = jsonObject.get(USERNAME).getAsString();
 

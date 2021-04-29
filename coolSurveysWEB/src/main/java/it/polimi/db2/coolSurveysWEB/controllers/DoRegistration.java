@@ -1,7 +1,7 @@
 package it.polimi.db2.coolSurveysWEB.controllers;
 
 import com.google.gson.JsonObject;
-import it.polimi.db2.coolSurveysWEB.utils.FormatUtils;
+import it.polimi.db2.coolSurveysWEB.utils.JsonUtils;
 import it.polimi.db2.coolsurveys.entities.Credentials;
 import it.polimi.db2.coolsurveys.services.IAuthService;
 
@@ -55,7 +55,7 @@ public class DoRegistration extends HttpServlet {
 
         JsonObject jsonObject;
         try {
-            jsonObject = FormatUtils.getJSON(request);
+            jsonObject = JsonUtils.getJsonFromRequest(request);
             usrn = jsonObject.get(USERNAME).getAsString();
             email = jsonObject.get(MAIL).getAsString();
             pwd = jsonObject.get(PASSWORD).getAsString();

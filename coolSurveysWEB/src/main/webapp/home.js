@@ -129,7 +129,7 @@ let index = new Vue ({
             let object = mapToObj(questionsAnswersMap);
 
             axios.post("./HandleSurvey", {
-                questions: object
+                object
             }).then(response => {
                 this.leaderboard = true;
                 this.section2 = false;
