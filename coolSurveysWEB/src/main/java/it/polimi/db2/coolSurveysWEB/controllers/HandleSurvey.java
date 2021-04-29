@@ -3,6 +3,8 @@ package it.polimi.db2.coolSurveysWEB.controllers;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonObject;
+import it.polimi.db2.coolSurveysWEB.utils.JsonUtils;
 import it.polimi.db2.coolSurveysWEB.utils.ResponseQuestionnaire;
 import it.polimi.db2.coolsurveys.dao.exceptions.AlreadyExistsException;
 import it.polimi.db2.coolsurveys.dao.exceptions.BlockedAccountException;
@@ -15,8 +17,6 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -43,11 +43,15 @@ public class HandleSurvey extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Questionnaire questionnaire = null;
         try {
-            questionnaire = surveysService.retrieveDailySurvey((String) request.getSession().getAttribute("user"));
+            questionnaire = surveysService.retrieveDailySurvey(request.getSession().getAttribute("user").toString());
         } catch (AlreadyExistsException e) {
-            e.printStackTrace();
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().println("You already compiled today's survey!");
+            return;
         } catch (BlockedAccountException e) {
-            e.printStackTrace();
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().println("Your account is temporary blocked");
+            return;
         }
 
         if (questionnaire == null) {
@@ -76,8 +80,46 @@ public class HandleSurvey extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        response.getWriter().println("This servlet only takes GET requests");
+        //JsonObject
+        JsonObject json = JsonUtils.getJsonFromRequest(request);
+
+        List<JsonObject> permanentQuestions = JsonUtils.getInstance().getPermanentQuestions();
+        List<String> sec2Answers = new ArrayList<>();
+
+        for (JsonObject q : permanentQuestions) {
+            List<String> stringOptions = new ArrayList<>();
+            String answer;
+            try {
+                String question = q.get("question").getAsString();
+                answer = json.get(question).getAsString();
+                q.get("options").getAsJsonArray().forEach((option) -> stringOptions.add(option.getAsString()));
+
+                if (!stringOptions.isEmpty() && !stringOptions.contains(answer)) {
+                    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                    response.getWriter().println("An answer to section 2 question is not correct");
+                    return;
+                }
+
+                json.remove(question);
+                sec2Answers.add(answer);
+            } catch (Exception e) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.getWriter().println("An error occurred in section 2 questions");
+                return;
+            }
+        }
+
+        try {
+            int age = Integer.parseInt(sec2Answers.get(0));
+            surveysService.registerSubmission(json, age, sec2Answers.get(1), sec2Answers.get(2));
+            response.setStatus(HttpServletResponse.SC_ACCEPTED);
+        } catch (NumberFormatException nfe) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().println("Age must be a number");
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().println(e.getMessage());
+        }
     }
 
     /**
@@ -144,12 +186,7 @@ public class HandleSurvey extends HttpServlet {
 
     protected void addPermanentQuestions(ResponseQuestionnaire questionnaire) {
 
-        Reader reader = new InputStreamReader(this.getClass().getResourceAsStream("/permanentQuestions.json"));
-        Gson gson = new Gson();
-        JsonArray jsonArray = gson.fromJson(reader, JsonArray.class);
-
-        List<JsonObject> jsonQuestions = new ArrayList<>();
-        jsonArray.forEach((question) -> jsonQuestions.add(question.getAsJsonObject()));
+        List<JsonObject> jsonQuestions = JsonUtils.getInstance().getPermanentQuestions();
 
         List<ResponseQuestionnaire.ResponseQuestion> questions = new ArrayList<>();
         int i = questionnaire.getNumberOfQuestions();

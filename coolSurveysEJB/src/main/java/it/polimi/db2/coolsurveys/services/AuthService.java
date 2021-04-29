@@ -59,7 +59,7 @@ public class AuthService implements IAuthService {
             credentials = null;
         }
 
-        return null;
+        return credentials;
 
     }
 }

@@ -1,6 +1,7 @@
 package it.polimi.db2.coolsurveys.services;
 
 import it.polimi.db2.coolsurveys.dao.AnswerDAO;
+import com.google.gson.JsonObject;
 import it.polimi.db2.coolsurveys.dao.QuestionnaireDAO;
 import it.polimi.db2.coolsurveys.entities.*;
 import it.polimi.db2.coolsurveys.dao.SubmissionDAO;
@@ -93,5 +94,11 @@ public class SurveysService implements ISurveysService {
         submissionDAO.submit(submission);
     }
 
-
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void registerSubmission(JsonObject questionAnswerMap, int age, String sex, String expLvl) {
+        return;
+    }
 }

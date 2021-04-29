@@ -96,10 +96,10 @@ let index = new Vue ({
                         else
                             console.log("Section not found for question n." + question.number);
                     });
+                    this.homepage = false;
+                    this.section1 = true;
                 })
                 .catch(error => {})
-            this.homepage = false;
-            this.section1 = true;
         },
 
         advanceSurveySection: function() {
