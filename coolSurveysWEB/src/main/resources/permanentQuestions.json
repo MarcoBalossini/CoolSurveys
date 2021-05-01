@@ -1,7 +1,8 @@
 [
   {
     "question": "What is your age?",
-    "options": []
+    "options": [],
+    "type": "number"
   },
   {
     "question": "What is your sex?",
@@ -10,7 +11,8 @@
       "Female",
       "Non-binary",
       "Dunno ・_・"
-    ]
+    ],
+    "type": "radio"
   },
   {
     "question": "What is your expertise level (whatever it means)?",
@@ -18,6 +20,7 @@
       "Low",
       "Medium",
       "High"
-    ]
+    ],
+    "type": "options"
   }
 ]

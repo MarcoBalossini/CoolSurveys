@@ -15,11 +15,19 @@ public class ResponseQuestionnaire {
         private String question;
         private List<ResponseOption> options = new ArrayList<>();
         int section;
+        String type;
 
         public ResponseQuestion(int number, String question, int section) {
             this.number = number;
             this.question = question;
             this.section = section;
+        }
+
+        public ResponseQuestion(int number, String question, int section, String type) {
+            this.number = number;
+            this.question = question;
+            this.section = section;
+            this.type = type;
         }
 
         public void setOptions(List<ResponseOption> options) {

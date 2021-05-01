@@ -191,7 +191,8 @@ public class HandleSurvey extends HttpServlet {
         int i = questionnaire.getNumberOfQuestions();
         for (JsonObject q : jsonQuestions) {
             i++;
-            ResponseQuestionnaire.ResponseQuestion question = new ResponseQuestionnaire.ResponseQuestion(i, q.get("question").getAsString(), 2);
+            ResponseQuestionnaire.ResponseQuestion question =
+                    new ResponseQuestionnaire.ResponseQuestion(i, q.get("question").getAsString(), 2, q.get("type").getAsString());
             List<String> stringOptions = new ArrayList<>();
             q.get("options").getAsJsonArray().forEach((option) -> stringOptions.add(option.getAsString()));
 
