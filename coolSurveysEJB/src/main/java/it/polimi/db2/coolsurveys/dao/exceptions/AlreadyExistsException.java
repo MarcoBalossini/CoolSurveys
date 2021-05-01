@@ -1,6 +1,6 @@
 package it.polimi.db2.coolsurveys.dao.exceptions;
 
-public class AlreadyExistsException extends Exception{
+public class AlreadyExistsException extends DAOException{
     public AlreadyExistsException(){
         super();
     }

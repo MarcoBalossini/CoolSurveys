@@ -7,6 +7,7 @@ import it.polimi.db2.coolsurveys.entities.*;
 import it.polimi.db2.coolsurveys.dao.SubmissionDAO;
 import it.polimi.db2.coolsurveys.dao.UserDAO;
 import it.polimi.db2.coolsurveys.dao.exceptions.AlreadyExistsException;
+import it.polimi.db2.coolsurveys.dao.exceptions.BadWordFoundException;
 import it.polimi.db2.coolsurveys.dao.exceptions.BlockedAccountException;
 import it.polimi.db2.coolsurveys.dao.exceptions.NotFoundException;
 import it.polimi.db2.coolsurveys.entities.Question;
@@ -42,33 +43,29 @@ public class SurveysService implements ISurveysService {
 
     /**
      * {@inheritDoc}
-     * @param username
+     * @param credentials
      */
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public Questionnaire retrieveDailySurvey(String username) throws AlreadyExistsException, BlockedAccountException {
+    public Questionnaire retrieveDailySurvey(Credentials credentials) throws AlreadyExistsException, BlockedAccountException, NotFoundException {
 
-        if(username == null || username.isEmpty())
+        if(credentials  == null || credentials.getUsername() == null || credentials.getUsername().isEmpty())
             throw new IllegalArgumentException();
 
-        try {
+
             Questionnaire questionnaire =  questionnaireDAO.getByDate(LocalDate.now());
 
-            User user = userDAO.retrieveUserByUsername(username);
+            User user = userDAO.find(credentials.getUser_id());
 
             submissionDAO.insert(user, questionnaire);
 
             return questionnaire;
 
-        } catch (NotFoundException e) {
-            return null;
-        }
-
     }
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void insertAnswers(Map<Question, String> answers, User user) throws BlockedAccountException {
+    public void insertAnswers(Map<Question, String> answers, User user) throws BlockedAccountException, BadWordFoundException {
 
         if(answers == null || user == null)
             throw new IllegalArgumentException();
@@ -82,8 +79,10 @@ public class SurveysService implements ISurveysService {
             for (Question question : answers.keySet())
                 answerDAO.insertAnswer(question, answers.get(question), user);
         } catch (PersistenceException e) {
-            if(e.getMessage().equals("Bad Word Found"))
+            if(e.getMessage().equals("Bad Word Found")) {
                 userDAO.banUser(user);
+                throw new BadWordFoundException();
+            }
             else throw e;
         }
 

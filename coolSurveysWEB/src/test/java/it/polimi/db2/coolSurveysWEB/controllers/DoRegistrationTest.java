@@ -80,7 +80,7 @@ class DoRegistrationTest {
         if (!throwException)
             when(authenticationService.register(anyString(), anyString(), anyString(), anyBoolean())).thenReturn(credentials);
         else
-            when(authenticationService.register(anyString(), anyString(), anyString(), anyBoolean())).thenThrow(new Exception(""));
+            when(authenticationService.register(anyString(), anyString(), anyString(), anyBoolean())).thenThrow(new RuntimeException(""));
 
         StringWriter stringWriter = new StringWriter();
         PrintWriter writer = new PrintWriter(stringWriter);

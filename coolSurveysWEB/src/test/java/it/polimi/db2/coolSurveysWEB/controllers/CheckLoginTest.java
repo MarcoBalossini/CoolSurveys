@@ -2,8 +2,10 @@ package it.polimi.db2.coolSurveysWEB.controllers;
 
 import it.polimi.db2.coolSurveysWEB.auth.AuthManager;
 import it.polimi.db2.coolSurveysWEB.auth.exceptions.TokenException;
+import it.polimi.db2.coolsurveys.dao.exceptions.NotFoundException;
 import it.polimi.db2.coolsurveys.entities.Credentials;
 import it.polimi.db2.coolsurveys.services.IAuthService;
+import it.polimi.db2.coolsurveys.services.exceptions.InvalidCredentialsException;
 import org.junit.jupiter.api.Test;
 
 import javax.servlet.ServletException;
@@ -65,8 +67,8 @@ class CheckLoginTest {
         // Test successful login
         testTokenMockDB(request, response, cookiesWithAuth, credentials.getUsername(), 0, credentials);
 
-        // Test TokenException
-        testTokenMockDB(request, response, cookiesWithAuth, TOKEN_EXCEPTION, 1, credentials);
+        // Test NotFoundException
+        testTokenMockDB(request, response, cookiesWithAuth, "User not found", 1, credentials);
 
         // Test Exception
         testTokenMockDB(request, response, cookiesWithAuth, "Invalid token. Login again", 2, credentials);
@@ -79,35 +81,41 @@ class CheckLoginTest {
             else: Exception
      */
     private void testTokenMockDB(HttpServletRequest request, HttpServletResponse response,
-                               Cookie[] cookies, String msg, int thrownExc, Credentials credentials) throws Exception {
+                               Cookie[] cookies, String msg, int thrownExc, Credentials credentials) {
         IAuthService authenticationService = mock(IAuthService.class);
         HttpSession session = mock(HttpSession.class);
 
-        //Use Reflection on check login class to mock injected service
-        CheckLogin checkLogin = new CheckLogin();
-        Field authServiceField = checkLogin.getClass().getDeclaredField("authService");
-        authServiceField.setAccessible(true);
-        authServiceField.set(checkLogin, authenticationService);
+        try {
 
-        //Mocks' responses
-        when(request.getSession()).thenReturn(session);
-        when(request.getCookies()).thenReturn(cookies);
+            //Use Reflection on check login class to mock injected service
+            CheckLogin checkLogin = new CheckLogin();
+            Field authServiceField = checkLogin.getClass().getDeclaredField("authService");
+            authServiceField.setAccessible(true);
+            authServiceField.set(checkLogin, authenticationService);
 
-        if (thrownExc == 0)
-            when(authenticationService.tokenLogin(anyInt())).thenReturn(credentials);
-        else if (thrownExc == 1)
-            when(authenticationService.tokenLogin(anyInt())).thenThrow(new TokenException(TOKEN_EXCEPTION));
-        else
-            when(authenticationService.tokenLogin(anyInt())).thenThrow(new Exception(""));
+            //Mocks' responses
+            when(request.getSession()).thenReturn(session);
+            when(request.getCookies()).thenReturn(cookies);
 
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter writer = new PrintWriter(stringWriter);
-        when(response.getWriter()).thenReturn(writer);
+            if (thrownExc == 0)
+                when(authenticationService.tokenLogin(anyInt())).thenReturn(credentials);
+            else if (thrownExc == 1)
+                when(authenticationService.tokenLogin(anyInt())).thenThrow(new NotFoundException("User not found"));
+            else
+                when(authenticationService.tokenLogin(anyInt())).thenThrow(new RuntimeException(""));
 
-        checkLogin.doGet(request, response);
-        writer.flush();
+            StringWriter stringWriter = new StringWriter();
+            PrintWriter writer = new PrintWriter(stringWriter);
+            when(response.getWriter()).thenReturn(writer);
 
-        assertTrue(stringWriter.toString().contains(msg));
+            checkLogin.doGet(request, response);
+            writer.flush();
+
+            assertTrue(stringWriter.toString().contains(msg));
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
     }
 
     private void testTokenNoDB(HttpServletRequest request, HttpServletResponse response,
@@ -141,37 +149,49 @@ class CheckLoginTest {
         assertTrue(stringWriter.toString().contains(msg));
     }
 
-    private void testFormMockDB(String usrn, String pwd, String msg, Credentials credentials, boolean throwException) throws Exception {
+    private void testFormMockDB(String usrn, String pwd, String msg, Credentials credentials, boolean throwsRuntimeException) {
         //Create mocks
         HttpServletRequest request = mock(HttpServletRequest.class);
         HttpServletResponse response = mock(HttpServletResponse.class);
         HttpSession session = mock(HttpSession.class);
         IAuthService authenticationService = mock(IAuthService.class);
 
-        //Use Reflection on check login class to mock injected service
-        CheckLogin checkLogin = new CheckLogin();
-        Field authServiceField = checkLogin.getClass().getDeclaredField("authService");
-        authServiceField.setAccessible(true);
-        authServiceField.set(checkLogin, authenticationService);
+        try {
 
-        //Mocks' responses
-        mockParams(usrn, pwd, request);
-        when(request.getSession()).thenReturn(session);
+            //Use Reflection on check login class to mock injected service
+            CheckLogin checkLogin = new CheckLogin();
+            Field authServiceField = checkLogin.getClass().getDeclaredField("authService");
+            authServiceField.setAccessible(true);
+            authServiceField.set(checkLogin, authenticationService);
 
-        if (!throwException)
-            when(authenticationService.checkCredentials(anyString(), anyString())).thenReturn(credentials);
-        else
-            when(authenticationService.checkCredentials(anyString(), anyString())).thenThrow(new Exception(""));
+            //Mocks' responses
+            mockParams(usrn, pwd, request);
+            when(request.getSession()).thenReturn(session);
 
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter writer = new PrintWriter(stringWriter);
-        when(response.getWriter()).thenReturn(writer);
+            if(throwsRuntimeException)
+                when(authenticationService.checkCredentials(anyString(), anyString())).thenThrow(new RuntimeException(""));
+            else if(credentials == null)
+                when(authenticationService.checkCredentials(anyString(), anyString())).thenThrow(new InvalidCredentialsException());
+            else
+                when(authenticationService.checkCredentials(anyString(), anyString())).thenThrow(new RuntimeException(""));
 
-        checkLogin.doPost(request, response);
 
-        writer.flush();
+            StringWriter stringWriter = new StringWriter();
 
-        assertTrue(stringWriter.toString().contains(msg));
+            PrintWriter writer = new PrintWriter(stringWriter);
+
+            when(response.getWriter()).thenReturn(writer);
+            checkLogin.doPost(request, response);
+
+            writer.flush();
+
+            assertTrue(stringWriter.toString().contains(msg));
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+
+
     }
 
     private Cookie[] createTokenCookie(Credentials credentials, HttpServletResponse response, boolean withAuth) throws IOException {

@@ -6,6 +6,8 @@ import it.polimi.db2.coolSurveysWEB.utils.JsonUtils;
 import it.polimi.db2.coolSurveysWEB.utils.ResponseQuestionnaire;
 import it.polimi.db2.coolsurveys.dao.exceptions.AlreadyExistsException;
 import it.polimi.db2.coolsurveys.dao.exceptions.BlockedAccountException;
+import it.polimi.db2.coolsurveys.dao.exceptions.DAOException;
+import it.polimi.db2.coolsurveys.entities.Credentials;
 import it.polimi.db2.coolsurveys.entities.Option;
 import it.polimi.db2.coolsurveys.entities.Question;
 import it.polimi.db2.coolsurveys.entities.Questionnaire;
@@ -25,10 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static it.polimi.db2.coolSurveysWEB.controllers.CheckLogin.PASSWORD;
-import static it.polimi.db2.coolSurveysWEB.controllers.CheckLogin.USERNAME;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 class HandleSurveyTest {
@@ -80,13 +79,17 @@ class HandleSurveyTest {
         surveyServiceField.set(handleSurvey, surveysService);
 
         when(request.getSession()).thenReturn(session);
-        when(session.getAttribute("user")).thenReturn("user");
+
+        Credentials credentials = new Credentials("user1", "user", "user@user.it", false);
+        credentials.setUserId(1);
+
+        when(session.getAttribute("user")).thenReturn(credentials);
+
+
 
         try {
-            when(surveysService.retrieveDailySurvey("user")).thenReturn(questionnaire);
-        } catch (AlreadyExistsException e) {
-            e.printStackTrace();
-        } catch (BlockedAccountException e) {
+            when(surveysService.retrieveDailySurvey(credentials)).thenReturn(questionnaire);
+        } catch (DAOException e) {
             e.printStackTrace();
         }
 

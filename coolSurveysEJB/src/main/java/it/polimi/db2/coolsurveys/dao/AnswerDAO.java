@@ -22,7 +22,6 @@ public class AnswerDAO {
 
     public Answer insertAnswer(Question question, String text, User user) {
 
-
         if(question == null || text == null || user == null || text.isEmpty())
             throw new IllegalArgumentException();
 

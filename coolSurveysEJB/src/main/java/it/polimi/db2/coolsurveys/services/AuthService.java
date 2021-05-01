@@ -2,6 +2,7 @@ package it.polimi.db2.coolsurveys.services;
 
 import it.polimi.db2.coolsurveys.dao.UserDAO;
 import it.polimi.db2.coolsurveys.dao.exceptions.AlreadyExistsException;
+import it.polimi.db2.coolsurveys.services.exceptions.InvalidCredentialsException;
 import it.polimi.db2.coolsurveys.dao.exceptions.NotFoundException;
 import it.polimi.db2.coolsurveys.entities.Credentials;
 import it.polimi.db2.coolsurveys.entities.User;
@@ -19,45 +20,43 @@ public class AuthService implements IAuthService {
      * {@inheritDoc}
      */
     @Override
-    public Credentials checkCredentials(String username, String password) {
+    public Credentials checkCredentials(String username, String password) throws InvalidCredentialsException {
         User user = null;
         try {
             user = dataAccess.retrieveUserByUsername(username);
         } catch (NotFoundException e) {
-            return null;
+            throw new InvalidCredentialsException();
         }
 
         Credentials credentials = user.getCredentials();
 
-        return credentials.getPassword_hash().equals(password) ? credentials : null;
+        if(credentials.getPassword_hash().equals(password))
+            return credentials;
+
+
+        throw new InvalidCredentialsException();
+
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Credentials tokenLogin(int id) throws Exception {
+    public Credentials tokenLogin(int id) throws NotFoundException {
         User u = dataAccess.find(id);
 
-        if(u != null)
-            return u.getCredentials();
-
-        return null;
+        return u.getCredentials();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Credentials register(String mail, String username, String password, boolean isAdmin)  {
+    public Credentials register(String mail, String username, String password, boolean isAdmin) throws AlreadyExistsException{
 
         Credentials credentials;
 
-        try {
-            credentials = dataAccess.insertUser(username, password, mail, isAdmin).getCredentials();
-        } catch (AlreadyExistsException e) {
-            credentials = null;
-        }
+        credentials = dataAccess.insertUser(username, password, mail, isAdmin).getCredentials();
 
         return credentials;
 

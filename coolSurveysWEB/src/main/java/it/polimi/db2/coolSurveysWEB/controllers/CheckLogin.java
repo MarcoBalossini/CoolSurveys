@@ -4,8 +4,11 @@ import com.google.gson.JsonObject;
 import it.polimi.db2.coolSurveysWEB.auth.AuthManager;
 import it.polimi.db2.coolSurveysWEB.auth.exceptions.TokenException;
 import it.polimi.db2.coolSurveysWEB.utils.JsonUtils;
+import it.polimi.db2.coolsurveys.dao.exceptions.NotFoundException;
 import it.polimi.db2.coolsurveys.entities.Credentials;
+import it.polimi.db2.coolsurveys.dao.exceptions.DAOException;
 import it.polimi.db2.coolsurveys.services.IAuthService;
+import it.polimi.db2.coolsurveys.services.exceptions.ServiceException;
 
 import javax.ejb.EJB;
 import javax.servlet.*;
@@ -83,11 +86,12 @@ public class CheckLogin extends HttpServlet {
         try {
             int userId = AuthManager.getInstance().checkToken(authCookie.getValue());
             credentials = authService.tokenLogin(userId);
-        } catch (TokenException e) {
+        } catch (TokenException | DAOException e) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().println(e.getMessage());
             return;
         } catch (Exception e) {
+            e.printStackTrace();
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().println("Invalid token. Login again");
             return;
@@ -126,6 +130,7 @@ public class CheckLogin extends HttpServlet {
                 return;
             }
         } catch (Exception e) {
+            e.printStackTrace();
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().println("Missing credential value");
             return;
@@ -133,12 +138,6 @@ public class CheckLogin extends HttpServlet {
 
         try {
             Credentials credentials = authService.checkCredentials(usrn, pwd);
-
-            if (credentials == null) {
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                response.getWriter().println("Invalid credentials");
-                return;
-            }
 
             AuthManager authManager = AuthManager.getInstance();
             String token = authManager.generateToken(credentials.getUser_id(), EXPIRATION_TIME);
@@ -159,7 +158,11 @@ public class CheckLogin extends HttpServlet {
             response.setCharacterEncoding("UTF-8");
             response.getWriter().println(credentials.getUsername());
 
+        } catch (ServiceException e) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().println(e.getMessage());
         } catch (Exception e) {
+            e.printStackTrace();
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().println("Operation not allowed");
             return;

@@ -25,17 +25,12 @@ public class UserDAO {
 
     public User insertUser(String username, String password, String mail, boolean admin) throws AlreadyExistsException {
 
-
-        System.out.println("Adding user " + username);
-
         if (username == null || password == null || mail == null)
             throw new IllegalArgumentException();
 
         if(em.createNamedQuery("User.selectByUsername")
                 .setParameter("username", username).getResultList().size() > 0)
             throw new AlreadyExistsException("User already exists");
-
-        System.out.println("Persisting user " + username);
 
         User newUser = new User();
         Credentials newCredentials = new Credentials();
@@ -62,7 +57,7 @@ public class UserDAO {
                     .setParameter("username", username)
                     .getSingleResult();
         } catch (NoResultException e) {
-            throw new NotFoundException();
+            throw new NotFoundException("User not found");
         }
         return user;
     }
@@ -76,7 +71,7 @@ public class UserDAO {
                     .setParameter("mail", mail)
                     .getSingleResult();
         } catch (NoResultException e) {
-            throw new NotFoundException();
+            throw new NotFoundException("User not found");
         }
 
         return user;
@@ -89,8 +84,13 @@ public class UserDAO {
 
     }
 
-    public User find(int id) {
-        return em.find(User.class, id);
+    public User find(int id) throws NotFoundException {
+        User user = em.find(User.class, id);
+
+        if(user != null)
+            return user;
+
+        throw new NotFoundException("User not found");
     }
 
 }

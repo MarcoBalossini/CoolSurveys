@@ -1,13 +1,13 @@
 package it.polimi.db2.coolSurveysWEB.controllers;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonObject;
 import it.polimi.db2.coolSurveysWEB.utils.JsonUtils;
 import it.polimi.db2.coolSurveysWEB.utils.ResponseQuestionnaire;
 import it.polimi.db2.coolsurveys.dao.exceptions.AlreadyExistsException;
 import it.polimi.db2.coolsurveys.dao.exceptions.BlockedAccountException;
+import it.polimi.db2.coolsurveys.dao.exceptions.DAOException;
+import it.polimi.db2.coolsurveys.entities.Credentials;
 import it.polimi.db2.coolsurveys.entities.Question;
 import it.polimi.db2.coolsurveys.entities.Questionnaire;
 import it.polimi.db2.coolsurveys.services.ISurveysService;
@@ -43,16 +43,13 @@ public class HandleSurvey extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Questionnaire questionnaire = null;
         try {
-            questionnaire = surveysService.retrieveDailySurvey(request.getSession().getAttribute("user").toString());
-        } catch (AlreadyExistsException e) {
+            questionnaire = surveysService.retrieveDailySurvey((Credentials) request.getSession().getAttribute("user"));
+        } catch (DAOException e) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().println("You already compiled today's survey!");
-            return;
-        } catch (BlockedAccountException e) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().println("Your account is temporary blocked");
+            response.getWriter().println(e.getMessage());
             return;
         }
+
 
         if (questionnaire == null) {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -103,6 +100,7 @@ public class HandleSurvey extends HttpServlet {
                 json.remove(question);
                 sec2Answers.add(answer);
             } catch (Exception e) {
+                e.printStackTrace();
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 response.getWriter().println("An error occurred in section 2 questions");
                 return;
@@ -117,6 +115,7 @@ public class HandleSurvey extends HttpServlet {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().println("Age must be a number");
         } catch (Exception e) {
+            e.printStackTrace();
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().println(e.getMessage());
         }
