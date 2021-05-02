@@ -28,11 +28,11 @@
                     <div class="form-field">
                         <!-- .trim to remove spaces from beginning and end of a field value-->
                         <label class="question" for="username">Username</label>
-                        <input v-model.trim="username" type="text" id ="username" required/>
+                        <input v-model.trim="username" type="text" id ="username" placeholder="Username" required/>
                     </div>
                     <div class="form-field">
                         <label class="question" for="password">Password</label>
-                        <input v-model="password" type="password" id ="password" required/>
+                        <input v-model="password" type="password" id ="password" placeholder="Password" required/>
                     </div>
 
                     <div class="buttons">
@@ -51,16 +51,16 @@
                     </div>
                     <div class="form-field">
                         <label class="question" for="newUsername">Username</label>
-                        <input v-model.trim="username" type="text" id ="newUsername" minlength="3" maxlength="15" required/>
+                        <input v-model.trim="username" type="text" id ="newUsername" minlength="3" maxlength="15" placeholder="New Username" required/>
                     </div>
                     <div class="form-field">
                         <label class="question" for="newPassword">Password</label>
-                        <input v-model="password" type="password" id="newPassword" minlength="1" maxlength="15" required/>
+                        <input v-model="password" type="password" id="newPassword" minlength="1" maxlength="15" placeholder="New Password" required/>
                     </div>
 
                     <div class="form-field">
                         <label class="question" for="passwordConfirm">Confirm Password</label>
-                        <input v-model="passwordConfirm" type="password" id="passwordConfirm" minlength="1" maxlength="15" required/>
+                        <input v-model="passwordConfirm" type="password" id="passwordConfirm" minlength="1" maxlength="15" placeholder="New Password" required/>
                     </div>
 
                     <div class="buttons">

@@ -20,12 +20,11 @@ body {
     margin-top: 6px;
 }
 
-
 .multipleChoiceQuestion label {
     margin-left: 1em;
 }
 
-#formView form {
+#formView form, #surveyCreation form {
     margin-top: 10% !important;
     margin-left: 25%;
     display: inline-grid;
@@ -49,9 +48,31 @@ body {
     display: inline-block;
     float: left;
     clear: left;
-    width: 250px;
+    width: 40%;
     text-align: right;
     margin-bottom: 15px;
+}
+#surveyCreation {
+    display: block;
+    column-gap: 20px;
+    justify-content: space-between;
+    position: relative;
+    padding: 1rem;
+    margin: 1rem -15px 0;
+    border-width: .2rem 0 0;
+}
+
+#surveyCreation form {
+    display: block;
+    margin-top: 20px !important;
+    margin-left: 25%;
+    width: 50%;
+    line-height: 1.5;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
 
 #registrationView form, #loginView form {
@@ -67,13 +88,9 @@ body {
     transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
 
-#registrationView .buttons, #loginView .buttons, #leaderBoard .buttons {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 1rem;
-    margin-block-start: 1.33em;
-    margin-block-end: 1.33em;
+#addSurveyForm form {
+    background-color: transparent;
+    border-color: transparent;
 }
 
 #the-count {
@@ -116,11 +133,26 @@ span {
 # BUTTONS
 --------------------------------------------------------------*/
 
-#formView .buttons, #welcomeView .buttons, #homePage .buttons {
+#surveyDiv button {
+    color: #fff !important;
+    background-color: #6c757d !important;
+    border-color: #6c757d !important;
+}
+
+#formView .buttons, #welcomeView .buttons, #homePage .buttons, #surveyDiv .buttons {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 50px;
+}
+
+#registrationView .buttons, #loginView .buttons, #leaderBoard .buttons {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1rem;
+    margin-block-start: 1.33em;
+    margin-block-end: 1.33em;
 }
 
 button {
