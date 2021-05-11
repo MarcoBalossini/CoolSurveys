@@ -12,6 +12,8 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class JsonUtils {
 
@@ -52,6 +54,10 @@ public class JsonUtils {
         jsonArray.forEach((question) -> jsonQuestions.add(question.getAsJsonObject()));
 
         permanentQuestions = jsonQuestions;
+    }
+
+    public static Map<String, String> convertToMap(JsonObject jsonObject) {
+        return jsonObject.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().getAsString()));
     }
 
 }
