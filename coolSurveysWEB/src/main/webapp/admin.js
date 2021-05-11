@@ -10,13 +10,14 @@ let index = new Vue ({
     },
     computed: {},
     methods: {
-        addQuestion(value, questions, index) {
-            questions.push({ value: "" });
+        addQuestion(questions, index) {
+            questions.push({ question: "" });
+            this.options.push([{ option: "" }]);
             this.multipleChoice = false;
             this.questionAdded[index] = true;
         },
         setOpenAnswer(questionIndex, options) {
-            if (options[questionIndex][0].option !== "")
+            if (options[questionIndex]!==null && options[questionIndex][0].option !== "")
                 options.splice(questionIndex, 1);
             this.multipleChoice = false;
         },
@@ -24,15 +25,36 @@ let index = new Vue ({
             questions.splice(index, 1);
             this.questionAdded[index] = false;
         },
-        addOption(value, options, optionIndex) {
-            if (options[optionIndex].value !== "" || options[optionIndex].option !== "")
-                options.push({ value: "" });
+        addOption(options, optionIndex) {
+            if (options[optionIndex].option !== "")
+                options.push({ option: "" });
+        },
+        setMultipleChoice(questionIndex) {
+            this.multipleChoice = true;
         },
         removeOption(index, options) {
             options.splice(index, 1);
         },
         submitQuestionsForm(){
-            //TODO:develop
+            let toSend = new Map();
+            let i;
+            if (this.questions.length === this.options.length) {
+                //returned a map of questions (keys) -> array of options (value)
+                for(i=0; i < this.questions.length; i++) {
+                    toSend.set(this.questions[i], this.options[i]);
+                }
+                const object = Object.fromEntries(toSend);
+                axios.post("./AdminSurvey", {
+                    object
+                }).then(response => {
+                    this.leaderboard = true;
+                    this.section2 = false;
+                    console.log(response.data)
+
+                }).catch(response => {
+                    console.log(response.data)
+                });
+            }
         }
     },
 });

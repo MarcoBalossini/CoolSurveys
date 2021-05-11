@@ -14,25 +14,27 @@
                 <h1>Create New Survey</h1>
                      <div id= "surveyDiv" v-for="(input, questionIndex) in questions" :key="`questionInput-${questionIndex}`">
 
-                        <form v-on:reset.prevent="removeQuestion(questionIndex, questions)" v-on:submit.prevent="addQuestion(input, questions, questionIndex)">
+                        <form v-on:reset.prevent="removeQuestion(questionIndex, questions)" v-on:submit.prevent="addQuestion(questions, questionIndex)">
                             <div class="form-field">
                                 <label class="question">Question{{questionIndex + 1}}:</label>
                                 <input type="text" v-model="input.question" placeholder="enter new question" required><br>
                                 <div class = "buttons">
-                                    <button type="button" v-on:click="multipleChoice = true">Multiple choice</button>
+                                    <button type="button" v-on:click="setMultipleChoice()">Multiple choice</button>
                                     <button type="button" v-on:click="setOpenAnswer(questionIndex, options)">Open answer</button>
                                 </div>
                             </div>
                             <br> <label class="question" v-if="options[questionIndex]!=null && options[questionIndex].length <= 4 && multipleChoice">Optional multiple options:</label> <br>
-                            <div v-if="options[questionIndex]!=null && options[questionIndex].length <= 4 && multipleChoice" v-for="(input, optionIndex) in options[questionIndex]" :key="`optionInput-${optionIndex}`" class="form-field">
+                            <div v-if="options[questionIndex]!=null && options[questionIndex].length <= 4 && multipleChoice"
+                                 v-for="(input, optionIndex) in options[questionIndex]" :key="`optionInput-${optionIndex}`" class="form-field">
                                 <label class="question">Option{{optionIndex + 1}}:</label>
                                 <input type="text" v-model="input.option" placeholder="enter new option" required><br>
                                 <div class = "buttons">
-                                    <button type="button" v-on:click="addOption(input, options[questionIndex], optionIndex)">Add option</button>
+                                    <button type="button" v-on:click="addOption(options[questionIndex], optionIndex)">Add option</button>
                                     <button type="button" v-show="options[questionIndex].length > 1" v-on:click="removeOption(questionIndex, options[questionIndex])">Remove option</button>
                                 </div>
                             </div>
-                            <br> <label v-if="options[questionIndex]!=null && options[questionIndex].length > 4 && multipleChoice">Max number of options reached.</label> <br>
+                            <br> <label v-if="options[questionIndex]!=null && options[questionIndex].length > 4 &&
+                            multipleChoice && questionAdded[questionIndex] !== true">Max number of options reached.</label> <br>
                             <label v-if="questionAdded[questionIndex] === true">Question added to survey</label><br>
                             <div class = "buttons">
                                 <button type="submit" v-if="questionAdded[questionIndex] !== true">Add question</button>

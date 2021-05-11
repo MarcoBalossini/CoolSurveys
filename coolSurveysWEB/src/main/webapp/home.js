@@ -84,8 +84,7 @@ let index = new Vue ({
                         else if (question.section === 2) {
                             this.questions2.push(question.question);
 
-                            //TODO
-                            //this.questions2Type.push(question.type);
+                            this.questions2Type.push(question.type);
 
                             let tmp = [];
                             question.options.forEach((option)=> {
@@ -140,8 +139,20 @@ let index = new Vue ({
                 console.log(response.data)
             });
         },
-        receiveLeaderboard: function() {
 
+        receiveLeaderboard: function() {
+            this.resetSurvey();
+            axios.get("./Leaderboard")
+                .then(response => {
+                    const leaderboard = response.data;
+                    leaderboard.forEach((user)=> {
+                        let tmp = [];
+                        tmp.push(user.username);
+                        tmp.push(user.points);
+                        this.scores.push(tmp);
+                        })
+                })
+                .catch(error => {})
         }
     }
 });
