@@ -12,15 +12,14 @@ import it.polimi.db2.coolsurveys.dao.exceptions.BlockedAccountException;
 import it.polimi.db2.coolsurveys.dao.exceptions.NotFoundException;
 import it.polimi.db2.coolsurveys.entities.Question;
 
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
+import javax.ejb.*;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 @Stateless
@@ -41,63 +40,49 @@ public class SurveysService implements ISurveysService {
     @PersistenceContext(unitName = "coolSurveys")
     protected EntityManager em;
 
+
     /**
      * {@inheritDoc}
-     * @param credentials
      */
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public Questionnaire retrieveDailySurvey(Credentials credentials) throws AlreadyExistsException, BlockedAccountException, NotFoundException {
+    public Questionnaire retrieveDailySurvey() throws NotFoundException {
 
-        if(credentials  == null || credentials.getUsername() == null || credentials.getUsername().isEmpty())
-            throw new IllegalArgumentException();
-
-
-            Questionnaire questionnaire =  questionnaireDAO.getByDate(LocalDate.now());
-
-            User user = userDAO.find(credentials.getUser_id());
-
-            submissionDAO.insert(user, questionnaire);
-
-            return questionnaire;
+        return questionnaireDAO.getByDate(LocalDate.now());
 
     }
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void insertAnswers(Map<Question, String> answers, User user) throws BlockedAccountException, BadWordFoundException {
+    public void insertAnswers(Map<String, String> answers, Credentials credentials, Integer age, String gender, String expLvl) throws BlockedAccountException, BadWordFoundException, AlreadyExistsException, NotFoundException {
 
-        if(answers == null || user == null)
+        if(answers == null || credentials == null)
             throw new IllegalArgumentException();
 
+        User user = credentials.getUser();
+
+        Questionnaire questionnaire = questionnaireDAO.getByDate(LocalDate.now());
 
         //check if User is banned
         if(user.getBlockedUntil().isAfter(LocalDateTime.now()))
             throw new BlockedAccountException();
 
+        List<Question> questions = questionnaire.getQuestions();
+
         try {
-            for (Question question : answers.keySet())
-                answerDAO.insertAnswer(question, answers.get(question), user);
-        } catch (PersistenceException e) {
-            if(e.getMessage().equals("Bad Word Found")) {
-                userDAO.banUser(user);
-                throw new BadWordFoundException();
-            }
-            else throw e;
+            for (Question question : questions)
+                answerDAO.insertAnswer(question, answers.get(question.getQuestion()), user);
+        } catch (BadWordFoundException e) {
+
+            //userDAO.banUser(user);
+            throw new BadWordFoundException();
         }
 
-    }
+        //Converts to null values if strings are empty ("")
+        Integer genderOpt = gender.isEmpty() ? null : Submission.Gender.valueOf(gender.toUpperCase()).ordinal();
+        Integer expLvlOpt = expLvl.isEmpty() ? null : Submission.ExpertiseLevel.valueOf(expLvl.toUpperCase()).ordinal();
 
-    @Override
-    public void submit(Submission submission) throws BlockedAccountException {
-        submissionDAO.submit(submission);
-    }
+        submissionDAO.insert(user, questionnaire, age, genderOpt, expLvlOpt);
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void registerSubmission(JsonObject questionAnswerMap, int age, String sex, String expLvl) {
-        return;
     }
-}
+    }

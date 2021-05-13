@@ -1,6 +1,8 @@
 package it.polimi.db2.coolsurveys.entities;
 
 import java.io.Serializable;
+import java.util.Objects;
+import javax.ejb.TransactionAttribute;
 import javax.persistence.*;
 
 
@@ -10,9 +12,11 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name="bad_words")
-@NamedQuery(name="BadWord.findAll", query="SELECT b FROM BadWord b")
+@NamedQuery(name="BadWord.findAllWords", query="SELECT b.word FROM BadWord b")
 public class BadWord implements Serializable {
 	private static final long serialVersionUID = 1L;
+
+	public static final int MONTHS_TO_BAN = 1;
 
 	@Id
 	private String word;
@@ -25,4 +29,16 @@ public class BadWord implements Serializable {
 		this.word = word;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		BadWord badWord = (BadWord) o;
+		return Objects.equals(word, badWord.word);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(word);
+	}
 }

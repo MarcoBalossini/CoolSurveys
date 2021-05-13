@@ -1,6 +1,7 @@
 package it.polimi.db2.coolsurveys.dao;
 
 import it.polimi.db2.coolsurveys.dao.exceptions.AlreadyExistsException;
+import it.polimi.db2.coolsurveys.dao.exceptions.BadWordFoundException;
 import it.polimi.db2.coolsurveys.dao.exceptions.NotFoundException;
 import it.polimi.db2.coolsurveys.entities.Question;
 import it.polimi.db2.coolsurveys.entities.Questionnaire;
@@ -49,33 +50,11 @@ public class AnswerDAOTest extends DAOTest {
             answerDAO.insertAnswer(q.getQuestions().get(0), TEXT1, userDAO.insertUser(USER, PASSWORD, MAIL, false));
             em.getTransaction().commit();
 
-        } catch (AlreadyExistsException e) {
+        } catch (AlreadyExistsException | BadWordFoundException e) {
             System.out.println(e.getMessage());
             em.getTransaction().rollback();
             fail();
         }
-    }
-
-    @Test
-    public void updateAnswer() {
-        addAnswer();
-
-        em.getTransaction().begin();
-
-        try {
-            Questionnaire q = questionnaireDAO.getByName(QUESTIONNAIRE);
-            Question question = q.getQuestions().get(0);
-
-            User user = userDAO.retrieveUserByUsername(USER);
-
-            answerDAO.insertAnswer(question, TEXT2, user);
-
-            em.getTransaction().commit();
-        } catch (NotFoundException e) {
-            System.out.println(e.getMessage());
-            fail();
-        }
-
     }
 
     @Test
@@ -92,9 +71,10 @@ public class AnswerDAOTest extends DAOTest {
 
             Questionnaire q = questionnaireDAO.insertQuestionnaire(LocalDate.now(), QUESTIONNAIRE, smallPhoto, questionList);
 
-            assertThrows(PersistenceException.class, () -> answerDAO.insertAnswer(q.getQuestions().get(0), BAD_TEXT, userDAO.insertUser(USER, PASSWORD, MAIL, false)));
-            //answerDAO.insertAnswer(q.getQuestions().get(0), BAD_TEXT, userDAO.insertUser(USER, PASSWORD, MAIL));
+            assertThrows(BadWordFoundException.class, () -> answerDAO.insertAnswer(q.getQuestions().get(0), BAD_TEXT, userDAO.insertUser(USER, PASSWORD, MAIL, false)));
             em.getTransaction().rollback();
+
+
 
         } catch (AlreadyExistsException e) {
             System.out.println(e.getMessage());

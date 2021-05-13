@@ -21,7 +21,7 @@ public class AuthService implements IAuthService {
      */
     @Override
     public Credentials checkCredentials(String username, String password) throws InvalidCredentialsException {
-        User user = null;
+        User user;
         try {
             user = dataAccess.retrieveUserByUsername(username);
         } catch (NotFoundException e) {
@@ -30,8 +30,10 @@ public class AuthService implements IAuthService {
 
         Credentials credentials = user.getCredentials();
 
-        if(credentials.getPassword_hash().equals(password))
+        if(credentials.getPassword_hash().equals(password)) {
+            dataAccess.log(user);
             return credentials;
+        }
 
 
         throw new InvalidCredentialsException();
@@ -44,6 +46,8 @@ public class AuthService implements IAuthService {
     @Override
     public Credentials tokenLogin(int id) throws NotFoundException {
         User u = dataAccess.find(id);
+
+        dataAccess.log(u);
 
         return u.getCredentials();
     }

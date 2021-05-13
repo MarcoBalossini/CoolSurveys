@@ -27,6 +27,10 @@ public class Credentials implements Serializable {
     @Column (nullable = false)
     private boolean admin = false;
 
+    public User getUser() {
+        return user;
+    }
+
     @OneToOne(fetch = FetchType.EAGER, mappedBy = "credentials", orphanRemoval = true)
     private User user;
 
@@ -78,4 +82,9 @@ public class Credentials implements Serializable {
     }
 
     public void setUserId(int id) {this.userId = id;}
+
+    @PrePersist
+    public void log() {
+        System.out.println("Entity " + this.toString() + " is being persisted");
+    }
 }

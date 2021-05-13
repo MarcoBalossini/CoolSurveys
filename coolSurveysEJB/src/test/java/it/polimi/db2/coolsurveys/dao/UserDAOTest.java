@@ -48,6 +48,21 @@ public class UserDAOTest extends DAOTest{
         em.getTransaction().commit();
     }
 
+    @Test
+    public void logUser() {
+        em.getTransaction().begin();
+
+        UserDAO dao = new UserDAO(em);
+        try {
+            User u = dao.insertUser("user1", "user1password", "user1@user.com", false);
+            dao.log(u);
+        } catch (AlreadyExistsException e) {
+            System.out.println(e.getMessage());
+            fail();
+        }
+        em.getTransaction().commit();
+    }
+
     @AfterEach
     @BeforeEach
     public void clean() {

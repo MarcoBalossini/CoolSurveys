@@ -4,8 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import it.polimi.db2.coolSurveysWEB.utils.JsonUtils;
 import it.polimi.db2.coolSurveysWEB.utils.ResponseQuestionnaire;
-import it.polimi.db2.coolsurveys.dao.exceptions.AlreadyExistsException;
-import it.polimi.db2.coolsurveys.dao.exceptions.BlockedAccountException;
 import it.polimi.db2.coolsurveys.dao.exceptions.DAOException;
 import it.polimi.db2.coolsurveys.entities.Credentials;
 import it.polimi.db2.coolsurveys.entities.Option;
@@ -88,7 +86,7 @@ class HandleSurveyTest {
 
 
         try {
-            when(surveysService.retrieveDailySurvey(credentials)).thenReturn(questionnaire);
+            when(surveysService.retrieveDailySurvey()).thenReturn(questionnaire);
         } catch (DAOException e) {
             e.printStackTrace();
         }
@@ -115,10 +113,12 @@ class HandleSurveyTest {
         HttpServletRequest request = mock(HttpServletRequest.class);
         HttpServletResponse response = mock(HttpServletResponse.class);
         ISurveysService surveysService = mock(SurveysService.class);
+        HttpSession session = mock(HttpSession.class);
 
         Map<String, String> questionsAnswersMap = new HashMap<>();
         questionsAnswersMap.put("key1", "val1");
         questionsAnswersMap.put("key2", "val2");
+
 
         HandleSurvey handleSurvey = new HandleSurvey();
         Field surveyServiceField = handleSurvey.getClass().getDeclaredField("surveysService");
@@ -128,6 +128,9 @@ class HandleSurveyTest {
         StringWriter stringWriter = new StringWriter();
         PrintWriter writer = new PrintWriter(stringWriter);
         when(response.getWriter()).thenReturn(writer);
+
+        when(request.getSession()).thenReturn(session);
+        when(session.getAttribute("user")).thenReturn(new Credentials());
 
         List<JsonObject> pQuestions = JsonUtils.getInstance().getPermanentQuestions();
         for(JsonObject j : pQuestions) {

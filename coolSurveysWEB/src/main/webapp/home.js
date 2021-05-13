@@ -113,6 +113,8 @@ let index = new Vue ({
             }
 
             for (i=0; i < this.questions2.length; i++) {
+                if(this.answers2[i] === undefined)
+                    this.answers2[i] = "";
                 questionsAnswersMap.set(this.questions2[i], this.answers2[i]);
             }
 
@@ -127,9 +129,7 @@ let index = new Vue ({
             }
             let object = mapToObj(questionsAnswersMap);
 
-            axios.post("./HandleSurvey", {
-                object
-            }).then(response => {
+            axios.post("./HandleSurvey", object).then(response => {
                 this.leaderboard = true;
                 this.section2 = false;
                 console.log(response.data)

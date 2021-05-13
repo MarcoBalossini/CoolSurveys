@@ -29,7 +29,7 @@ public class Answer implements Serializable {
     /**
      * If a user is removed, also his answers have to be removed
      */
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 

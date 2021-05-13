@@ -10,6 +10,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Stateless
 public class SubmissionDAO {
@@ -22,7 +23,7 @@ public class SubmissionDAO {
 
     public SubmissionDAO() {}
 
-    public Submission insert(User user, Questionnaire questionnaire) throws BlockedAccountException, AlreadyExistsException {
+    public Submission insert(User user, Questionnaire questionnaire, Integer age, Integer isFemale, Integer expLvl) throws BlockedAccountException, AlreadyExistsException {
         if(user == null || questionnaire == null)
             throw new IllegalArgumentException();
 
@@ -34,26 +35,22 @@ public class SubmissionDAO {
 
         if(em.createNamedQuery("Submission.get", Submission.class).setParameter("userId", user.getCredentials().getUser_id())
             .setParameter("questionnaireId", questionnaire.getQId()).getResultList().size() > 0)
-            throw new AlreadyExistsException("Submission already started");
+            throw new AlreadyExistsException("User already submitted");
+
+        //Wrap possible null values into Optional containers
+        Optional<Integer> ageOpt = Optional.ofNullable(age);
+        Optional<Integer> isFemaleOpt = Optional.ofNullable(isFemale);
+        Optional<Integer> expLvlOpt = Optional.ofNullable(expLvl);
 
         Submission submission = new Submission(user, questionnaire);
+
+        ageOpt.ifPresent(submission::setAge);
+        isFemaleOpt.ifPresent(submission::setSex);
+        expLvlOpt.ifPresent(submission::setExpertiseLevel);
+
         em.persist(submission);
 
         return submission;
     }
 
-    public void update(Submission submission) {
-        em.merge(submission);
-    }
-
-    public void submit(Submission submission) throws BlockedAccountException {
-
-        LocalDateTime banTime = submission.getUser().getBlockedUntil();
-
-        if(banTime.isAfter(LocalDateTime.now()))
-            throw new BlockedAccountException(banTime);
-
-        submission.setSubmitted(true);
-        em.merge(submission);
-    }
 }

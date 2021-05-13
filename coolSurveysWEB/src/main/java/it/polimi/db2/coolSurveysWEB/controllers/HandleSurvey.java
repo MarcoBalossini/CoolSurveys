@@ -4,12 +4,11 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import it.polimi.db2.coolSurveysWEB.utils.JsonUtils;
 import it.polimi.db2.coolSurveysWEB.utils.ResponseQuestionnaire;
-import it.polimi.db2.coolsurveys.dao.exceptions.AlreadyExistsException;
-import it.polimi.db2.coolsurveys.dao.exceptions.BlockedAccountException;
 import it.polimi.db2.coolsurveys.dao.exceptions.DAOException;
 import it.polimi.db2.coolsurveys.entities.Credentials;
 import it.polimi.db2.coolsurveys.entities.Question;
 import it.polimi.db2.coolsurveys.entities.Questionnaire;
+import it.polimi.db2.coolsurveys.services.IAuthService;
 import it.polimi.db2.coolsurveys.services.ISurveysService;
 
 import javax.ejb.EJB;
@@ -30,6 +29,9 @@ public class HandleSurvey extends HttpServlet {
     @EJB(name = "it.polimi.db2.coolsurveys.services/SurveysService")
     private ISurveysService surveysService;
 
+    @EJB(name = "it.polimi.db2.coolsurveys.services/AuthService")
+    private IAuthService authService;
+
     /**
      * Respond to daily surveys requests
      *
@@ -41,9 +43,9 @@ public class HandleSurvey extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Questionnaire questionnaire = null;
+        Questionnaire questionnaire;
         try {
-            questionnaire = surveysService.retrieveDailySurvey((Credentials) request.getSession().getAttribute("user"));
+            questionnaire = surveysService.retrieveDailySurvey();
         } catch (DAOException e) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().println(e.getMessage());
@@ -77,6 +79,9 @@ public class HandleSurvey extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        Credentials credentials = (Credentials) request.getSession().getAttribute("user");
+
         //JsonObject
         JsonObject json = JsonUtils.getJsonFromRequest(request);
 
@@ -91,7 +96,7 @@ public class HandleSurvey extends HttpServlet {
                 answer = json.get(question).getAsString();
                 q.get("options").getAsJsonArray().forEach((option) -> stringOptions.add(option.getAsString()));
 
-                if (!stringOptions.isEmpty() && !stringOptions.contains(answer)) {
+                if (!stringOptions.isEmpty() && !stringOptions.contains(answer) && !answer.isEmpty()) {
                     response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                     response.getWriter().println("An answer to section 2 question is not correct");
                     return;
@@ -109,7 +114,8 @@ public class HandleSurvey extends HttpServlet {
 
         try {
             int age = Integer.parseInt(sec2Answers.get(0));
-            surveysService.registerSubmission(json, age, sec2Answers.get(1), sec2Answers.get(2));
+
+            surveysService.insertAnswers(JsonUtils.convertToMap(json), credentials, age, sec2Answers.get(1), sec2Answers.get(2));
             response.setStatus(HttpServletResponse.SC_ACCEPTED);
         } catch (NumberFormatException nfe) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);

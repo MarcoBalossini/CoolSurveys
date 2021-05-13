@@ -12,11 +12,21 @@ import java.io.Serializable;
 public class Submission implements Serializable {
 
 
+    public enum Gender {
+        MALE,
+        FEMALE,
+        NON_BINARY,
+        DUNNO
+    }
+
+    public enum ExpertiseLevel {
+        LOW,
+        MEDIUM,
+        HIGH
+    }
+
     @EmbeddedId
     private SubmissionPK id;
-
-    @Column(name = "submitted", nullable = false)
-    private boolean submitted;
 
     @Column(name = "age")
     private Integer age = null;
@@ -49,14 +59,6 @@ public class Submission implements Serializable {
 
     public void setId(SubmissionPK id) {
         this.id = id;
-    }
-
-    public boolean isSubmitted() {
-        return submitted;
-    }
-
-    public void setSubmitted(boolean submitted) {
-        this.submitted = submitted;
     }
 
     public void setAge(Integer age) {
