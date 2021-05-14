@@ -7,8 +7,26 @@ body {
 # FORMS
 --------------------------------------------------------------*/
 
-.question {
+.question, .answer {
     font-weight : 500 !important;
+}
+
+#oldSurveysList .question, .usersList .question {
+    display:inline-block;
+    padding:0 22px;
+    margin: 15px auto 15px;
+}
+
+.answer {
+    margin: 10px auto 10px;
+}
+
+.usersList label {
+    display: inline-block;
+    float: left;
+    clear: left;
+    text-align: center;
+    margin-bottom: 15px;
 }
 
 .form-field label {
@@ -24,8 +42,7 @@ body {
     margin-left: 1em;
 }
 
-#formView form, #surveyCreation form {
-    margin-top: 10% !important;
+#formView form, .formView form, #surveyCreation form, #oldSurveysList, .usersList, #answersList {
     margin-left: 25%;
     display: inline-grid;
     width: 50%;
@@ -52,6 +69,25 @@ body {
     text-align: right;
     margin-bottom: 15px;
 }
+
+.simpleDiv {
+    display: block;
+    column-gap: 20px;
+    justify-content: space-between;
+    position: relative;
+    padding: 1rem;
+    margin: 1rem -15px 0;
+    margin-top: 20px !important;
+    margin-left: 25%;
+    width: 50%;
+    line-height: 1.5;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
 #surveyCreation {
     display: block;
     column-gap: 20px;
@@ -59,7 +95,6 @@ body {
     position: relative;
     padding: 1rem;
     margin: 1rem -15px 0;
-    border-width: .2rem 0 0;
 }
 
 #surveyCreation form {
@@ -133,13 +168,21 @@ span {
 # BUTTONS
 --------------------------------------------------------------*/
 
-#surveyDiv button {
+button.link {
+    background:none;
+    border:none;
+    color: #4285F4;
+    padding:0 22px;
+}
+
+#surveyDiv button, .secondaryBtn {
     color: #6c757d !important;
     background-color: #eff6ff !important;
     border-color: #6c757d !important;
 }
 
-#formView .buttons, #welcomeView .buttons, #homePage .buttons, #surveyDiv .buttons {
+#welcomeView .buttons, #homePage .buttons, #surveyDiv .buttons,
+.formView .buttons, #secondaryBtns .buttons {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -204,6 +247,9 @@ h1 {
     text-align: center;
 }
 
+#answersList h2 {
+    margin-bottom: 10px;
+}
 
 h2 {
     padding: 4px 0;

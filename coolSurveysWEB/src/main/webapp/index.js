@@ -85,7 +85,7 @@ let index = new Vue ({
                 this.login = false;
                 this.homepage = true;
                 console.log(response.data);
-                window.location.href = "./userHome.html";
+                window.location.href = "userHome.html";
             }).catch(response => {
                 console.log(response.data)
             });

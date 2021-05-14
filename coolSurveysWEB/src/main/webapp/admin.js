@@ -1,14 +1,66 @@
 let index = new Vue ({
     el: "#admin",
     data: {
+        activeSurveysDates:[],
+        newSurveyDate: "",
         questions: [{ question: "" }],
         options: [[{ option: "" }]],
         multipleChoice: false,
         questionAdded:[],
+        oldSurveysDates:["10/05/2021", "13/05/2021"],
+        toDelete:[],
+        submissions: [["Giuseppe", "yes", "quite bad"], ["Pino", "Bleah"]], //TODO: receive a map of arrays quest (key) -> user + answers (values)
+        deletions: ["Marco", "Annulla", "RandomUser"],
+        surveyToInspect: "",
+        userToInspect: "",
         message: '',
-        surveyCreation: true
+        wrongDateChoice: false,
+        welcome: true,
+        surveyDateChoice: false,
+        surveyCreation: false,
+        surveyDeletion: false,
+        surveysInspection:false,
+        oldSurveys:false,
+        singleSurveyInspection:false,
+        submissionsInspection: false,
+        deletionsInspection:false,
+        singleUserInspection:false
     },
-    computed: {},
+    computed: {
+
+        totalSubmissions: function () {
+            return [["10/05/2021", this.submissions, this.deletions]]
+        }, //elements of the array composed by survey date + its submissions
+
+        submissionOfChosenUser: function() {
+            let found = false;
+            let i;
+            let index;
+            for (i = 0; i<this.totalSubmissions.length; i++) {
+                //TODO: check date format
+               if (this.totalSubmissions[i][0] === this.surveyToInspect) {
+                   found = true;
+                   index = i;
+               }
+            }
+            if (found) {
+                for (let j = 0; j < this.totalSubmissions[index][1].length; j++) {
+                    if (this.totalSubmissions[index][1][j][0] === this.userToInspect)
+                        return this.totalSubmissions[index][1][j];
+                }
+            }
+            else {
+                return "";
+            }
+        },
+        deletionsOfChosenSurvey: function() {
+            let i;
+            for (i = 0; i<this.totalSubmissions.length; i++) {
+                if (this.totalSubmissions[i][0] === this.surveyToInspect)
+                    return this.totalSubmissions[i][2];
+            }
+        }
+    },
     methods: {
         addQuestion(questions, index) {
             questions.push({ question: "" });
@@ -35,6 +87,14 @@ let index = new Vue ({
         removeOption(index, options) {
             options.splice(index, 1);
         },
+        resetQuestionsForm(){
+            this.questions = [{ question: "" }];
+            this.options = [[{ option: "" }]];
+            this.multipleChoice = false;
+            this.questionAdded= [];
+            this.surveyCreation = false;
+            this.welcome = true;
+        },
         submitQuestionsForm(){
             let toSend = new Map();
             let i;
@@ -55,6 +115,49 @@ let index = new Vue ({
                     console.log(response.data)
                 });
             }
+        },
+        resetDeletion(){
+            this.toDelete = [];
+            this.surveyDeletion = false;
+            this.welcome = true;
+        },
+        submitDeletion(){
+            axios.post("./AdminSurvey", {
+                //send array of dates toDelete
+            }).then(response => {
+
+            }).catch(response => {
+                console.log(response.data)
+            });
+            this.surveyDeletion = false;
+            this.welcome = true;
+        },
+        resetNewSurveyDateChoice(){
+            this.welcome = true;
+            this.surveyDateChoice = false;
+            this.newSurveyDate = "";
+        },
+        checkValidDate(){
+            axios.get("", {
+                //TODO: get the active surveys dates and check if !== from new survey date
+            })
+            if (true) {
+                this.surveyDateChoice = false;
+                this.surveyCreation = true;
+            }
+            else {
+                this.wrongDateChoice = true;
+            }
+        },
+        setSurveyChoice(event) {
+            this.surveyToInspect = event.target.innerText;
+            this.oldSurveys = false;
+            this.singleSurveyInspection = true;
+        },
+        setUserChoice(event) {
+            this.userToInspect = event.target.innerText;
+            this.submissionsInspection = false;
+            this.singleUserInspection = true;
         }
     },
 });
