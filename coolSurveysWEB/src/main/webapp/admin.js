@@ -6,21 +6,26 @@ let index = new Vue ({
         questions: [{ question: "" }],
         options: [[{ option: "" }]],
         multipleChoice: false,
+        newProductName:"",
+        newProductImage:"",
         questionAdded:[],
-        oldSurveysDates:["10/05/2021", "13/05/2021"],
+        oldSurveys:[["10/05/2021", "ShampooGarden"], ["13/05/2021", "SpecialSoap"]],
         toDelete:[],
-        submissions: [["Giuseppe", "yes", "quite bad"], ["Pino", "Bleah"]], //TODO: receive a map of arrays quest (key) -> user + answers (values)
-        deletions: ["Marco", "Annulla", "RandomUser"],
+        usersWhoSubmitted: ["Giuseppe", "Pino"],
+        usersWhoDeleted: ["Marco", "Annulla", "RandomUser"],
+        singleUserAnswers: [["Did you like this product?", "yes a lot"], ["Do you find your hair softer?", "no"]], //questions + answers
         surveyToInspect: "",
         userToInspect: "",
         message: '',
         wrongDateChoice: false,
         welcome: true,
         surveyDateChoice: false,
+        surveyNewProduct: false,
+        surveyQuestions: false,
         surveyCreation: false,
         surveyDeletion: false,
         surveysInspection:false,
-        oldSurveys:false,
+        oldSurveysBool:false,
         singleSurveyInspection:false,
         submissionsInspection: false,
         deletionsInspection:false,
@@ -92,8 +97,8 @@ let index = new Vue ({
             this.options = [[{ option: "" }]];
             this.multipleChoice = false;
             this.questionAdded= [];
-            this.surveyCreation = false;
-            this.welcome = true;
+            this.surveyQuestions = false;
+            this.surveyNewProduct = true;
         },
         submitQuestionsForm(){
             let toSend = new Map();
@@ -107,8 +112,9 @@ let index = new Vue ({
                 axios.post("./AdminSurvey", {
                     object
                 }).then(response => {
-                    this.leaderboard = true;
-                    this.section2 = false;
+                    this.welcome = true;
+                    this.surveyQuestions = false;
+                    this.surveyCreation = false;
                     console.log(response.data)
 
                 }).catch(response => {
@@ -134,8 +140,10 @@ let index = new Vue ({
         },
         resetNewSurveyDateChoice(){
             this.welcome = true;
+            this.surveyCreation = false;
             this.surveyDateChoice = false;
             this.newSurveyDate = "";
+            this.newProductName = "";
         },
         checkValidDate(){
             axios.get("", {
@@ -143,15 +151,23 @@ let index = new Vue ({
             })
             if (true) {
                 this.surveyDateChoice = false;
-                this.surveyCreation = true;
+                this.surveyNewProduct = true;
             }
             else {
                 this.wrongDateChoice = true;
             }
         },
+        resetNewProduct(){
+            this.surveyDateChoice = true;
+            this.surveyNewProduct = false;
+        },
+        submitNewProduct(){
+            this.surveyNewProduct = false;
+            this.surveyQuestions = true;
+        },
         setSurveyChoice(event) {
             this.surveyToInspect = event.target.innerText;
-            this.oldSurveys = false;
+            this.oldSurveysBool = false;
             this.singleSurveyInspection = true;
         },
         setUserChoice(event) {

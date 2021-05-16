@@ -15,57 +15,70 @@
                     <h1>Welcome to CoolSurveys!</h1>
                 </header>
                 <div class = "buttons">
-                    <button id="createSurvey" v-on:click="()=>{surveyDateChoice = true; welcome = false}">Create Survey</button>
+                    <button id="createSurvey" v-on:click="()=>{surveyDateChoice = true; surveyCreation = true; welcome = false}">Create Survey</button>
                     <button id="deleteSurvey" v-on:click="()=>{surveyDeletion = true; welcome = false}">Delete Survey</button>
-                    <button id="surveysReview" v-on:click="()=>{surveysInspection = true; oldSurveys = true; welcome = false}">Surveys Inspection</button>
+                    <button id="surveysReview" v-on:click="()=>{surveysInspection = true; oldSurveysBool = true; welcome = false}">Surveys Inspection</button>
                 </div>
-            </div>
-            <div class = "formView" v-if = "surveyDateChoice">
-                <h1>Create New Survey</h1>
-                <form v-on:reset.prevent="resetNewSurveyDateChoice" v-on:submit.prevent="checkValidDate">
-                    <label class="question" for="date">Choose the date for your new product and survey: </label>
-                    <input type="date" id="date" v-model="newSurveyDate" required>
-                    <label v-if="wrongDateChoice"> A survey for this date has already been created. Choose another date. </label>
-                    <div class = "buttons">
-                        <button type="reset">Back</button>
-                        <button type="submit">Send survey</button>
-                    </div>
-                </form>
             </div>
             <div id="surveyCreation" v-if = "surveyCreation">
                 <h1>Create New Survey</h1>
-                     <div id= "surveyDiv" v-for="(input, questionIndex) in questions" :key="`questionInput-${questionIndex}`">
-
-                        <form v-on:reset.prevent="removeQuestion(questionIndex, questions)" v-on:submit.prevent="addQuestion(questions, questionIndex)">
-                            <div class="form-field">
-                                <label class="question">Question{{questionIndex + 1}}:</label>
-                                <input type="text" v-model="input.question" placeholder="enter new question" required><br>
-                                <div class = "buttons">
-                                    <button type="button" v-on:click="setMultipleChoice()">Multiple choice</button>
-                                    <button type="button" v-on:click="setOpenAnswer(questionIndex, options)">Open answer</button>
-                                </div>
-                            </div>
-                            <br> <label class="question" v-if="options[questionIndex]!=null && options[questionIndex].length <= 4 && multipleChoice">Optional multiple options:</label> <br>
-                            <div v-if="options[questionIndex]!=null && options[questionIndex].length <= 4 && multipleChoice"
-                                 v-for="(input, optionIndex) in options[questionIndex]" :key="`optionInput-${optionIndex}`" class="form-field">
-                                <label class="question">Option{{optionIndex + 1}}:</label>
-                                <input type="text" v-model="input.option" placeholder="enter new option" required><br>
-                                <div class = "buttons">
-                                    <button type="button" v-on:click="addOption(options[questionIndex], optionIndex)">Add option</button>
-                                    <button type="button" v-show="options[questionIndex].length > 1" v-on:click="removeOption(questionIndex, options[questionIndex])">Remove option</button>
-                                </div>
-                            </div>
-                            <br> <label v-if="options[questionIndex]!=null && options[questionIndex].length > 4 &&
-                            multipleChoice && questionAdded[questionIndex] !== true">Max number of options reached.</label> <br>
-                            <label v-if="questionAdded[questionIndex] === true">Question added to survey</label><br>
+                <div class="newSurveySetup" v-if = "surveyDateChoice">
+                    <form v-on:reset.prevent="resetNewSurveyDateChoice" v-on:submit.prevent="checkValidDate">
+                        <div class="form-field">
+                            <label class="question" for="date">New survey date: </label>
+                            <input type="date" id="date" v-model.trim="newSurveyDate" required>
+                            <label v-if="wrongDateChoice"> A survey for this date has already been created. Choose another date. </label>
+                        </div>
+                        <div class = "buttons">
+                            <button type="reset" class="reset">Back</button>
+                            <button type="submit">Next</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="newSurveySetup" id="newProduct" v-if="surveyNewProduct">
+                    <form v-on:reset.prevent="resetNewProduct" v-on:submit.prevent="submitNewProduct">
+                        <div class="form-field">
+                            <label class="question" for="newProductName">Product Name: </label>
+                            <input v-model.trim="newProductName" type="text" id ="newProductName" placeholder="product name" required/>
+                            <label class="question" for="newImage">Product Image: </label>
+                            <input v-model.trim="newProductImage" type="file" id ="newImage" accept=".jpg,.png,.jpeg" required/>
+                        </div>
+                        <div class = "buttons">
+                            <button type="reset">Back</button>
+                            <button type="submit">Create product</button>
+                        </div>
+                    </form>
+                </div>
+                <div id="surveyDiv" v-if="surveyQuestions" v-for="(input, questionIndex) in questions" :key="`questionInput-${questionIndex}`">
+                    <form v-on:reset.prevent="removeQuestion(questionIndex, questions)" v-on:submit.prevent="addQuestion(questions, questionIndex)">
+                        <div class="form-field">
+                            <label class="question">Question{{questionIndex + 1}}:</label>
+                            <input type="text" v-model.trim="input.question" placeholder="enter new question" required><br>
                             <div class = "buttons">
-                                <button type="submit" v-if="questionAdded[questionIndex] !== true">Add question</button>
-                                <button v-show="questions.length > 1" type="reset">Remove question</button><br>
+                                <button type="button" v-on:click="setMultipleChoice()">Multiple choice</button>
+                                <button type="button" v-on:click="setOpenAnswer(questionIndex, options)">Open answer</button>
                             </div>
-                        </form>
-
-                    </div>
-                <div id="addSurveyForm">
+                        </div>
+                        <br> <label class="question" v-if="options[questionIndex]!=null && options[questionIndex].length <= 4 && multipleChoice">Optional multiple options:</label> <br>
+                        <div v-if="options[questionIndex]!=null && options[questionIndex].length <= 4 && multipleChoice"
+                             v-for="(input, optionIndex) in options[questionIndex]" :key="`optionInput-${optionIndex}`" class="form-field">
+                            <label class="question">Option{{optionIndex + 1}}:</label>
+                            <input type="text" v-model.trim="input.option" placeholder="enter new option" required><br>
+                            <div class = "buttons">
+                                <button type="button" v-on:click="addOption(options[questionIndex], optionIndex)">Add option</button>
+                                <button type="button" v-show="options[questionIndex].length > 1" v-on:click="removeOption(questionIndex, options[questionIndex])">Remove option</button>
+                            </div>
+                        </div>
+                        <br> <label v-if="options[questionIndex]!=null && options[questionIndex].length > 4 &&
+                        multipleChoice && questionAdded[questionIndex] !== true">Max number of options reached.</label> <br>
+                        <label v-if="questionAdded[questionIndex] === true">Question added to survey</label><br>
+                        <div class = "buttons">
+                            <button type="submit" v-if="questionAdded[questionIndex] !== true">Add question</button>
+                            <button v-show="questions.length > 1" type="reset">Remove question</button><br>
+                        </div>
+                    </form>
+                </div>
+                <div id="addSurveyForm" v-if="surveyQuestions">
                     <form v-on:reset.prevent="resetQuestionsForm" v-on:submit.prevent="submitQuestionsForm" method="post">
                         <div class = "buttons">
                             <button type="reset">Back</button>
@@ -79,10 +92,10 @@
                 <h1>Choose the survey/s to delete</h1>
                 <form v-on:reset.prevent="resetDeletion" v-on:submit.prevent="submitDeletion">
                     <div class="form-field">
-                        <label class="question">Saved surveys from previous days:</label>
-                        <div class="multipleChoiceQuestion" v-for="date in oldSurveysDates">
-                            <input type="checkbox" v-model="toDelete" :value="date" :id="date">
-                            <label :for="date">{{date}}</label>
+                        <label class="question">Select past surveys to delete:</label>
+                        <div class="multipleChoiceQuestion" v-for="date in oldSurveys">
+                            <input type="checkbox" v-model.trim="toDelete" :value="date[0]" :id="date[0]">
+                            <label :for="date[0]">{{date[0]}} - {{date[1]}}</label>
                         </div>
                     </div>
                     <div class="buttons">
@@ -93,49 +106,54 @@
             </div>
             <div id = "surveysInspection" v-if = "surveysInspection">
                 <h1>Surveys Inspection</h1>
-                <div id = "oldSurveysList" v-if = "oldSurveys">
-                    <button class="link" v-for="date in oldSurveysDates" v-on:click="setSurveyChoice($event)">{{date}} </button>
+                <div id = "oldSurveysList" v-if = "oldSurveysBool">
+                    <h2>Saved surveys from previous days:</h2>
+                    <div v-for="oldSurvey in oldSurveys">
+                        <button class="link"  v-on:click="setSurveyChoice($event)">{{oldSurvey[0]}}</button>
+                        <label class="link">{{oldSurvey[1]}}</label>
+                    </div>
                     <label class="question">Click on a date for further details</label>
                     <div class="buttons">
                         <button v-on:click="()=>{surveysInspection = false; welcome = true}">Back</button>
                     </div>
                 </div>
             </div>
-            <div v-if = "singleSurveyInspection">
-                <div class = "simpleDiv">
+            <div id = "singleSurveyInspection" v-if = "singleSurveyInspection">
+                <div class = "usersList">
                     <div  id = "secondaryBtns">
                         <div class="buttons">
                             <button class = "secondaryBtn" v-on:click="()=>{singleSurveyInspection = false; submissionsInspection = true}">Submissions</button>
                             <button class = "secondaryBtn" v-on:click="()=>{singleSurveyInspection = false; deletionsInspection = true}">Deletions</button>
                         </div>
                     </div>
-                    <br>
-                    <div class="buttons">
-                        <button v-on:click="()=>{singleSurveyInspection = false; surveysInspection = true; oldSurveys = true;}">Back</button>
+                    <div>
+                        <button v-on:click="()=>{singleSurveyInspection = false; surveysInspection = true; oldSurveysBool = true;}">Back</button>
                     </div>
                 </div>
             </div>
-            <div v-if = "submissionsInspection">
+            <div id = "submissionsInspection" v-if = "submissionsInspection">
                 <div class = "usersList">
-                    <button class="link" v-for="submission in submissions" v-on:click="setUserChoice($event)">{{submission[0]}}</button>
+                    <h2>Users who submitted the questionnaire:</h2>
+                    <button class="link" v-for="user in usersWhoSubmitted" v-on:click="setUserChoice($event)">{{user}}</button>
+                    <label class="question">Click on a name to see submission details</label>
                     <div class="buttons" >
                         <button v-on:click="()=>{submissionsInspection = false; singleSurveyInspection = true;}">Back</button>
                     </div>
                 </div>
             </div>
-            <div v-if = "singleUserInspection">
+            <div id = "singleUserInspection" v-if = "singleUserInspection">
                 <div id = "answersList">
-                    <h2>{{userToInspect}}</h2>
-                    <label v-for="(answer, index) in submissionOfChosenUser" v-if="index" class = answer>Question {{index}} : {{answer}}</label>
+                    <h2>{{userToInspect}}'s answers:</h2>
+                    <label v-for="answer in singleUserAnswers" class = "answer">{{answer[0]}} - {{answer[1]}}</label>
                     <div class="buttons">
                         <button v-on:click="()=>{singleUserInspection = false; submissionsInspection = true;}">Back</button>
                     </div>
                 </div>
             </div>
-            <div v-if = "deletionsInspection">
+            <div id = "deletionsInspection" v-if = "deletionsInspection">
                 <div class = "usersList">
-                    <h2>List of users who cancelled the questionnaire: </h2>
-                    <label v-for="user in deletions">{{user}}</label>
+                    <h2>Users who cancelled the questionnaire: </h2>
+                    <label v-for="user in usersWhoDeleted">{{user}}</label>
                     <div class="buttons" >
                         <button v-on:click="()=>{deletionsInspection = false; singleSurveyInspection = true;}">Back</button>
                     </div>

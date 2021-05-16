@@ -18,7 +18,7 @@ body {
 }
 
 .answer {
-    margin: 10px auto 10px;
+    margin: 10px auto 5px;
 }
 
 .usersList label {
@@ -26,7 +26,7 @@ body {
     float: left;
     clear: left;
     text-align: center;
-    margin-bottom: 15px;
+    margin-bottom: 5px;
 }
 
 .form-field label {
@@ -42,7 +42,7 @@ body {
     margin-left: 1em;
 }
 
-#formView form, .formView form, #surveyCreation form, #oldSurveysList, .usersList, #answersList {
+#formView form, .formView form, #surveyDiv form, #oldSurveysList, .usersList, #answersList {
     margin-left: 25%;
     display: inline-grid;
     width: 50%;
@@ -56,17 +56,19 @@ body {
     transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
 
-#registrationView input, #loginView input {
+#registrationView input, #loginView input, .newSurveySetup input {
+    margin-top: 12px;
     display: inline-block;
     float: left;
 }
 
-#registrationView label, #loginView label {
+#registrationView label, #loginView label, .newSurveySetup label {
     display: inline-block;
     float: left;
     clear: left;
     width: 40%;
     text-align: right;
+    margin-top: 15px;
     margin-bottom: 15px;
 }
 
@@ -97,7 +99,7 @@ body {
     margin: 1rem -15px 0;
 }
 
-#surveyCreation form {
+#surveyDiv form {
     display: block;
     margin-top: 20px !important;
     margin-left: 25%;
@@ -110,7 +112,7 @@ body {
     transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
 
-#registrationView form, #loginView form {
+#registrationView form, #loginView form, .newSurveySetup form {
     margin-top: 13% !important;
     margin-left: 25%;
     width: 50%;
@@ -182,14 +184,14 @@ button.link {
 }
 
 #welcomeView .buttons, #homePage .buttons, #surveyDiv .buttons,
-.formView .buttons, #secondaryBtns .buttons {
+.formView .buttons, #secondaryBtns .buttons, .simpleDiv .buttons {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 50px;
 }
 
-#registrationView .buttons, #loginView .buttons, #leaderBoard .buttons {
+#registrationView .buttons, #loginView .buttons, #leaderBoard .buttons, .newSurveySetup .buttons {
     display: inline-flex;
     justify-content: center;
     align-items: center;
@@ -247,8 +249,9 @@ h1 {
     text-align: center;
 }
 
-#answersList h2 {
-    margin-bottom: 10px;
+#answersList h2, .usersList h2, #oldSurveysList h2 {
+    margin-bottom: 5px;
+    margin-top: 5px;
 }
 
 h2 {
