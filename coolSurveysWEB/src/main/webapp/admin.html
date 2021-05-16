@@ -40,8 +40,10 @@
                         <div class="form-field">
                             <label class="question" for="newProductName">Product Name: </label>
                             <input v-model.trim="newProductName" type="text" id ="newProductName" placeholder="product name" required/>
-                            <label class="question" for="newImage">Product Image: </label>
-                            <input v-model.trim="newProductImage" type="file" id ="newImage" accept=".jpg,.png,.jpeg" required/>
+                            <label id = "uploadImage" class="question" for="newImage">Load Image</label>
+                            <input v-on:change="handleImageUpdate($event)" type="file" id ="newImage" style="display:none" accept=".jpg,.png,.jpeg" required/>
+                            <span v-if="!newProductImage">No file selected</span>
+                            <span v-if="newProductImage">{{newProductImage.name}}</span>
                         </div>
                         <div class = "buttons">
                             <button type="reset">Back</button>
@@ -86,7 +88,6 @@
                         </div>
                     </form>
                 </div>
-
             </div>
             <div class="formView" v-if = "surveyDeletion">
                 <h1>Choose the survey/s to delete</h1>

@@ -56,8 +56,8 @@ body {
     transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
 
-#registrationView input, #loginView input, .newSurveySetup input {
-    margin-top: 12px;
+#registrationView input, #loginView input, .newSurveySetup input, span{
+    margin-top: 1.15em;
     display: inline-block;
     float: left;
 }
@@ -68,7 +68,7 @@ body {
     clear: left;
     width: 40%;
     text-align: right;
-    margin-top: 15px;
+    margin-top: 1.33em;
     margin-bottom: 15px;
 }
 
@@ -112,8 +112,11 @@ body {
     transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
 
+.newSurveySetup form {
+    margin-top: 7% !important;
+}
+
 #registrationView form, #loginView form, .newSurveySetup form {
-    margin-top: 13% !important;
     margin-left: 25%;
     width: 50%;
     line-height: 1.5;
@@ -125,17 +128,22 @@ body {
     transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
 
+#registrationView form, #loginView form {
+    margin-top: 13% !important;
+}
+
 #addSurveyForm form {
+    display: block;
+    margin-top: 20px !important;
+    margin-left: 25%;
+    width: 50%;
+    line-height: 1.5;
     background-color: transparent;
     border-color: transparent;
 }
 
 #the-count {
     position: relative;
-}
-
-span {
-    color: rgb(102, 102, 102);
 }
 
 .productOpenQuestion textarea {
@@ -229,11 +237,36 @@ button:hover{
     }
 }
 
-button, input, optgroup, select, option {
+button, input, optgroup, select, option, span {
     margin: 0;
     font-family: inherit;
     font-size: inherit;
     line-height: inherit;
+}
+
+/*--------------------------------------------------------------
+# INPUT FILE
+--------------------------------------------------------------*/
+
+span {
+    color: rgb(102, 102, 102);
+    margin: 18px 0px 15px 0px !important;
+    text-align:center;
+}
+
+#uploadImage {
+    margin: 15px 20px 15px 15%;
+    border:0.16em solid #FF4E4E;
+    width: 25%;
+    border-radius:2em;
+    box-sizing: border-box;
+    font-family:'Lato',sans-serif;
+    font-weight:300;
+    color: #FF4E4E;
+    -webkit-box-sizing: border-box;
+    text-shadow: 0 0.04em 0.04em rgba(0,0,0,0.35);
+    text-align:center;
+    transition: all 0.2s;
 }
 
 /*--------------------------------------------------------------
@@ -265,9 +298,8 @@ h2 {
     display: block;
     margin-bottom: 1rem;
     margin-block-start: 1.33em;
-    margin-block-end: 1.33em;
-    margin-inline-start: 0px;
-    margin-inline-end: 0px;
+    margin-inline-start: 0;
+    margin-inline-end: 0;
 }
 
 /*--------------------------------------------------------------

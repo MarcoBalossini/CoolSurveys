@@ -97,6 +97,8 @@ let index = new Vue ({
             this.options = [[{ option: "" }]];
             this.multipleChoice = false;
             this.questionAdded= [];
+            this.newProductImage="";
+            this.newProductName="";
             this.surveyQuestions = false;
             this.surveyNewProduct = true;
         },
@@ -156,6 +158,9 @@ let index = new Vue ({
             else {
                 this.wrongDateChoice = true;
             }
+        },
+        handleImageUpdate(event) {
+            this.newProductImage = event.target.files[0];
         },
         resetNewProduct(){
             this.surveyDateChoice = true;
