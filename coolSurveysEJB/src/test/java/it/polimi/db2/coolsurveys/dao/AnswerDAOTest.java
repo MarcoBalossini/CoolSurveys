@@ -1,16 +1,14 @@
 package it.polimi.db2.coolsurveys.dao;
 
+import it.polimi.db2.coolsurveys.PersistenceTest;
 import it.polimi.db2.coolsurveys.dao.exceptions.AlreadyExistsException;
 import it.polimi.db2.coolsurveys.dao.exceptions.BadWordFoundException;
-import it.polimi.db2.coolsurveys.dao.exceptions.NotFoundException;
 import it.polimi.db2.coolsurveys.entities.Question;
 import it.polimi.db2.coolsurveys.entities.Questionnaire;
-import it.polimi.db2.coolsurveys.entities.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.persistence.PersistenceException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +16,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class AnswerDAOTest extends DAOTest {
+public class AnswerDAOTest extends PersistenceTest {
 
     static protected QuestionnaireDAO questionnaireDAO = new QuestionnaireDAO(em);
     static protected AnswerDAO answerDAO = new AnswerDAO(em);

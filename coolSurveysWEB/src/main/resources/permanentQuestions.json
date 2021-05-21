@@ -9,8 +9,8 @@
     "options": [
       "Male",
       "Female",
-      "Non-binary",
-      "Dunno ・_・"
+      "Non_binary",
+      "Dunno"
     ],
     "type": "radio"
   },

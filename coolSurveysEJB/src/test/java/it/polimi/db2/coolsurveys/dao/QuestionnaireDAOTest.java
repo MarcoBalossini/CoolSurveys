@@ -1,5 +1,6 @@
 package it.polimi.db2.coolsurveys.dao;
 
+import it.polimi.db2.coolsurveys.PersistenceTest;
 import it.polimi.db2.coolsurveys.dao.exceptions.AlreadyExistsException;
 import it.polimi.db2.coolsurveys.dao.exceptions.NotFoundException;
 import it.polimi.db2.coolsurveys.entities.Option;
@@ -15,7 +16,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class QuestionnaireDAOTest extends DAOTest {
+public class QuestionnaireDAOTest extends PersistenceTest {
 
 
     @Test

@@ -1,4 +1,4 @@
-package it.polimi.db2.coolsurveys.dao;
+package it.polimi.db2.coolsurveys;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -9,7 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-abstract public class DAOTest {
+abstract public class PersistenceTest {
     static protected EntityManagerFactory emf;
     static protected EntityManager em;
 

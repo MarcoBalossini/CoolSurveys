@@ -1,13 +1,12 @@
 package it.polimi.db2.coolsurveys.services;
 
 import it.polimi.db2.coolsurveys.dao.AnswerDAO;
-import com.google.gson.JsonObject;
 import it.polimi.db2.coolsurveys.dao.QuestionnaireDAO;
 import it.polimi.db2.coolsurveys.entities.*;
 import it.polimi.db2.coolsurveys.dao.SubmissionDAO;
 import it.polimi.db2.coolsurveys.dao.UserDAO;
 import it.polimi.db2.coolsurveys.dao.exceptions.AlreadyExistsException;
-import it.polimi.db2.coolsurveys.dao.exceptions.BadWordFoundException;
+import it.polimi.db2.coolsurveys.services.exceptions.BadWordFoundException;
 import it.polimi.db2.coolsurveys.dao.exceptions.BlockedAccountException;
 import it.polimi.db2.coolsurveys.dao.exceptions.NotFoundException;
 import it.polimi.db2.coolsurveys.entities.Question;
@@ -15,8 +14,6 @@ import it.polimi.db2.coolsurveys.entities.Question;
 import javax.ejb.*;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceException;
-import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,7 +28,7 @@ public class SurveysService implements ISurveysService {
     @EJB(name = "it.polimi.db2.coolsurveys.dao/AnswerDAO")
     protected AnswerDAO answerDAO;
 
-    @EJB(name = "it.polimi.db2.coolsuveys.dao/UserDAO")
+    @EJB
     protected UserDAO userDAO;
 
     @EJB(name = "it.polimi.db2.coolsurveys.dao/SubmissionDAO")
@@ -40,6 +37,14 @@ public class SurveysService implements ISurveysService {
     @PersistenceContext(unitName = "coolSurveys")
     protected EntityManager em;
 
+    protected SurveysService(QuestionnaireDAO questionnaireDAO, AnswerDAO answerDAO, UserDAO userDAO, SubmissionDAO submissionDAO) {
+        this.questionnaireDAO = questionnaireDAO;
+        this.answerDAO = answerDAO;
+        this.userDAO = userDAO;
+        this.submissionDAO = submissionDAO;
+    }
+
+    public SurveysService () {}
 
     /**
      * {@inheritDoc}
@@ -52,30 +57,26 @@ public class SurveysService implements ISurveysService {
 
     }
 
+
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void insertAnswers(Map<String, String> answers, Credentials credentials, Integer age, String gender, String expLvl) throws BlockedAccountException, BadWordFoundException, AlreadyExistsException, NotFoundException {
+    public void registerSubmission(Map<String, String> answers, Credentials credentials, Integer age, String gender, String expLvl) throws BlockedAccountException, AlreadyExistsException, NotFoundException, BadWordFoundException {
 
         if(answers == null || credentials == null)
             throw new IllegalArgumentException();
 
-        User user = credentials.getUser();
-
         Questionnaire questionnaire = questionnaireDAO.getByDate(LocalDate.now());
 
-        //check if User is banned
-        if(user.getBlockedUntil().isAfter(LocalDateTime.now()))
-            throw new BlockedAccountException();
-
-        List<Question> questions = questionnaire.getQuestions();
+        User user = credentials.getUser();
 
         try {
-            for (Question question : questions)
-                answerDAO.insertAnswer(question, answers.get(question.getQuestion()), user);
-        } catch (BadWordFoundException e) {
-
-            //userDAO.banUser(user);
-            throw new BadWordFoundException();
+            insertAnswers(questionnaire, answers, user);
+        } catch (it.polimi.db2.coolsurveys.dao.exceptions.BadWordFoundException e) {
+            /*
+                At this point the transaction should be marked for rollback as BadWordFoundException is
+                annotated with @ApplicationException(rollback = true)
+             */
+            System.out.println("User inserted a swear word.");
+            throw new BadWordFoundException("User inserted a swear word.");
         }
 
         //Converts to null values if strings are empty ("")
@@ -85,4 +86,21 @@ public class SurveysService implements ISurveysService {
         submissionDAO.insert(user, questionnaire, age, genderOpt, expLvlOpt);
 
     }
+
+    private void insertAnswers(Questionnaire questionnaire, Map<String, String> answers, User user) throws AlreadyExistsException, it.polimi.db2.coolsurveys.dao.exceptions.BadWordFoundException, BlockedAccountException, NotFoundException {
+
+        //check if User is banned
+        if(user.getBlockedUntil().isAfter(LocalDateTime.now()))
+            throw new BlockedAccountException();
+
+        for(Question question : questionnaire.getQuestions())
+            answerDAO.insertAnswer(question, answers.get(question.getQuestion()), user);
     }
+
+    public void blockUser(Credentials credentials) {
+        User user = credentials.getUser();
+
+        userDAO.banUser(user);
+    }
+
+}

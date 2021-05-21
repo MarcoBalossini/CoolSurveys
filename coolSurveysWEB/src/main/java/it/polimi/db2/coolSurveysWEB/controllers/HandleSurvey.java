@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import it.polimi.db2.coolSurveysWEB.utils.JsonUtils;
 import it.polimi.db2.coolSurveysWEB.utils.ResponseQuestionnaire;
+import it.polimi.db2.coolsurveys.services.exceptions.BadWordFoundException;
 import it.polimi.db2.coolsurveys.dao.exceptions.DAOException;
 import it.polimi.db2.coolsurveys.entities.Credentials;
 import it.polimi.db2.coolsurveys.entities.Question;
@@ -115,11 +116,16 @@ public class HandleSurvey extends HttpServlet {
         try {
             int age = Integer.parseInt(sec2Answers.get(0));
 
-            surveysService.insertAnswers(JsonUtils.convertToMap(json), credentials, age, sec2Answers.get(1), sec2Answers.get(2));
+            surveysService.registerSubmission(JsonUtils.convertToMap(json), credentials, age, sec2Answers.get(1), sec2Answers.get(2));
             response.setStatus(HttpServletResponse.SC_ACCEPTED);
         } catch (NumberFormatException nfe) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().println("Age must be a number");
+        } catch (BadWordFoundException e) {
+            surveysService.blockUser(credentials);
+
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().println("Your answers contained swear words. Your account will be blocked");
         } catch (Exception e) {
             e.printStackTrace();
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
