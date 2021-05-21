@@ -97,12 +97,7 @@ public class CheckLogin extends HttpServlet {
             return;
         }
 
-        request.getSession().setAttribute("user", credentials);
-
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().println(credentials.getUsername());
+        login(request, response, credentials);
     }
 
     /**
@@ -149,14 +144,10 @@ public class CheckLogin extends HttpServlet {
 
             Cookie authCookie  = new Cookie(AUTH_TOKEN, token);
             authCookie.setMaxAge(24*60*60);
+            authCookie.setHttpOnly(true);
             response.addCookie(authCookie);
 
-            request.getSession().setAttribute("user", credentials);
-
-            response.setStatus(HttpServletResponse.SC_OK);
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
-            response.getWriter().println(credentials.getUsername());
+            login(request, response, credentials);
 
         } catch (ServiceException e) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -168,6 +159,20 @@ public class CheckLogin extends HttpServlet {
             return;
         }
 
+    }
+
+    private void login(HttpServletRequest request, HttpServletResponse response, Credentials credentials) throws IOException {
+        request.getSession().setAttribute("user", credentials);
+
+        if (credentials.isAdmin()) {
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.sendRedirect("/admin.html");
+        } else {
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().println(credentials.getUsername());
+        }
     }
 
 }

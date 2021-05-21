@@ -84,12 +84,10 @@ public class ResponseQuestionnaire {
 
     private String name;
     private LocalDate date;
-    private byte[] photo;
     private List<ResponseQuestion> questions = new ArrayList<>();
 
-    public ResponseQuestionnaire(String name, byte[] photo, LocalDate date) {
+    public ResponseQuestionnaire(String name, LocalDate date) {
         this.name = name;
-        this.photo = photo;
         this.date = date;
     }
 
@@ -113,6 +111,6 @@ public class ResponseQuestionnaire {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ResponseQuestionnaire that = (ResponseQuestionnaire) o;
-        return Objects.equals(name, that.name) && Objects.equals(date, that.date) && Arrays.equals(photo, that.photo) && Objects.equals(questions, that.questions);
+        return Objects.equals(name, that.name) && Objects.equals(date, that.date) && Objects.equals(questions, that.questions);
     }
 }

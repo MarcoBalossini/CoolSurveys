@@ -19,6 +19,8 @@ import javax.persistence.PersistenceException;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -85,4 +87,61 @@ public class SurveysService implements ISurveysService {
         submissionDAO.insert(user, questionnaire, age, genderOpt, expLvlOpt);
 
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public LocalDate createSurvey(Map<String, List<String>> survey) {
+        return null;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Questionnaire> getSurveyList() {
+        return new ArrayList<>();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void deleteSurvey(LocalDate date) {
+        return;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<User> getSurveyResponders(LocalDate date, boolean hasSubmitted) {
+        return new ArrayList<>();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Submission getSurveySubmission(LocalDate date, String username) {
+        return new Submission();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Map<String, String> getSurveyAnswers(LocalDate date, String username) {
+        //Fai la query con ORDER BY questionID e usa una LinkedHashMap per mantenere l'ordine
+        return new LinkedHashMap<>();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public byte[] getImage() {
+        return new byte[0];
+    }
+}

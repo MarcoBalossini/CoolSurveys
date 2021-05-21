@@ -31,7 +31,7 @@ import static org.mockito.Mockito.*;
 class HandleSurveyTest {
 
     @Test
-    public void testSurveyRetrieval() throws IOException, IllegalAccessException, ServletException, NoSuchFieldException {
+    void testSurveyRetrieval() throws IOException, IllegalAccessException, ServletException, NoSuchFieldException {
 
         //Test questionnaire not found
         testGetMockDB(null, "Survey not found", null);
@@ -52,7 +52,7 @@ class HandleSurveyTest {
         question.setOptions(List.of(option, option2));
         questionnaire.setQuestions(List.of(question, question2));
 
-        ResponseQuestionnaire responseQuestionnaire = new ResponseQuestionnaire(questionnaireName, photo, null);
+        ResponseQuestionnaire responseQuestionnaire = new ResponseQuestionnaire(questionnaireName, null);
         ResponseQuestionnaire.ResponseQuestion responseQuestion = new ResponseQuestionnaire.ResponseQuestion(1, questionText, 1);
         ResponseQuestionnaire.ResponseQuestion responseQuestion2 = new ResponseQuestionnaire.ResponseQuestion(2, question2Text, 1);
         ResponseQuestionnaire.ResponseOption responseOption = new ResponseQuestionnaire.ResponseOption(1, optionText);
@@ -109,7 +109,7 @@ class HandleSurveyTest {
     }
 
     @Test
-    public void testSurveySubmission() throws IOException, ServletException, NoSuchFieldException, IllegalAccessException {
+    void testSurveySubmission() throws IOException, ServletException, NoSuchFieldException, IllegalAccessException {
         HttpServletRequest request = mock(HttpServletRequest.class);
         HttpServletResponse response = mock(HttpServletResponse.class);
         ISurveysService surveysService = mock(SurveysService.class);

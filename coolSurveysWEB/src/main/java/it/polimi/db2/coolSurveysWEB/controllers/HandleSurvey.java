@@ -94,7 +94,7 @@ public class HandleSurvey extends HttpServlet {
             try {
                 String question = q.get("question").getAsString();
                 answer = json.get(question).getAsString();
-                q.get("options").getAsJsonArray().forEach((option) -> stringOptions.add(option.getAsString()));
+                q.get("options").getAsJsonArray().forEach(option -> stringOptions.add(option.getAsString()));
 
                 if (!stringOptions.isEmpty() && !stringOptions.contains(answer) && !answer.isEmpty()) {
                     response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -134,7 +134,7 @@ public class HandleSurvey extends HttpServlet {
      */
     private ResponseQuestionnaire createResponseObject(Questionnaire q) {
 
-        ResponseQuestionnaire questionnaire = new ResponseQuestionnaire(q.getName(), q.getPhoto(), q.getDate());
+        ResponseQuestionnaire questionnaire = new ResponseQuestionnaire(q.getName(), q.getDate());
 
         //Create options
         Map<Question, List<ResponseQuestionnaire.ResponseOption>> optPerQuestion = new HashMap<>();
@@ -200,7 +200,7 @@ public class HandleSurvey extends HttpServlet {
             ResponseQuestionnaire.ResponseQuestion question =
                     new ResponseQuestionnaire.ResponseQuestion(i, q.get("question").getAsString(), 2, q.get("type").getAsString());
             List<String> stringOptions = new ArrayList<>();
-            q.get("options").getAsJsonArray().forEach((option) -> stringOptions.add(option.getAsString()));
+            q.get("options").getAsJsonArray().forEach(option -> stringOptions.add(option.getAsString()));
 
             int j = 1;
             List<ResponseQuestionnaire.ResponseOption> options = new ArrayList<>();
