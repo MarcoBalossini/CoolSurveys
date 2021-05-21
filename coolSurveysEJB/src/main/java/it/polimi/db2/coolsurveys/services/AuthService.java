@@ -6,6 +6,7 @@ import it.polimi.db2.coolsurveys.services.exceptions.InvalidCredentialsException
 import it.polimi.db2.coolsurveys.dao.exceptions.NotFoundException;
 import it.polimi.db2.coolsurveys.entities.Credentials;
 import it.polimi.db2.coolsurveys.entities.User;
+import it.polimi.db2.coolsurveys.utility.HashUtility;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -30,7 +31,7 @@ public class AuthService implements IAuthService {
 
         Credentials credentials = user.getCredentials();
 
-        if(credentials.getPassword_hash().equals(password)) {
+        if(HashUtility.verifyHash(password, credentials.getPassword_hash())) {
             dataAccess.log(user);
             return credentials;
         }
@@ -60,9 +61,11 @@ public class AuthService implements IAuthService {
 
         Credentials credentials;
 
-        credentials = dataAccess.insertUser(username, password, mail, isAdmin).getCredentials();
+        credentials = dataAccess.insertUser(username, HashUtility.hash(password), mail, isAdmin).getCredentials();
 
         return credentials;
 
     }
+
+
 }

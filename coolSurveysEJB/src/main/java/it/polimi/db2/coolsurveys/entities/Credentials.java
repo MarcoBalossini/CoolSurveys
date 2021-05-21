@@ -31,6 +31,11 @@ public class Credentials implements Serializable {
         return user;
     }
 
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     @OneToOne(fetch = FetchType.EAGER, mappedBy = "credentials", orphanRemoval = true)
     private User user;
 

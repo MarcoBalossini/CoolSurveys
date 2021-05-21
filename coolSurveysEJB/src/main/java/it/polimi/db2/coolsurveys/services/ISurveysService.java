@@ -1,7 +1,7 @@
 package it.polimi.db2.coolsurveys.services;
 
 import it.polimi.db2.coolsurveys.dao.exceptions.AlreadyExistsException;
-import it.polimi.db2.coolsurveys.dao.exceptions.BadWordFoundException;
+import it.polimi.db2.coolsurveys.services.exceptions.BadWordFoundException;
 import it.polimi.db2.coolsurveys.dao.exceptions.BlockedAccountException;
 import it.polimi.db2.coolsurveys.dao.exceptions.NotFoundException;
 import it.polimi.db2.coolsurveys.entities.*;
@@ -30,9 +30,9 @@ public interface ISurveysService {
      * @throws BadWordFoundException if the user typed some forbidden word.
      * @throws AlreadyExistsException if the user already submitted questionnaire `questionnaire`
      */
-    void insertAnswers(Map<String, String> answers, Credentials user, Integer age, String gender, String expLvl) throws BlockedAccountException, BadWordFoundException, AlreadyExistsException, NotFoundException;
+    void registerSubmission(Map<String, String> answers, Credentials user, Integer age, String gender, String expLvl) throws BlockedAccountException, AlreadyExistsException, NotFoundException, BadWordFoundException;
 
-
+    void blockUser(Credentials credentials);
 
     /**
      * Create a survey in the database for the first available day.

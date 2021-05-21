@@ -49,6 +49,7 @@ public class User implements Serializable {
 
     public void setCredentials(Credentials credentials) {
         this.credentials = credentials;
+        credentials.setUser(this);
     }
 
     public List<Answer> getAnswers() {

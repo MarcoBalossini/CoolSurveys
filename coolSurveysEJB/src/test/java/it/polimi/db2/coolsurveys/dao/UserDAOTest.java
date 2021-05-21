@@ -1,15 +1,20 @@
 package it.polimi.db2.coolsurveys.dao;
 
+import it.polimi.db2.coolsurveys.PersistenceTest;
 import it.polimi.db2.coolsurveys.dao.exceptions.AlreadyExistsException;
 import it.polimi.db2.coolsurveys.dao.exceptions.NotFoundException;
+import it.polimi.db2.coolsurveys.entities.BadWord;
 import it.polimi.db2.coolsurveys.entities.User;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.time.LocalDateTime;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-public class UserDAOTest extends DAOTest{
+public class UserDAOTest extends PersistenceTest {
 
     @Test
     public void insertUser() {
@@ -37,15 +42,18 @@ public class UserDAOTest extends DAOTest{
 
         try {
             User u = dao.retrieveUserByUsername("user1");
+            LocalDateTime blockedUntil = u.getBlockedUntil();
 
             dao.banUser(u);
+
+            em.getTransaction().commit();
+
+            assert(u.getBlockedUntil().isAfter(blockedUntil.plusMonths(BadWord.MONTHS_TO_BAN)));
 
         } catch (NotFoundException e) {
             System.out.println(e.getMessage());
             fail();
         }
-
-        em.getTransaction().commit();
     }
 
     @Test

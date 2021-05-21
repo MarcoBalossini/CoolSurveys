@@ -2,6 +2,7 @@ package it.polimi.db2.coolsurveys.dao;
 
 import it.polimi.db2.coolsurveys.dao.exceptions.AlreadyExistsException;
 import it.polimi.db2.coolsurveys.dao.exceptions.NotFoundException;
+import it.polimi.db2.coolsurveys.entities.BadWord;
 import it.polimi.db2.coolsurveys.entities.Credentials;
 import it.polimi.db2.coolsurveys.entities.Log;
 import it.polimi.db2.coolsurveys.entities.User;
@@ -12,15 +13,14 @@ import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import java.time.LocalDateTime;
 
 @Stateless
 public class UserDAO {
     @PersistenceContext(unitName = "coolSurveys")
     private EntityManager em;
 
-    private static final int monthsToBeBanned = 1;
-
-    protected UserDAO(EntityManager em) {
+    public UserDAO(EntityManager em) {
         this.em = em;
     }
 
@@ -82,7 +82,7 @@ public class UserDAO {
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void banUser(User user) {
-        user.setBlockedUntil(user.getBlockedUntil().plusMonths(monthsToBeBanned));
+        user.setBlockedUntil(LocalDateTime.now().plusMonths(BadWord.MONTHS_TO_BAN));
         em.merge(user);
 
 
