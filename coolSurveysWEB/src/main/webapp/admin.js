@@ -67,32 +67,46 @@ let index = new Vue ({
         }
     },
     methods: {
-        addQuestion(questions, index) {
+        createNewSurveyPage: function() {
+            this.surveyDateChoice = true;
+            this.surveyCreation = true;
+            this.welcome = false;
+        },
+        deleteSurveyPage: function() {
+            this.surveyDeletion = true;
+            this.welcome = false;
+        },
+        surveysInspectionPage: function() {
+            this.surveysInspection = true;
+            this.oldSurveysBool = true;
+            this.welcome = false;
+        },
+        addQuestion: function(questions, index) {
             questions.push({ question: "" });
             this.options.push([{ option: "" }]);
             this.multipleChoice = false;
             this.questionAdded[index] = true;
         },
-        setOpenAnswer(questionIndex, options) {
+        setOpenAnswer: function(questionIndex, options) {
             if (options[questionIndex]!==null && options[questionIndex][0].option !== "")
                 options.splice(questionIndex, 1);
             this.multipleChoice = false;
         },
-        removeQuestion(index, questions) {
+        removeQuestion: function(index, questions) {
             questions.splice(index, 1);
             this.questionAdded[index] = false;
         },
-        addOption(options, optionIndex) {
+        addOption: function(options, optionIndex) {
             if (options[optionIndex].option !== "")
                 options.push({ option: "" });
         },
-        setMultipleChoice(questionIndex) {
+        setMultipleChoice: function(questionIndex) {
             this.multipleChoice = true;
         },
-        removeOption(index, options) {
+        removeOption: function(index, options) {
             options.splice(index, 1);
         },
-        resetQuestionsForm(){
+        resetQuestionsForm: function(){
             this.questions = [{ question: "" }];
             this.options = [[{ option: "" }]];
             this.multipleChoice = false;
@@ -102,7 +116,7 @@ let index = new Vue ({
             this.surveyQuestions = false;
             this.surveyNewProduct = true;
         },
-        submitQuestionsForm(){
+        submitQuestionsForm: function(){
             let toSend = new Map();
             let i;
             if (this.questions.length === this.options.length) {
@@ -124,12 +138,12 @@ let index = new Vue ({
                 });
             }
         },
-        resetDeletion(){
+        resetDeletion: function(){
             this.toDelete = [];
             this.surveyDeletion = false;
             this.welcome = true;
         },
-        submitDeletion(){
+        submitDeletion: function(){
             axios.post("./AdminSurvey", {
                 //send array of dates toDelete
             }).then(response => {
@@ -140,14 +154,14 @@ let index = new Vue ({
             this.surveyDeletion = false;
             this.welcome = true;
         },
-        resetNewSurveyDateChoice(){
+        resetNewSurveyDateChoice: function(){
             this.welcome = true;
             this.surveyCreation = false;
             this.surveyDateChoice = false;
             this.newSurveyDate = "";
             this.newProductName = "";
         },
-        checkValidDate(){
+        checkValidDate: function(){
             axios.get("", {
                 //TODO: get the active surveys dates and check if !== from new survey date
             })
@@ -159,23 +173,23 @@ let index = new Vue ({
                 this.wrongDateChoice = true;
             }
         },
-        handleImageUpdate(event) {
+        handleImageUpdate: function(event) {
             this.newProductImage = event.target.files[0];
         },
-        resetNewProduct(){
+        resetNewProduct: function(){
             this.surveyDateChoice = true;
             this.surveyNewProduct = false;
         },
-        submitNewProduct(){
+        submitNewProduct: function(){
             this.surveyNewProduct = false;
             this.surveyQuestions = true;
         },
-        setSurveyChoice(event) {
+        setSurveyChoice: function(event) {
             this.surveyToInspect = event.target.innerText;
             this.oldSurveysBool = false;
             this.singleSurveyInspection = true;
         },
-        setUserChoice(event) {
+        setUserChoice: function(event) {
             this.userToInspect = event.target.innerText;
             this.submissionsInspection = false;
             this.singleUserInspection = true;

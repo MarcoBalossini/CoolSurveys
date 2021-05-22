@@ -1,6 +1,7 @@
 let index = new Vue ({
     el : "#homeApp",
     data: {
+        productOfTheDay: "Ping-Pong rackets",
         answers1: [],
         answers2: [],
         questions1: ["Do you like it?", "hello write here."],
@@ -17,6 +18,7 @@ let index = new Vue ({
         section1:false,
         section2:false,
         leaderboard:false,
+        greetings:false,
         totalCharacters: 0
     },
 
@@ -130,7 +132,7 @@ let index = new Vue ({
             let object = mapToObj(questionsAnswersMap);
 
             axios.post("./HandleSurvey", object).then(response => {
-                this.leaderboard = true;
+                this.greetings = true;
                 this.section2 = false;
                 console.log(response.data)
                 //To change html file:
@@ -151,8 +153,23 @@ let index = new Vue ({
                         tmp.push(user.points);
                         this.scores.push(tmp);
                         })
+                    this.leaderboard = true;
+                    this.homepage = false;
                 })
                 .catch(error => {})
+        },
+        goToHomepage: function() {
+            if (this.leaderboard === true)
+                this.leaderboard = false;
+            else if (this.section1 === true)
+                this.section1 = false;
+            else if (this.greetings === true)
+                this.greetings = false;
+            this.homepage = true;
+        },
+        goToPrevSection: function () {
+            this.section1 = true;
+            this.section2 = false;
         }
     }
 });

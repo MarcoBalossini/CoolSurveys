@@ -3,6 +3,31 @@ body {
     background: -webkit-linear-gradient(left, #3931af, #00c6ff);
 }
 
+#greetings {
+    padding: 1rem 2rem;
+    margin: 6rem 6rem 2rem;
+    background-color: #e9ecef;
+    border-radius: .3rem;
+    display: block;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    text-align: left;
+}
+
+#greetings p {
+    font-size: 1.5rem;
+    font-weight: 300;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    display: block;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0;
+    margin-inline-end: 0;
+}
+
 /*--------------------------------------------------------------
 # FORMS
 --------------------------------------------------------------*/
@@ -192,11 +217,15 @@ button.link {
 }
 
 #welcomeView .buttons, #homePage .buttons, #surveyDiv .buttons,
-.formView .buttons, #secondaryBtns .buttons, .simpleDiv .buttons {
+.formView .buttons, #secondaryBtns .buttons, .simpleDiv .buttons, #greetings .buttons {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 50px;
+}
+
+#homePage .buttons {
+    margin-top: 5px;
 }
 
 #registrationView .buttons, #loginView .buttons, #leaderBoard .buttons, .newSurveySetup .buttons {
@@ -212,7 +241,7 @@ button {
     display:inline-block;
     padding:0 22px;
     margin: 72px auto 25px;
-    margin-right: 0.5rem !important;
+    margin-right: 1rem !important;
     border:0.16em solid rgba(255,255,255,0);
     border-radius:2em;
     box-sizing: border-box;
@@ -282,10 +311,23 @@ h1 {
     text-align: center;
 }
 
+#greetings h1 {
+    font-size: 3.5rem;
+    font-weight: 300;
+    line-height: 1.2;
+    margin-bottom: .5rem;
+    color: #FF4E4E;
+    display: block;
+    margin-block-start: 0.67em;
+    margin-block-end: 0.67em;
+}
+
 #answersList h2, .usersList h2, #oldSurveysList h2 {
     margin-bottom: 5px;
     margin-top: 5px;
 }
+
+
 
 h2 {
     padding: 4px 0;

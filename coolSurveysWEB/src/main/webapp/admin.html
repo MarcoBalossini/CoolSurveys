@@ -14,10 +14,11 @@
                 <header>
                     <h1>Welcome to CoolSurveys!</h1>
                 </header>
+
                 <div class = "buttons">
-                    <button id="createSurvey" v-on:click="()=>{surveyDateChoice = true; surveyCreation = true; welcome = false}">Create Survey</button>
-                    <button id="deleteSurvey" v-on:click="()=>{surveyDeletion = true; welcome = false}">Delete Survey</button>
-                    <button id="surveysReview" v-on:click="()=>{surveysInspection = true; oldSurveysBool = true; welcome = false}">Surveys Inspection</button>
+                    <button id="createSurvey" v-on:click="createNewSurveyPage">Create Survey</button>
+                    <button id="deleteSurvey" v-on:click="deleteSurveyPage">Delete Survey</button>
+                    <button id="surveysReview" v-on:click="surveysInspectionPage">Surveys Inspection</button>
                 </div>
             </div>
             <div id="surveyCreation" v-if = "surveyCreation">

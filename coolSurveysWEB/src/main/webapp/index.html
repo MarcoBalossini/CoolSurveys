@@ -62,7 +62,7 @@
                         <label class="question" for="passwordConfirm">Confirm Password</label>
                         <input v-model="passwordConfirm" type="password" id="passwordConfirm" minlength="1" maxlength="15" placeholder="New Password" required/>
                     </div>
-
+                    <span style = "color:red" v-if = "!validRegForm">Passwords do not correspond.</span>
                     <div class="buttons">
                         <button type="reset" class="reset">Exit</button>
                         <button type="submit" v-bind:disabled="!validRegForm">Register</button>

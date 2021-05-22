@@ -12,9 +12,12 @@
     <div id="homeApp">
         <div id="homePage" v-if = "homepage">
             <h1>HomePage</h1>
+            <h2 style="background:snow">Today's product: {{productOfTheDay}}</h2>
+            <img src="ping-pong-paddles.jpg"
+                 style="height:200px; display: block; margin-left: auto; margin-right: auto;" alt="productOfTheDay">
             <div class="buttons">
-                <button v-on:click="()=>{leaderboard = true; homepage = false}">LeaderBoard</button>
-                <button v-on:click="receiveSurvey">StartSurvey</button>
+                <button v-on:click="receiveLeaderboard">LeaderBoard</button>
+                <button v-on:click="receiveSurvey">StartDailySurvey</button>
             </div>
         </div>
 
@@ -22,7 +25,6 @@
             <div id="section1" v-if = "section1">
                 <form v-on:reset.prevent="resetSection1Form" v-on:submit.prevent="advanceSurveySection">
                     <h2>What about today product?</h2>
-                    <!-- TODO: add photo of the product-->
                     <div class="form-field" v-for="(question,index) in questions1">
                         <label class="question" for="answer">{{question}}</label>
                         <div class="multipleChoiceQuestion" v-if="options1[index]" v-for="option in options1[index]">
@@ -66,12 +68,11 @@
                         <select v-if= "questions2Type[index] === 'options'" id="answer2Options" v-model="answers2[index]">
                             <option v-for="option in options2[index]" :value="option">{{option}}</option>
                         </select>
-
                     </div>
 
                     <div class="buttons">
                         <button type="reset" class="reset">Cancel</button>
-                        <button v-on:click="()=>{section1 = true; section2 = false}">Previous</button>
+                        <button v-on:click="goToPrevSection()">Previous</button>
                         <button type="submit">Submit</button>
                     </div>
                 </form>
@@ -94,8 +95,17 @@
                     </tr>
                 </table>
                 <div class="buttons">
-                    <button v-on:click="()=>{homepage = true; leaderboard = false}">Back</button>
+                    <button v-on:click="goToHomepage()">Back</button>
                 </div>
+            </div>
+        </div>
+        <div id="greetings" v-if = "greetings">
+            <h1>Well Done!</h1>
+            <p>Thanks for your time. You may have earned new points, check your position on the leaderboard!
+                We hope to have you back soon!</p>
+            <div class="buttons">
+                <button v-on:click="goToHomepage">HomePage</button>
+                <button v-on:click="receiveLeaderboard">LeaderBoard</button>
             </div>
         </div>
     </div>
