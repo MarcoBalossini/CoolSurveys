@@ -36,7 +36,6 @@ let index = new Vue ({
         singleUserInspection:false
     },
     computed: {
-
     },
     methods: {
         createNewSurveyPage: function() {
@@ -75,10 +74,23 @@ let index = new Vue ({
             else
                 this.message = "Question already entered.";
         },
-        setOpenAnswer: function(questionIndex, options) {
-            if (options[questionIndex]!==null && options[questionIndex].length !== 0 && options[questionIndex][0].option !== "")
-                options.splice(questionIndex, 1);
+        showOptions(questionIndex){
+            let maxOptionsReached = true;
+            if (this.options[questionIndex]!=null)
+                maxOptionsReached = this.options[questionIndex].length > 4;
+            return this.multipleChoice[questionIndex] && !maxOptionsReached;
+        },
+        setOpenAnswer: function(questionIndex) {
+            this.options= [[{ option: "" }]];
             this.multipleChoice[questionIndex] = false;
+        },
+        setMultipleChoice: function(questionIndex) {
+            this.options= [[{ option: "" }]];
+            this.multipleChoice[questionIndex] = true;
+        },
+        removeOption: function(index, options) {
+            options.splice(index, 1);
+            this.optionAdded[options.length-1] = false;
         },
         removeQuestion: function(index, questions) {
             questions.splice(index, 1);
@@ -106,13 +118,6 @@ let index = new Vue ({
             }
             else
                 this.message = "Option can't be empty.";
-        },
-        setMultipleChoice: function(questionIndex) {
-            this.multipleChoice[questionIndex] = true;
-        },
-        removeOption: function(index, options) {
-            options.splice(index, 1);
-            this.optionAdded[options.length-1] = false;
         },
         resetQuestionsForm: function(){
             this.questions = [{ question: "" }];
