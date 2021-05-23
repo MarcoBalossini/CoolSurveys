@@ -5,24 +5,28 @@ let index = new Vue ({
         newSurveyDate: "",
         questions: [{ question: "" }],
         options: [[{ option: "" }]],
-        multipleChoice: false,
         newProductName:"",
         newProductImage:"",
         questionAdded:[],
-        oldSurveys:[["10/05/2021", "ShampooGarden"], ["13/05/2021", "SpecialSoap"]],
+        optionAdded:[],
+        multipleChoice:[],
+        oldSurveys:[["2021-10-05", "ShampooGarden"], ["2021-05-13", "SpecialSoap"]],
         toDelete:[],
         usersWhoSubmitted: ["Giuseppe", "Pino"],
         usersWhoDeleted: ["Marco", "Annulla", "RandomUser"],
         singleUserAnswers: [["Did you like this product?", "yes a lot"], ["Do you find your hair softer?", "no"]], //questions + answers
+        userToInspectAge: "",
+        userToInspectGender: "",
+        userToInspectExpLvl: "ciao",
         surveyToInspect: "",
         userToInspect: "",
-        message: '',
+        message: "",
         wrongDateChoice: false,
-        welcome: true,
+        welcome: false,
         surveyDateChoice: false,
         surveyNewProduct: false,
-        surveyQuestions: false,
-        surveyCreation: false,
+        surveyQuestions: true,
+        surveyCreation: true,
         surveyDeletion: false,
         surveysInspection:false,
         oldSurveysBool:false,
@@ -33,38 +37,6 @@ let index = new Vue ({
     },
     computed: {
 
-        totalSubmissions: function () {
-            return [["10/05/2021", this.submissions, this.deletions]]
-        }, //elements of the array composed by survey date + its submissions
-
-        submissionOfChosenUser: function() {
-            let found = false;
-            let i;
-            let index;
-            for (i = 0; i<this.totalSubmissions.length; i++) {
-                //TODO: check date format
-               if (this.totalSubmissions[i][0] === this.surveyToInspect) {
-                   found = true;
-                   index = i;
-               }
-            }
-            if (found) {
-                for (let j = 0; j < this.totalSubmissions[index][1].length; j++) {
-                    if (this.totalSubmissions[index][1][j][0] === this.userToInspect)
-                        return this.totalSubmissions[index][1][j];
-                }
-            }
-            else {
-                return "";
-            }
-        },
-        deletionsOfChosenSurvey: function() {
-            let i;
-            for (i = 0; i<this.totalSubmissions.length; i++) {
-                if (this.totalSubmissions[i][0] === this.surveyToInspect)
-                    return this.totalSubmissions[i][2];
-            }
-        }
     },
     methods: {
         createNewSurveyPage: function() {
@@ -82,34 +54,70 @@ let index = new Vue ({
             this.welcome = false;
         },
         addQuestion: function(questions, index) {
-            questions.push({ question: "" });
-            this.options.push([{ option: "" }]);
-            this.multipleChoice = false;
-            this.questionAdded[index] = true;
+            let found;
+            let i = 0;
+            questions.forEach((question)=> {
+                i++;
+                let questionsNum = questions.length;
+                let newQuestion = questions[questionsNum-1].question;
+                if (questionsNum !== 1 && i !== questionsNum && question.question === newQuestion) {
+                    found = true;
+                    this.questionAdded[index] = false;
+                }
+            })
+            if (!found) {
+                questions.push({ question: "" });
+                this.options.push([{ option: "" }]);
+                this.multipleChoice[index] = false;
+                this.questionAdded[index] = true;
+                this.message = "";
+            }
+            else
+                this.message = "Question already entered.";
         },
         setOpenAnswer: function(questionIndex, options) {
-            if (options[questionIndex]!==null && options[questionIndex][0].option !== "")
+            if (options[questionIndex]!==null && options[questionIndex].length !== 0 && options[questionIndex][0].option !== "")
                 options.splice(questionIndex, 1);
-            this.multipleChoice = false;
+            this.multipleChoice[questionIndex] = false;
         },
         removeQuestion: function(index, questions) {
             questions.splice(index, 1);
             this.questionAdded[index] = false;
         },
         addOption: function(options, optionIndex) {
-            if (options[optionIndex].option !== "")
-                options.push({ option: "" });
+            let found;
+            let i = 0;
+            if (options[optionIndex].option !== "") {
+                let optionsNum = options.length;
+                    options.forEach((option) => {
+                        i++;
+                        let newOption = options[optionsNum - 1].option;
+                        if (optionsNum !== 1 && i !== optionsNum && option.option === newOption) {
+                            found = true;
+                            this.optionAdded[optionIndex] = false;
+                        }
+                    })
+                if (!found) {
+                    options.push({ option: "" });
+                    this.optionAdded[optionIndex] = true;
+                    this.message = "";
+                } else
+                    this.message = "Option already entered.";
+            }
+            else
+                this.message = "Option can't be empty.";
         },
         setMultipleChoice: function(questionIndex) {
-            this.multipleChoice = true;
+            this.multipleChoice[questionIndex] = true;
         },
         removeOption: function(index, options) {
             options.splice(index, 1);
+            this.optionAdded[options.length-1] = false;
         },
         resetQuestionsForm: function(){
             this.questions = [{ question: "" }];
             this.options = [[{ option: "" }]];
-            this.multipleChoice = false;
+            this.multipleChoice = [];
             this.questionAdded= [];
             this.newProductImage="";
             this.newProductName="";
@@ -144,13 +152,17 @@ let index = new Vue ({
             this.welcome = true;
         },
         submitDeletion: function(){
-            axios.post("./AdminSurvey", {
-                //send array of dates toDelete
-            }).then(response => {
-
-            }).catch(response => {
-                console.log(response.data)
+            let toSend;
+            toSend = Object.fromEntries(this.toDelete);
+            axios.post("./AdminSurvey",toSend)
+                .then(response => {
+                    this.surveyDeletion = false;
+                    this.welcome = true;
+                    console.log(response.data)
+                }).catch(response => {
+                    console.log(response.data)
             });
+            //to leave only in response=>
             this.surveyDeletion = false;
             this.welcome = true;
         },
@@ -162,16 +174,46 @@ let index = new Vue ({
             this.newProductName = "";
         },
         checkValidDate: function(){
-            axios.get("", {
-                //TODO: get the active surveys dates and check if !== from new survey date
-            })
-            if (true) {
-                this.surveyDateChoice = false;
-                this.surveyNewProduct = true;
-            }
-            else {
-                this.wrongDateChoice = true;
-            }
+            axios.post("./AdminSurvey?date=" + this.newSurveyDate).then(response => {
+                if (response.data === true) {
+                    this.surveyDateChoice = false;
+                    this.surveyNewProduct = true;
+                    this.message = "";
+                }
+                else {
+                    this.wrongDateChoice = true;
+                    this.message = "A survey for this date has already been created. Choose another date.";
+                }
+            }).catch(response => {
+                console.log(response.data)
+            });
+        },
+        sendNewProduct: function (){
+            let formData = new FormData();
+            formData.append("name", this.newProductName);
+            formData.append("image", this.newProductImage);
+            axios.post('./AdminSurvey', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            }).then(response => {
+                console.log(response.data)
+            }).catch(response => {
+                console.log(response.data)
+            });
+        },
+        getOldSurveys: function(){
+            axios.get("/AdminSurvey")
+                .then(response => {
+                    this.oldSurveys= [];
+                    const oldSurveys = response.data;
+                    oldSurveys.forEach((survey)=> {
+                        let tmp = [];
+                        tmp.push(survey.getKey()); //date
+                        tmp.push(survey.get(survey.getKey())); //name
+                        this.oldSurveys.push(tmp);
+                    })
+                })
         },
         handleImageUpdate: function(event) {
             this.newProductImage = event.target.files[0];
@@ -193,6 +235,35 @@ let index = new Vue ({
             this.userToInspect = event.target.innerText;
             this.submissionsInspection = false;
             this.singleUserInspection = true;
+        },
+        submitSurveyToInspect: function(){
+            axios.get("./AdminSurvey?date=" + this.surveyToInspect)
+                .then(response => {
+                    let usersListsObject = response.data;
+                    this.usersWhoSubmitted = usersListsObject.submitters;
+                    this.usersWhoDeleted = usersListsObject.cancellers;
+                    console.log(response.data)
+                }).catch(response => {
+                console.log(response.data)
+            });
+        },
+        submitUserToInspect: function(){
+            axios.post("./AdminSurvey?user=" + this.userToInspect)
+                .then(response => {
+                    let surveyData = response.data;
+                    surveyData.questionAnswersMap.forEach((qAnda)=> {
+                        let tmp = [];
+                        tmp.push(qAnda.getKey()); //question
+                        tmp.push(qAnda.get(qAnda.getKey())); //answer
+                        this.singleUserAnswers.push(tmp);
+                    })
+                    this.userToInspectAge.push(surveyData.age);
+                    this.userToInspectGender.push(surveyData.gender);
+                    this.userToInspectExpLvl.push(surveyData.expLvl);
+                    console.log(response.data)
+                }).catch(response => {
+                console.log(response.data)
+            });
         }
     },
 });
