@@ -48,10 +48,12 @@ public interface ISurveysService {
     List<Questionnaire> getSurveyList();
 
     /**
-     * Deletes a survey given its date
-     * @param date The survey's date
+     * Deletes some survey given their dates<br>
+     * Controls that all the surveys are already closed
+     *
+     * @param dates The survey's dates
      */
-    void deleteSurvey(LocalDate date);
+    void deleteSurveys(List<LocalDate> dates);
 
     /**
      * Get the list of all the users who had submitted/cancelled a given survey
@@ -76,6 +78,13 @@ public interface ISurveysService {
      * @return The Question/Answers map
      */
     Map<String, String> getSurveyAnswers(LocalDate date, String username);
+
+    /**
+     * Checks whether or not a date is available for a survey
+     * @param date The date
+     * @return true if the date is available, false id not
+     */
+    boolean checkDateAvailability(LocalDate date);
 
     /**
      * Gets the product's of the day image

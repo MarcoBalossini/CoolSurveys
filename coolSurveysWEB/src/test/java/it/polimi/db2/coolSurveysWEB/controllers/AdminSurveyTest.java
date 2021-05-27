@@ -65,7 +65,7 @@ class AdminSurveyTest {
         HttpServletRequest request = mock(HttpServletRequest.class);
         HttpServletResponse response = mock(HttpServletResponse.class);
 
-        when(request.getAttribute(DATE)).thenReturn("2021-05-16");
+        when(request.getParameter(DATE)).thenReturn("2021-05-16");
 
         try {
             AdminSurvey adminSurvey = new AdminSurvey();
@@ -108,8 +108,8 @@ class AdminSurveyTest {
         HttpServletRequest request = mock(HttpServletRequest.class);
         HttpServletResponse response = mock(HttpServletResponse.class);
 
-        when(request.getAttribute(DATE)).thenReturn("2021-05-16");
-        when(request.getAttribute(USER)).thenReturn("asd");
+        when(request.getParameter(DATE)).thenReturn("2021-05-16");
+        when(request.getParameter(USER)).thenReturn("asd");
 
         try {
             AdminSurvey adminSurvey = new AdminSurvey();

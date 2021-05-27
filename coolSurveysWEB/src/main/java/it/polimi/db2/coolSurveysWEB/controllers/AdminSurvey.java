@@ -1,6 +1,7 @@
 package it.polimi.db2.coolSurveysWEB.controllers;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import it.polimi.db2.coolSurveysWEB.utils.JsonUtils;
 import it.polimi.db2.coolsurveys.entities.Questionnaire;
@@ -21,15 +22,15 @@ import java.util.*;
  * It supports 3 verbs:
  * <ul>
  *     <li>
- *         <b>GET</b> does 3 different things depending on present attributes:
+ *         <b>GET</b> does 3 different things depending on present parameters:
  *         <ul>
- *             <li>No attributes: Get name and date of past surveys</li>
- *             <li>Only date attribute: Gets responders list for the survey available on the selected date</li>
- *             <li>Date and user attributes: Get user responses to the survey available on the selected date</li>
+ *             <li>No parameters: Get Map(Date, name) of the past surveys</li>
+ *             <li>Only date parameters: Gets responders list for the survey available on the selected date</li>
+ *             <li>Date and user parameters: Get user responses to the survey available on the selected date</li>
  *         </ul>
  *     </li>
  *     <li><b>POST</b>: Create a survey for a future date. The parameters are a Map(Question, List(Option)) and the date</li>
- *     <li><b>DELETE</b>: Deletes a past survey given its date as an attribute</li>
+ *     <li><b>DELETE</b>: Deletes a past survey given its date as an parameter</li>
  * </ul>
  */
 @WebServlet(name = "AdminSurvey", urlPatterns = "/AdminSurvey")
@@ -60,12 +61,12 @@ public class AdminSurvey extends HttpServlet {
     }
 
     /**
-     * Date attribute name for GET requests
+     * Date parameter's name for GET requests
      */
     protected static final String DATE = "date";
 
     /**
-     * User attribute name for GET requests
+     * User parameter's name for GET requests
      */
     protected static final String USER = "user";
 
@@ -77,13 +78,13 @@ public class AdminSurvey extends HttpServlet {
 
     /**
      * If the request has a date parameter, returns the responders lists (submit + cancel)<br>
-     * If no attribute is given, returns the survey list without details
+     * If no parameter is given, returns the survey list without details
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         //If d exists get its data
-        if(request.getAttribute(DATE) != null) {
-            String d = request.getAttribute(DATE).toString();
+        if(request.getParameter(DATE) != null) {
+            String d = request.getParameter(DATE);
             LocalDate date;
             try {
                 date = LocalDate.parse(d);
@@ -93,8 +94,8 @@ public class AdminSurvey extends HttpServlet {
                 return;
             }
 
-            if(request.getAttribute(USER) != null) {
-                String usrn = request.getAttribute(USER).toString();
+            if(request.getParameter(USER) != null) {
+                String usrn = request.getParameter(USER);
                 getResponses(request, response, date, usrn);
             }
             else {
@@ -112,28 +113,50 @@ public class AdminSurvey extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //JsonObject
-        JsonObject json = JsonUtils.getJsonFromRequest(request);
+        var d = request.getParameter(DATE);
 
-        Map<String, List<String>> survey = JsonUtils.convertToMapStringList(json);
+        // If a date parameter is present we check its availability
+        // If available status = 200 (OK)
+        // If unavailable status = 403 (FORBIDDEN)
+        if (d != null) {
+            try {
+                LocalDate date = LocalDate.parse(d);
+                if (surveysService.checkDateAvailability(date))
+                    response.getWriter().println("true");
+                else
+                    response.getWriter().println("false");
 
-        if (survey.isEmpty()) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().println("The submitted survey is empty. Fill it!");
-            return;
-        }
+                response.setStatus(HttpServletResponse.SC_OK);
 
-        //TODO: Fix catch with correct exception/s
-        try {
-            LocalDate date = surveysService.createSurvey(survey);
+            } catch (DateTimeParseException e) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.getWriter().println("The parameter is not formatted as a date");
+                return;
+            }
+            //TODO: Add catches
+        } else {
+            JsonObject json = JsonUtils.getJsonFromRequest(request);
 
-            response.setStatus(HttpServletResponse.SC_OK);
-            response.getWriter().println(date);
-            return;
-        } catch (Exception e) {
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().println("Some server error occurred");
-            return;
+            Map<String, List<String>> survey = JsonUtils.convertToMapStringList(json);
+
+            if (survey.isEmpty()) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.getWriter().println("The submitted survey is empty. Fill it!");
+                return;
+            }
+
+            //TODO: Fix catch with correct exception/s
+            try {
+                LocalDate date = surveysService.createSurvey(survey);
+
+                response.setStatus(HttpServletResponse.SC_OK);
+                response.getWriter().println(date);
+                return;
+            } catch (Exception e) {
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                response.getWriter().println("Some server error occurred");
+                return;
+            }
         }
     }
 
@@ -142,12 +165,20 @@ public class AdminSurvey extends HttpServlet {
      */
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String d = request.getAttribute(DATE).toString();
-        LocalDate date = LocalDate.parse(d);
+        JsonObject json = JsonUtils.getJsonFromRequest(request);
+        List<LocalDate> dates = new ArrayList<>();
+
+        try {
+            new Gson().fromJson(json, JsonArray.class).forEach(d -> dates.add(LocalDate.parse(d.getAsString())));
+        } catch (DateTimeParseException e) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().println("Invalid dates");
+            return;
+        }
 
         //TODO: Fix catch
         try {
-            surveysService.deleteSurvey(date);
+            surveysService.deleteSurveys(dates);
         } catch (Exception e) {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             response.getWriter().println("Some error");
