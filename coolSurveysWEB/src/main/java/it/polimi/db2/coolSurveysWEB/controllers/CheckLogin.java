@@ -54,6 +54,7 @@ public class CheckLogin extends HttpServlet {
     @EJB(name = "it.polimi.db2.coolsurveys.services/AuthService")
     private IAuthService authService;
 
+
     /**
      * Handle token login
      * @param request The request containing auth token
@@ -61,6 +62,7 @@ public class CheckLogin extends HttpServlet {
      * @throws ServletException
      * @throws IOException
      */
+    /*
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -99,6 +101,7 @@ public class CheckLogin extends HttpServlet {
 
         login(request, response, credentials);
     }
+    */
 
     /**
      * Handle form login
@@ -166,7 +169,7 @@ public class CheckLogin extends HttpServlet {
 
         if (credentials.isAdmin()) {
             response.setStatus(HttpServletResponse.SC_OK);
-            response.sendRedirect("/admin.html");
+            response.sendRedirect(request.getServletContext().getContextPath() + "/admin.html");
         } else {
             response.setStatus(HttpServletResponse.SC_OK);
             response.setContentType("application/json");

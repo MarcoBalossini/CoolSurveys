@@ -109,7 +109,7 @@ public class SurveysService implements ISurveysService {
      * {@inheritDoc}
      */
     @Override
-    public void deleteSurvey(LocalDate date) {
+    public void deleteSurveys(List<LocalDate> dates) {
         return;
     }
 
@@ -136,6 +136,14 @@ public class SurveysService implements ISurveysService {
     public Map<String, String> getSurveyAnswers(LocalDate date, String username) {
         //Fai la query con ORDER BY questionID e usa una LinkedHashMap per mantenere l'ordine
         return new LinkedHashMap<>();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean checkDateAvailability(LocalDate date) {
+        return true;
     }
 
     /**
