@@ -52,7 +52,7 @@ let index = new Vue ({
             this.oldSurveysBool = true;
             this.welcome = false;
         },
-        addQuestion: function(questions, index) {
+        addQuestion: function(questions, options, index) {
             let found;
             let i = 0;
             questions.forEach((question)=> {
@@ -66,7 +66,8 @@ let index = new Vue ({
             })
             if (!found) {
                 questions.push({ question: "" });
-                this.options.push([{ option: "" }]);
+                this.optionAdded = [];
+                options.push([{ option: "" }]);
                 this.multipleChoice[index] = false;
                 this.questionAdded[index] = true;
                 this.message = "";
@@ -81,19 +82,21 @@ let index = new Vue ({
             return this.multipleChoice[questionIndex] && !maxOptionsReached;
         },
         setOpenAnswer: function(questionIndex) {
-            this.options= [[{ option: "" }]];
+            this.options[questionIndex]= [{ option: "" }];
+            this.optionAdded = [];
             this.multipleChoice[questionIndex] = false;
         },
         setMultipleChoice: function(questionIndex) {
-            this.options= [[{ option: "" }]];
+            //this.options= [[{ option: "" }]];
             this.multipleChoice[questionIndex] = true;
         },
         removeOption: function(index, options) {
             options.splice(index, 1);
             this.optionAdded[options.length-1] = false;
         },
-        removeQuestion: function(index, questions) {
+        removeQuestion: function(index, questions, options) {
             questions.splice(index, 1);
+            options.splice(index, 1);
             this.questionAdded[index] = false;
         },
         addOption: function(options, optionIndex) {
@@ -135,7 +138,7 @@ let index = new Vue ({
             if (this.questions.length === this.options.length) {
                 //returned a map of questions (keys) -> array of options (value)
                 for(i=0; i < this.questions.length; i++) {
-                    toSend.set(this.questions[i], this.options[i]);
+                    toSend.set(this.questions[i].question, this.options[i]);
                 }
                 const object = Object.fromEntries(toSend);
                 axios.post("./AdminSurvey", {

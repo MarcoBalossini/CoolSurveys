@@ -28,7 +28,7 @@
                         <div class="form-field">
                             <label class="question" for="date">New survey date: </label>
                             <input type="date" id="date" v-model.trim="newSurveyDate" required>
-                            <label v-if="wrongDateChoice"> {{message}} </label>
+                            <label v-if="wrongDateChoice" style="color:red"> {{message}} </label>
                         </div>
                         <div class = "buttons">
                             <button type="reset" class="reset">Back</button>
@@ -53,13 +53,13 @@
                     </form>
                 </div>
                 <div id="surveyDiv" v-if="surveyQuestions" v-for="(input, questionIndex) in questions" :key="`questionInput-${questionIndex}`">
-                    <form v-on:reset.prevent="removeQuestion(questionIndex, questions)" v-on:submit.prevent="addQuestion(questions, questionIndex)">
+                    <form v-on:reset.prevent="removeQuestion(questionIndex, questions, options)" v-on:submit.prevent="addQuestion(questions, options, questionIndex)">
                         <div class="form-field">
                             <label class="question">Question{{questionIndex + 1}}:</label>
                             <input type="text" v-model.trim="input.question" placeholder="enter new question" required :disabled="questionAdded[questionIndex] === true"><br>
                             <div class = "buttons" v-if="questionAdded[questionIndex] !== true">
-                                <button type="button" @click="setMultipleChoice(questionIndex)" :disabled="multipleChoice[questionIndex] === true">Multiple choice</button>
-                                <button type="button" @click="setOpenAnswer(questionIndex)" :disabled="multipleChoice[questionIndex] !== true">Open answer</button>
+                                <button type="button" v-on:click="setMultipleChoice(questionIndex)" :disabled="multipleChoice[questionIndex] === true">Multiple choice</button>
+                                <button type="button" v-on:click="setOpenAnswer(questionIndex)" :disabled="multipleChoice[questionIndex] !== true">Open answer</button>
                             </div>
                         </div>
                         <br> <label class="question" v-if="options[questionIndex]!=null && options[questionIndex].length <= 4

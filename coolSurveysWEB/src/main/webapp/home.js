@@ -138,7 +138,7 @@ let index = new Vue ({
                 //To change html file:
                 //window.location.href = "/nome.html";
             }).catch(response => {
-                console.log(response.data)
+                this.message = response.data;
             });
         },
 
