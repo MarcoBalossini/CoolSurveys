@@ -24,8 +24,8 @@ let index = new Vue ({
         wrongDateChoice: false,
         welcome: false,
         surveyDateChoice: false,
-        surveyNewProduct: false,
-        surveyQuestions: true,
+        surveyNewProduct: true,
+        surveyQuestions: false,
         surveyCreation: true,
         surveyDeletion: false,
         surveysInspection:false,
@@ -137,23 +137,37 @@ let index = new Vue ({
             this.surveyQuestions = false;
             this.surveyNewProduct = true;
         },
-        submitQuestionsForm: function(){
+        goToNewQuestionsPage() {
+            this.surveyNewProduct = false;
+            this.surveyQuestions = true;
+        },
+        submitQuestionsForm: function() {
             let toSend = new Map();
             let i;
             if (this.questions.length === this.options.length) {
                 //returned a map of questions (keys) -> array of options (value)
+                this.questions.pop();
                 for(i=0; i < this.questions.length; i++) {
+                    this.options[i].pop();
                     toSend.set(this.questions[i].question, this.options[i]);
                 }
-                const object = Object.fromEntries(toSend);
-                axios.post("./AdminSurvey", {
-                    object
+
+                let questionsMap = Object.fromEntries(toSend);
+
+                let formData = new FormData();
+                formData.append("name", this.newProductName);
+                formData.append("image", this.newProductImage);
+                formData.append("questionsMap", JSON.stringify(questionsMap));
+
+                axios.post("./AdminSurvey", formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
                 }).then(response => {
                     this.welcome = true;
                     this.surveyQuestions = false;
                     this.surveyCreation = false;
                     console.log(response.data)
-
                 }).catch(response => {
                     console.log(response.data)
                 });
@@ -197,22 +211,6 @@ let index = new Vue ({
                     this.wrongDateChoice = true;
                     this.message = "A survey for this date has already been created. Choose another date.";
                 }
-            }).catch(response => {
-                console.log(response.data)
-            });
-        },
-        sendNewProduct: function (){
-            let formData = new FormData();
-            formData.append("name", this.newProductName);
-            formData.append("image", this.newProductImage);
-            axios.post('./AdminSurvey', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            }).then(response => {
-                this.surveyNewProduct = false;
-                this.surveyQuestions = true;
-                console.log(response.data)
             }).catch(response => {
                 console.log(response.data)
             });

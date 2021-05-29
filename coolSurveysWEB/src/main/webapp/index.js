@@ -87,6 +87,7 @@ let index = new Vue ({
                 console.log(response.data);
                 window.location.href = "userHome.html";
             }).catch(response => {
+                this.message = response.data;
                 console.log(response.data)
             });
         },

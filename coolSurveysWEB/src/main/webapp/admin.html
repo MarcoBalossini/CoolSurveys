@@ -28,7 +28,7 @@
                         <div class="form-field">
                             <label class="question" for="date">New survey date: </label>
                             <input type="date" id="date" v-model.trim="newSurveyDate" required>
-                            <label v-if="wrongDateChoice" style="color:red"> {{message}} </label>
+                            <label v-if="wrongDateChoice" class="errorMsg"> {{message}} </label>
                         </div>
                         <div class = "buttons">
                             <button type="reset" class="reset">Back</button>
@@ -37,7 +37,7 @@
                     </form>
                 </div>
                 <div class="newSurveySetup" id="newProduct" v-if="surveyNewProduct">
-                    <form v-on:reset.prevent="resetNewProduct" v-on:submit.prevent="sendNewProduct">
+                    <form v-on:reset.prevent="resetNewProduct" v-on:submit.prevent="goToNewQuestionsPage">
                         <div class="form-field">
                             <label class="question" for="newProductName">Product Name: </label>
                             <input v-model.trim="newProductName" type="text" id ="newProductName" placeholder="product name" required/>
@@ -75,7 +75,7 @@
                         </div>
                         <br> <label v-if="maxOptionsReached(questionIndex)">Max number of options reached.</label> <br>
                         <label v-if="questionAdded[questionIndex] === true">Question added to survey</label><br>
-                        <label v-if="questionAdded[questionIndex] !== true" style="color:red"> {{message}} </label><br>
+                        <label v-if="questionAdded[questionIndex] !== true" class="errorMsg"> {{message}} </label><br>
                         <div class = "buttons">
                             <button type="submit" v-if="questionAdded[questionIndex] !== true">Add question</button>
                             <button v-show="questionAdded[questionIndex] === true" type="reset">Remove question</button><br>
