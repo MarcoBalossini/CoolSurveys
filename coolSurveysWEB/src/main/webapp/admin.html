@@ -37,7 +37,7 @@
                     </form>
                 </div>
                 <div class="newSurveySetup" id="newProduct" v-if="surveyNewProduct">
-                    <form v-on:reset.prevent="resetNewProduct" v-on:submit.prevent="submitNewProduct">
+                    <form v-on:reset.prevent="resetNewProduct" v-on:submit.prevent="sendNewProduct">
                         <div class="form-field">
                             <label class="question" for="newProductName">Product Name: </label>
                             <input v-model.trim="newProductName" type="text" id ="newProductName" placeholder="product name" required/>
@@ -58,12 +58,11 @@
                             <label class="question">Question{{questionIndex + 1}}:</label>
                             <input type="text" v-model.trim="input.question" placeholder="enter new question" required :disabled="questionAdded[questionIndex] === true"><br>
                             <div class = "buttons" v-if="questionAdded[questionIndex] !== true">
-                                <button type="button" v-on:click="setMultipleChoice(questionIndex)" :disabled="multipleChoice[questionIndex] === true">Multiple choice</button>
-                                <button type="button" v-on:click="setOpenAnswer(questionIndex)" :disabled="multipleChoice[questionIndex] !== true">Open answer</button>
+                                <button type="button" v-on:click="setMultipleChoice()">Multiple choice</button>
+                                <button type="button" v-on:click="setOpenAnswer(questionIndex)">Open answer (default)</button>
                             </div>
                         </div>
-                        <br> <label class="question" v-if="options[questionIndex]!=null && options[questionIndex].length <= 4
-                         && multipleChoice[questionIndex]">Optional multiple options:</label> <br>
+                        <br> <label class="question" v-if="showOptions(questionIndex)">Optional multiple options:</label> <br>
                         <div v-if="showOptions(questionIndex)"
                              v-for="(input, optionIndex) in options[questionIndex]" :key="`optionInput-${optionIndex}`" class="form-field">
                             <label class="question">Option{{optionIndex + 1}}:</label>
@@ -74,8 +73,7 @@
                                         v-on:click="removeOption(optionIndex, options[questionIndex])">Remove option</button>
                             </div>
                         </div>
-                        <br> <label v-if="options[questionIndex]!=null && options[questionIndex].length > 4 &&
-                        multipleChoice[questionIndex] && questionAdded[questionIndex] !== true">Max number of options reached.</label> <br>
+                        <br> <label v-if="maxOptionsReached(questionIndex)">Max number of options reached.</label> <br>
                         <label v-if="questionAdded[questionIndex] === true">Question added to survey</label><br>
                         <label v-if="questionAdded[questionIndex] !== true" style="color:red"> {{message}} </label><br>
                         <div class = "buttons">
@@ -127,12 +125,12 @@
                 <div class = "usersList">
                     <div  id = "secondaryBtns">
                         <div class="buttons">
-                            <button class = "secondaryBtn" v-on:click="()=>{singleSurveyInspection = false; submissionsInspection = true}">Submissions</button>
-                            <button class = "secondaryBtn" v-on:click="()=>{singleSurveyInspection = false; deletionsInspection = true}">Deletions</button>
+                            <button class = "secondaryBtn" v-on:click="showSubmissions()">Submissions</button>
+                            <button class = "secondaryBtn" v-on:click="showCancellations()">Deletions</button>
                         </div>
                     </div>
                     <div>
-                        <button v-on:click="()=>{singleSurveyInspection = false; surveysInspection = true; oldSurveysBool = true;}">Back</button>
+                        <button v-on:click="showOldSurveysInspection()">Back</button>
                     </div>
                 </div>
             </div>
@@ -142,7 +140,7 @@
                     <button class="link" v-for="user in usersWhoSubmitted" v-on:click="setUserChoice($event)">{{user}}</button>
                     <label class="question">Click on a name to see submission details</label>
                     <div class="buttons" >
-                        <button v-on:click="()=>{submissionsInspection = false; singleSurveyInspection = true;}">Back</button>
+                        <button v-on:click="showSingleSurvey()">Back</button>
                     </div>
                 </div>
             </div>

@@ -9,7 +9,7 @@ let index = new Vue ({
         newProductImage:"",
         questionAdded:[],
         optionAdded:[],
-        multipleChoice:[],
+        multipleChoice: false,
         oldSurveys:[["2021-10-05", "ShampooGarden"], ["2021-05-13", "SpecialSoap"]],
         toDelete:[],
         usersWhoSubmitted: ["Giuseppe", "Pino"],
@@ -68,7 +68,7 @@ let index = new Vue ({
                 questions.push({ question: "" });
                 this.optionAdded = [];
                 options.push([{ option: "" }]);
-                this.multipleChoice[index] = false;
+                this.multipleChoice = false;
                 this.questionAdded[index] = true;
                 this.message = "";
             }
@@ -79,16 +79,21 @@ let index = new Vue ({
             let maxOptionsReached = true;
             if (this.options[questionIndex]!=null)
                 maxOptionsReached = this.options[questionIndex].length > 4;
-            return this.multipleChoice[questionIndex] && !maxOptionsReached;
+            return this.multipleChoice && !maxOptionsReached && this.questionAdded[questionIndex] !== true;
+        },
+        maxOptionsReached(questionIndex){
+            let maxOptionsReached = true;
+            if (this.options[questionIndex]!=null)
+                maxOptionsReached = this.options[questionIndex].length > 4;
+            return this.multipleChoice && maxOptionsReached && this.questionAdded[questionIndex] !== true;
         },
         setOpenAnswer: function(questionIndex) {
             this.options[questionIndex]= [{ option: "" }];
             this.optionAdded = [];
-            this.multipleChoice[questionIndex] = false;
+            this.multipleChoice = false;
         },
-        setMultipleChoice: function(questionIndex) {
-            //this.options= [[{ option: "" }]];
-            this.multipleChoice[questionIndex] = true;
+        setMultipleChoice: function() {
+            this.multipleChoice = true;
         },
         removeOption: function(index, options) {
             options.splice(index, 1);
@@ -125,7 +130,7 @@ let index = new Vue ({
         resetQuestionsForm: function(){
             this.questions = [{ question: "" }];
             this.options = [[{ option: "" }]];
-            this.multipleChoice = [];
+            this.multipleChoice = false;
             this.questionAdded= [];
             this.newProductImage="";
             this.newProductName="";
@@ -205,6 +210,8 @@ let index = new Vue ({
                     'Content-Type': 'multipart/form-data'
                 }
             }).then(response => {
+                this.surveyNewProduct = false;
+                this.surveyQuestions = true;
                 console.log(response.data)
             }).catch(response => {
                 console.log(response.data)
@@ -229,10 +236,6 @@ let index = new Vue ({
         resetNewProduct: function(){
             this.surveyDateChoice = true;
             this.surveyNewProduct = false;
-        },
-        submitNewProduct: function(){
-            this.surveyNewProduct = false;
-            this.surveyQuestions = true;
         },
         setSurveyChoice: function(event) {
             this.surveyToInspect = event.target.innerText;
@@ -272,6 +275,23 @@ let index = new Vue ({
                 }).catch(response => {
                 console.log(response.data)
             });
+        },
+        showSubmissions: function() {
+            this.singleSurveyInspection = false;
+            this.submissionsInspection = true;
+        },
+        showCancellations: function() {
+            this.singleSurveyInspection = false;
+            this.deletionsInspection = true
+        },
+        showOldSurveysInspection: function() {
+            this.singleSurveyInspection = false;
+            this.surveysInspection = true;
+            this.oldSurveysBool = true;
+        },
+        showSingleSurvey: function() {
+            this.submissionsInspection = false;
+            this.singleSurveyInspection = true;
         }
     },
 });

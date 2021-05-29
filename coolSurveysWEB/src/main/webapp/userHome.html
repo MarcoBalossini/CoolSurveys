@@ -28,12 +28,12 @@
                     <h2>What about today product?</h2>
                     <div class="form-field" v-for="(question,index) in questions1">
                         <label class="question" for="answer">{{question}}</label>
-                        <div class="multipleChoiceQuestion" v-if="options1[index]" v-for="option in options1[index]">
+                        <div class="multipleChoiceQuestion" v-if="options1[index].length !== 0" v-for="option in options1[index]">
                             <input type="radio" v-model="answers1[index]" :value="option" :id="option" required>
                             <label :for="option">{{option}}</label>
                         </div>
 
-                        <div class="productOpenQuestion" v-if="!options1[index]">
+                        <div class="productOpenQuestion" v-if="options1[index].length === 0">
                                             <textarea id="answer" v-model="answers1[index]" v-on:keyup="charCount(index)"
                                                       rows="5" cols="30" minlength="2" maxlength="100" required></textarea>
                             <div id="the-count">

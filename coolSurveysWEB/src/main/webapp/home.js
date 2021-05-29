@@ -7,7 +7,7 @@ let index = new Vue ({
         questions1: ["Do you like it?", "hello write here."],
         questions2: ["What's your age?", "ExpLvl", "What's your sex?"],
         questions2Type: ["number", "options", "radio"],
-        options1: [["No", "Bleah"]],
+        options1: [["No", "Bleah"],[]],
         options2: [[], ["low", "medium", "high"], ["male", "female"]],
         age: 0,
         sex: 0,
@@ -25,6 +25,7 @@ let index = new Vue ({
     //computed properties: dynamic data based on other dynamic data
 
     computed: {
+
     },
     methods:{
         charCount: function(index){
