@@ -14,13 +14,14 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-public class SurveysServiceTest {
+public class SubmissionServiceTest {
 
     private static final String USER1 = "user1";
     private static final String PASS1 = "pass1";
@@ -40,7 +41,7 @@ public class SurveysServiceTest {
     private static SubmissionDAO submissionDAO;
     private static QuestionnaireDAO questionnaireDAO;
 
-    private static SurveysService service;
+    private static SubmissionServiceBean service;
 
     private static Credentials cred1;
     private static Credentials cred2;
@@ -59,7 +60,7 @@ public class SurveysServiceTest {
         submissionDAO = mock(SubmissionDAO.class);
         questionnaireDAO = mock(QuestionnaireDAO.class);
 
-        service = new SurveysService(questionnaireDAO, answerDAO, userDAO, submissionDAO);
+        service = new SubmissionServiceBean(questionnaireDAO, answerDAO, userDAO, submissionDAO);
 
         cred1 = new Credentials(USER1, PASS1, MAIL1, false);
         user1 = new User(cred1);
@@ -83,11 +84,19 @@ public class SurveysServiceTest {
         when(questionnaireDAO.getByDate(LocalDate.now())).thenReturn(questionnaire);
 
 
+        //create Submission objects with submitted = false
+        Submission sub1 = new Submission(user1, questionnaire);
+        user1.setSubmission(List.of(sub1));
+
+        Submission sub2 = new Submission(user2, questionnaire);
+        user2.setSubmission(List.of(sub2));
+
     }
 
     @Test
     public void blockedAccount() {
         map = Map.of(QUESTION1, "answer1", QUESTION2, "answer2");
+
         assertThrows(BlockedAccountException.class, () -> service.registerSubmission(map, cred2, 1, "Male", "High"));
     }
 

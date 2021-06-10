@@ -9,8 +9,8 @@ import it.polimi.db2.coolsurveys.entities.Credentials;
 import it.polimi.db2.coolsurveys.entities.Option;
 import it.polimi.db2.coolsurveys.entities.Question;
 import it.polimi.db2.coolsurveys.entities.Questionnaire;
-import it.polimi.db2.coolsurveys.services.ISurveysService;
-import it.polimi.db2.coolsurveys.services.SurveysService;
+import it.polimi.db2.coolsurveys.services.SubmissionService;
+import it.polimi.db2.coolsurveys.services.SubmissionServiceBean;
 import org.junit.jupiter.api.Test;
 
 import javax.servlet.ServletException;
@@ -67,7 +67,7 @@ class HandleSurveyTest {
             throws NoSuchFieldException, IllegalAccessException, IOException, ServletException {
         HttpServletRequest request = mock(HttpServletRequest.class);
         HttpServletResponse response = mock(HttpServletResponse.class);
-        ISurveysService surveysService = mock(SurveysService.class);
+        SubmissionService surveysService = mock(SubmissionServiceBean.class);
 
         HttpSession session = mock(HttpSession.class);
 
@@ -86,7 +86,7 @@ class HandleSurveyTest {
 
 
         try {
-            when(surveysService.retrieveDailySurvey()).thenReturn(questionnaire);
+            when(surveysService.retrieveDailySurvey(credentials)).thenReturn(questionnaire);
         } catch (DAOException e) {
             e.printStackTrace();
         }
@@ -112,7 +112,7 @@ class HandleSurveyTest {
     void testSurveySubmission() throws IOException, ServletException, NoSuchFieldException, IllegalAccessException {
         HttpServletRequest request = mock(HttpServletRequest.class);
         HttpServletResponse response = mock(HttpServletResponse.class);
-        ISurveysService surveysService = mock(SurveysService.class);
+        SubmissionService surveysService = mock(SubmissionServiceBean.class);
         HttpSession session = mock(HttpSession.class);
 
         Map<String, String> questionsAnswersMap = new HashMap<>();

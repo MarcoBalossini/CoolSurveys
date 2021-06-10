@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 @Stateless
-public class SurveysService implements ISurveysService {
+public class SubmissionServiceBean implements SubmissionService {
 
     @EJB(name = "it.polimi.db2.coolsurveys.dao/UserDAO")
     protected QuestionnaireDAO questionnaireDAO;
@@ -39,28 +39,43 @@ public class SurveysService implements ISurveysService {
     @PersistenceContext(unitName = "coolSurveys")
     protected EntityManager em;
 
-    protected SurveysService(QuestionnaireDAO questionnaireDAO, AnswerDAO answerDAO, UserDAO userDAO, SubmissionDAO submissionDAO) {
+    protected SubmissionServiceBean(QuestionnaireDAO questionnaireDAO, AnswerDAO answerDAO, UserDAO userDAO, SubmissionDAO submissionDAO) {
         this.questionnaireDAO = questionnaireDAO;
         this.answerDAO = answerDAO;
         this.userDAO = userDAO;
         this.submissionDAO = submissionDAO;
     }
 
-    public SurveysService () {}
+    public SubmissionServiceBean() {}
 
     /**
      * {@inheritDoc}
+     * @param credentials
      */
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public Questionnaire retrieveDailySurvey() throws NotFoundException {
+    public Questionnaire retrieveDailySurvey(Credentials credentials) throws NotFoundException, AlreadyExistsException {
 
-        return questionnaireDAO.getByDate(LocalDate.now());
+        User user = credentials.getUser();
+
+        Questionnaire questionnaire = questionnaireDAO.getByDate(LocalDate.now());
+
+        Submission submission = submissionDAO.find(user, questionnaire);
+
+        if(submission == null) //first time user sees Daily Survey
+            submissionDAO.create(user, questionnaire);
+        else if(submission.getSubmitted().equals(Boolean.TRUE))
+            throw new AlreadyExistsException("User already submitted");
+
+
+
+        return questionnaire;
 
     }
 
 
     @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void registerSubmission(Map<String, String> answers, Credentials credentials, Integer age, String gender, String expLvl) throws BlockedAccountException, AlreadyExistsException, NotFoundException, BadWordFoundException {
 
         if(answers == null || credentials == null)
@@ -69,6 +84,21 @@ public class SurveysService implements ISurveysService {
         Questionnaire questionnaire = questionnaireDAO.getByDate(LocalDate.now());
 
         User user = credentials.getUser();
+
+        Submission submission = null;
+
+        //Search if user has started a submission
+        for(Submission sub : user.getSubmission())
+            if(sub.getQuestionnaire().equals(questionnaire)) {
+                submission = sub;
+                break;
+            }
+
+        if(submission == null)
+            throw new NotFoundException("User never retrieved the Questionnaire");
+
+        if(submission.getSubmitted().equals(Boolean.TRUE))
+            throw new AlreadyExistsException("User already submitted this Questionnaire");
 
         try {
             insertAnswers(questionnaire, answers, user);
@@ -85,7 +115,7 @@ public class SurveysService implements ISurveysService {
         Integer genderOpt = gender.isEmpty() ? null : Submission.Gender.valueOf(gender.toUpperCase()).ordinal();
         Integer expLvlOpt = expLvl.isEmpty() ? null : Submission.ExpertiseLevel.valueOf(expLvl.toUpperCase()).ordinal();
 
-        submissionDAO.insert(user, questionnaire, age, genderOpt, expLvlOpt);
+        submissionDAO.submit(submission, age, genderOpt, expLvlOpt);
 
     }
     

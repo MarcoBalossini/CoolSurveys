@@ -1,8 +1,11 @@
 package it.polimi.db2.coolsurveys.entities;
 
+import jdk.jfr.Name;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -11,7 +14,9 @@ import java.util.List;
         @NamedQuery(name = "User.selectByUsername",
                 query = "select u from User u where u.credentials.username = :username"),
         @NamedQuery(name = "User.selectByMail",
-                query = "select u from User u where u.credentials.mail = :mail")
+                query = "select u from User u where u.credentials.mail = :mail"),
+        @NamedQuery(name = "User.selectOrderedByPoints",
+                query = "select u from User u order by u.points desc ")
 })
 @Table(name = "user")
 public class User implements Serializable {
@@ -28,10 +33,10 @@ public class User implements Serializable {
     private LocalDateTime blockedUntil = LocalDateTime.now();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    private List<Answer> answers;
+    private List<Answer> answers = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    private List<Submission> submission;
+    private List<Submission> submission = new ArrayList<>();
 
     public User(Credentials credentials) {
         this.credentials = credentials;

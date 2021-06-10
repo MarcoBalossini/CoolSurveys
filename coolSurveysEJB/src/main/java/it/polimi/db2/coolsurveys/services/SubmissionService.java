@@ -11,13 +11,14 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
-public interface ISurveysService {
+public interface SubmissionService {
 
     /**
      * Retrieve the daily survey's data
      * @return The survey, if found. null otherwise
+     * @param credentials
      */
-    Questionnaire retrieveDailySurvey() throws NotFoundException;
+    Questionnaire retrieveDailySurvey(Credentials credentials) throws NotFoundException, AlreadyExistsException;
 
     /**
      * Submit user's answers

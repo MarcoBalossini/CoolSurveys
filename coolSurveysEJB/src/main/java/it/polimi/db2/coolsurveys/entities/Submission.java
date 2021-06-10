@@ -47,14 +47,32 @@ public class Submission implements Serializable {
     private User user;
 
 
+
+    @Column(name = "submitted", nullable = false)
+    private Boolean submitted = false;
+
+
     public Submission() {}
     public Submission(User user, Questionnaire questionnaire) {
         this.user = user;
+
+        user.getSubmission().add(this); //updates directly
+
         this.questionnaire = questionnaire;
+
+        questionnaire.addSubmission(this);
     }
 
     public SubmissionPK getId() {
         return id;
+    }
+
+    public Boolean getSubmitted() {
+        return submitted;
+    }
+
+    public void setSubmitted(Boolean submitted) {
+        this.submitted = submitted;
     }
 
     public void setId(SubmissionPK id) {

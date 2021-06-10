@@ -10,7 +10,7 @@ import it.polimi.db2.coolsurveys.entities.Credentials;
 import it.polimi.db2.coolsurveys.entities.Question;
 import it.polimi.db2.coolsurveys.entities.Questionnaire;
 import it.polimi.db2.coolsurveys.services.IAuthService;
-import it.polimi.db2.coolsurveys.services.ISurveysService;
+import it.polimi.db2.coolsurveys.services.SubmissionService;
 
 import javax.ejb.EJB;
 import javax.servlet.*;
@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 public class HandleSurvey extends HttpServlet {
 
     @EJB(name = "it.polimi.db2.coolsurveys.services/SurveysService")
-    private ISurveysService surveysService;
+    private SubmissionService surveysService;
 
     @EJB(name = "it.polimi.db2.coolsurveys.services/AuthService")
     private IAuthService authService;
@@ -46,7 +46,8 @@ public class HandleSurvey extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Questionnaire questionnaire;
         try {
-            questionnaire = surveysService.retrieveDailySurvey();
+            //TODO: filter on servlet. Session cannot be empty
+            questionnaire = surveysService.retrieveDailySurvey((Credentials) request.getSession().getAttribute("user"));
         } catch (DAOException e) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().println(e.getMessage());

@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @NamedQueries({
         @NamedQuery(name = "Questionnaire.selectByName",
@@ -126,5 +127,18 @@ public class Questionnaire implements Serializable {
 
     public Integer getQId() {
         return qId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Questionnaire that = (Questionnaire) o;
+        return qId.equals(that.qId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(qId);
     }
 }
