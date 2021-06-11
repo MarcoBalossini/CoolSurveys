@@ -1,6 +1,7 @@
 package it.polimi.db2.coolSurveysWEB.controllers;
 
 import it.polimi.db2.coolsurveys.services.SubmissionService;
+import it.polimi.db2.coolsurveys.services.SurveyService;
 
 import javax.ejb.EJB;
 import javax.servlet.*;
@@ -12,7 +13,7 @@ import java.io.IOException;
 public class SendImage extends HttpServlet {
 
     @EJB(name = "it.polimi.db2.coolsurveys.services/SurveysService")
-    private SubmissionService surveysService;
+    private SurveyService surveysService;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

@@ -6,6 +6,7 @@ import it.polimi.db2.coolsurveys.entities.Questionnaire;
 import it.polimi.db2.coolsurveys.entities.Submission;
 import it.polimi.db2.coolsurveys.entities.User;
 import it.polimi.db2.coolsurveys.services.SubmissionService;
+import it.polimi.db2.coolsurveys.services.SurveyService;
 import org.junit.jupiter.api.Test;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,7 +27,7 @@ class AdminSurveyTest {
 
     @Test
     void testGetSurveyList() {
-        SubmissionService survService = mock(SubmissionService.class);
+        SurveyService survService = mock(SurveyService.class);
         HttpServletRequest request = mock(HttpServletRequest.class);
         HttpServletResponse response = mock(HttpServletResponse.class);
 
@@ -61,7 +62,7 @@ class AdminSurveyTest {
 
     @Test
     void testGetSurveyResponders() {
-        SubmissionService survService = mock(SubmissionService.class);
+        SurveyService survService = mock(SurveyService.class);
         HttpServletRequest request = mock(HttpServletRequest.class);
         HttpServletResponse response = mock(HttpServletResponse.class);
 
@@ -104,7 +105,7 @@ class AdminSurveyTest {
         int expLvl = 0;
         int gender = 0;
 
-        SubmissionService survService = mock(SubmissionService.class);
+        SurveyService survService = mock(SurveyService.class);
         HttpServletRequest request = mock(HttpServletRequest.class);
         HttpServletResponse response = mock(HttpServletResponse.class);
 

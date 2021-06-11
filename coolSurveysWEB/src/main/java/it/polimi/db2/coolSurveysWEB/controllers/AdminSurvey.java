@@ -7,6 +7,7 @@ import it.polimi.db2.coolSurveysWEB.utils.JsonUtils;
 import it.polimi.db2.coolsurveys.entities.Questionnaire;
 import it.polimi.db2.coolsurveys.entities.Submission;
 import it.polimi.db2.coolsurveys.services.SubmissionService;
+import it.polimi.db2.coolsurveys.services.SurveyService;
 
 import javax.ejb.EJB;
 import javax.servlet.*;
@@ -74,7 +75,7 @@ public class AdminSurvey extends HttpServlet {
      * Injected EJB service for survey related needs
      */
     @EJB(name = "it.polimi.db2.coolsurveys.services/SurveysService")
-    private SubmissionService surveysService;
+    private SurveyService surveysService;
 
     /**
      * If the request has a date parameter, returns the responders lists (submit + cancel)<br>
