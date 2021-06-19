@@ -1,8 +1,10 @@
 package it.polimi.db2.coolsurveys.services;
 
+import it.polimi.db2.coolsurveys.dao.exceptions.NotFoundException;
 import it.polimi.db2.coolsurveys.entities.Questionnaire;
 import it.polimi.db2.coolsurveys.entities.Submission;
 import it.polimi.db2.coolsurveys.entities.User;
+import it.polimi.db2.coolsurveys.services.exceptions.ServiceException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -28,7 +30,7 @@ public interface SurveyService {
      *
      * @param dates The survey's dates
      */
-    void deleteSurveys(List<LocalDate> dates);
+    void deleteSurveys(List<LocalDate> dates) throws ServiceException, NotFoundException;
 
     /**
      * Get the list of all the users who had submitted/cancelled a given survey
@@ -36,7 +38,7 @@ public interface SurveyService {
      * @param hasSubmitted Which user category to select: submitters or "cancellers"
      * @return The filtered list of user
      */
-    List<User> getSurveyResponders(LocalDate date, boolean hasSubmitted);
+    List<User> getSurveyResponders(LocalDate date, boolean hasSubmitted) throws NotFoundException;
 
     /**
      * Get submission data given survey date and responder's username
@@ -44,7 +46,7 @@ public interface SurveyService {
      * @param username The responder's username
      * @return The submission object
      */
-    Submission getSurveySubmission(LocalDate date, String username);
+    Submission getSurveySubmission(LocalDate date, String username) throws NotFoundException;
 
     /**
      * Get the Map(Question, Answer) to a given date survey by a selected user
@@ -52,7 +54,7 @@ public interface SurveyService {
      * @param username The submitter's username
      * @return The Question/Answers map
      */
-    Map<String, String> getSurveyAnswers(LocalDate date, String username);
+    Map<String, String> getSurveyAnswers(LocalDate date, String username) throws NotFoundException;
 
     /**
      * Checks whether or not a date is available for a survey
@@ -65,5 +67,5 @@ public interface SurveyService {
      * Gets the product's of the day image
      * @return The image as a array of bytes
      */
-    byte[] getImage();
+    byte[] getImage() throws NotFoundException;
 }

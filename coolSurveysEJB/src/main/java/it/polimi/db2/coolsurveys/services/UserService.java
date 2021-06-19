@@ -5,9 +5,11 @@ import it.polimi.db2.coolsurveys.entities.Credentials;
 import it.polimi.db2.coolsurveys.entities.User;
 
 import javax.ejb.EJB;
+import javax.ejb.Stateless;
 import java.util.ArrayList;
 import java.util.List;
 
+@Stateless
 public class UserService implements IUserService {
 
 
@@ -19,10 +21,6 @@ public class UserService implements IUserService {
      */
     @Override
     public List<User> getLeaderboard() {
-        List<User> leaderboard = new ArrayList<>();
-
-
-
-        return leaderboard;
+        return dao.getLeaderBoard();
     }
 }

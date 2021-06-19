@@ -1,10 +1,13 @@
 package it.polimi.db2.coolsurveys.entities;
 
+import jdk.jfr.Name;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
 @NamedQueries({
-        @NamedQuery(name = "Submission.get", query = "Select s from Submission s where s.id.userId = :userId and s.id.questionnaireId = :questionnaireId")
+        @NamedQuery(name = "Submission.get", query = "Select s from Submission s where s.id.userId = :userId and s.id.questionnaireId = :questionnaireId"),
+        @NamedQuery(name = "Submission.getResponders", query = "Select s.user from Submission s where s.id.questionnaireId = :questionnaireId and s.submitted = :hasSubmitted")
 })
 
 @Entity

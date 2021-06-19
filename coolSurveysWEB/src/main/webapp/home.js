@@ -12,7 +12,7 @@ let index = new Vue ({
         age: 0,
         sex: 0,
         explvl: '',
-        scores:[['Michele', 0], ['Gigi', 9] ],
+        scores:[],
         message: '',
         homepage:true,
         section1:false,

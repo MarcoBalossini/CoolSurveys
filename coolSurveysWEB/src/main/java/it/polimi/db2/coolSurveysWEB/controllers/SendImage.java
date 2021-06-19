@@ -1,5 +1,6 @@
 package it.polimi.db2.coolSurveysWEB.controllers;
 
+import it.polimi.db2.coolsurveys.dao.exceptions.DAOException;
 import it.polimi.db2.coolsurveys.services.SubmissionService;
 import it.polimi.db2.coolsurveys.services.SurveyService;
 
@@ -17,10 +18,15 @@ public class SendImage extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        byte[] img = surveysService.getImage();
 
-        response.setContentType("image/jpeg");
-        response.setContentLength(img.length);
-        response.getWriter().println(img);
+        try {
+            byte[] img = surveysService.getImage();
+
+            response.setContentType("image/jpeg");
+            response.setContentLength(img.length);
+            response.getWriter().println(img);
+        } catch (DAOException e) {
+            response.getWriter().println(e.getMessage());
+        }
     }
 }

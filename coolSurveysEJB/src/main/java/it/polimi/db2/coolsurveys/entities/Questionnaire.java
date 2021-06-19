@@ -29,10 +29,6 @@ public class Questionnaire implements Serializable {
     @Column(name = "date", nullable = false)
     private LocalDate date;
 
-    /**
-     * Photo_path not unique since a questionnaire may be re-proposed
-     */
-    //TODO: see how images in byte[] work
     @Column (name = "photo", nullable = false)
     @Lob
     private byte[] photo;

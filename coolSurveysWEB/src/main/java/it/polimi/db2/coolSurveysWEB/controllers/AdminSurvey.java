@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import it.polimi.db2.coolSurveysWEB.utils.JsonUtils;
+import it.polimi.db2.coolsurveys.dao.exceptions.DAOException;
 import it.polimi.db2.coolsurveys.entities.Questionnaire;
 import it.polimi.db2.coolsurveys.entities.Submission;
 import it.polimi.db2.coolsurveys.services.SubmissionService;
@@ -74,7 +75,7 @@ public class AdminSurvey extends HttpServlet {
     /**
      * Injected EJB service for survey related needs
      */
-    @EJB(name = "it.polimi.db2.coolsurveys.services/SurveysService")
+    @EJB(name = "it.polimi.db2.coolsurveys.services/SurveyService")
     private SurveyService surveysService;
 
     /**
@@ -220,19 +221,25 @@ public class AdminSurvey extends HttpServlet {
     private void getSurveyResponders(HttpServletRequest request, HttpServletResponse response, LocalDate date) throws IOException {
 
         List<String> submitters = new ArrayList<>();
-        surveysService.getSurveyResponders(date, true)
-                .forEach(user -> submitters.add(user.getCredentials().getUsername()));
-        List<String> cancellers = new ArrayList<>();
-        surveysService.getSurveyResponders(date, false)
-                .forEach(user -> cancellers.add(user.getCredentials().getUsername()));
 
-        Responders toSend = new Responders(submitters, cancellers);
+        try {
+            surveysService.getSurveyResponders(date, true)
+                    .forEach(user -> submitters.add(user.getCredentials().getUsername()));
+            List<String> cancellers = new ArrayList<>();
+            surveysService.getSurveyResponders(date, false)
+                    .forEach(user -> cancellers.add(user.getCredentials().getUsername()));
 
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        String json = new Gson().toJson(toSend);
-        response.getWriter().println(json);
+            Responders toSend = new Responders(submitters, cancellers);
+
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            String json = new Gson().toJson(toSend);
+            response.getWriter().println(json);
+        } catch (DAOException e) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().println(e.getMessage());
+        }
     }
 
     /**

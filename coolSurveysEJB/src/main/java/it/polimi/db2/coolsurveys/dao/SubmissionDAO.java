@@ -80,4 +80,11 @@ public class SubmissionDAO {
 
     }
 
+    public List<User> getResponders(Questionnaire questionnaire, boolean hasSubmitted) {
+        return em.createNamedQuery("Submission.getResponders", User.class)
+                .setParameter("questionnaireId", questionnaire.getQId())
+                .setParameter("hasSubmitted", hasSubmitted)
+                .getResultList();
+    }
+
 }

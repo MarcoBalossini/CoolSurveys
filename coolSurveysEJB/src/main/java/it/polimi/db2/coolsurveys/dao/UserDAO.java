@@ -14,6 +14,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Stateless
 public class UserDAO {
@@ -78,6 +79,10 @@ public class UserDAO {
         }
 
         return user;
+    }
+
+    public List<User> getLeaderBoard() {
+        return em.createNamedQuery("User.selectOrderedByPoints", User.class).getResultList();
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
