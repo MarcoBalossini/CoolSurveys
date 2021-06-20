@@ -14,10 +14,23 @@
         <session-timeout>30</session-timeout>
     </session-config>
 
-    <!-- Filters -->
+    <!-- === Filters === -->
     <filter-mapping>
         <filter-name>AuthenticationFilter</filter-name>
         <url-pattern>*</url-pattern>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>AdminAuthorizationFilter</filter-name>
+        <servlet-name>AdminSurvey</servlet-name>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>UserAuthorizationFilter</filter-name>
+        <servlet-name>HandleSurvey</servlet-name>
+        <servlet-name>Leaderboard</servlet-name>
+        <servlet-name>Reviews</servlet-name>
+        <servlet-name>SendImage</servlet-name>
     </filter-mapping>
 
 </web-app>

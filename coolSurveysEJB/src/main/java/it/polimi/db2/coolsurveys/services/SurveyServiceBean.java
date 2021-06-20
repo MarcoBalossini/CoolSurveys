@@ -121,4 +121,9 @@ public class SurveyServiceBean implements SurveyService{
         return questionnaire.getPhoto();
 
     }
+
+    @Override
+    public List<String> getReviews() {
+        return new ArrayList<>();
+    }
 }

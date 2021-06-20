@@ -68,4 +68,10 @@ public interface SurveyService {
      * @return The image as a array of bytes
      */
     byte[] getImage() throws NotFoundException;
+
+    /**
+     * Get the reviews of today's survey as a list of strings
+     * @return The list of reviews
+     */
+    List<String> getReviews();
 }

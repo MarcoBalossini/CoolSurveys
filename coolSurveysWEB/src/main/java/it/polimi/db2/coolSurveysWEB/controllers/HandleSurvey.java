@@ -30,9 +30,6 @@ public class HandleSurvey extends HttpServlet {
     @EJB(name = "it.polimi.db2.coolsurveys.services/SurveysService")
     private SubmissionService surveysService;
 
-    @EJB(name = "it.polimi.db2.coolsurveys.services/AuthService")
-    private IAuthService authService;
-
     /**
      * Respond to daily surveys requests
      *
@@ -84,7 +81,6 @@ public class HandleSurvey extends HttpServlet {
 
         Credentials credentials = (Credentials) request.getSession().getAttribute("user");
 
-        //JsonObject
         JsonObject json = JsonUtils.getJsonFromRequest(request);
 
         List<JsonObject> permanentQuestions = JsonUtils.getInstance().getPermanentQuestions();
@@ -115,7 +111,9 @@ public class HandleSurvey extends HttpServlet {
         }
 
         try {
-            int age = Integer.parseInt(sec2Answers.get(0));
+            Integer age = null;
+            if (!sec2Answers.get(0).isEmpty())
+                age = Integer.parseInt(sec2Answers.get(0));
 
             surveysService.registerSubmission(JsonUtils.convertToMap(json), credentials, age, sec2Answers.get(1), sec2Answers.get(2));
             response.setStatus(HttpServletResponse.SC_ACCEPTED);
