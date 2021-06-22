@@ -20,6 +20,7 @@ let index = new Vue ({
         userToInspectExpLvl: "ciao",
         surveyToInspect: "",
         userToInspect: "",
+        internal_message: "",
         message: "",
         wrongDateChoice: false,
         welcome: false,
@@ -70,10 +71,10 @@ let index = new Vue ({
                 options.push([{ option: "" }]);
                 this.multipleChoice = false;
                 this.questionAdded[index] = true;
-                this.message = "";
+                this.internal_message = "";
             }
             else
-                this.message = "Question already entered.";
+                this.internal_message = "Question already entered.";
         },
         showOptions(questionIndex){
             let maxOptionsReached = true;
@@ -120,12 +121,12 @@ let index = new Vue ({
                 if (!found) {
                     options.push({ option: "" });
                     this.optionAdded[optionIndex] = true;
-                    this.message = "";
+                    this.internal_message = "";
                 } else
-                    this.message = "Option already entered.";
+                    this.internal_message = "Option already entered.";
             }
             else
-                this.message = "Option can't be empty.";
+                this.internal_message = "Option can't be empty.";
         },
         resetQuestionsForm: function(){
             this.questions = [{ question: "" }];
@@ -169,7 +170,8 @@ let index = new Vue ({
                     this.surveyCreation = false;
                     console.log(response.data)
                 }).catch(response => {
-                    console.log(response.data)
+                    this.message = response.response.data;
+                    console.log(response.data);
                 });
             }
         },
@@ -181,17 +183,18 @@ let index = new Vue ({
         submitDeletion: function(){
             let toSend;
             toSend = Object.fromEntries(this.toDelete);
-            axios.post("./AdminSurvey",toSend)
+            axios.delete("./AdminSurvey",toSend)
                 .then(response => {
                     this.surveyDeletion = false;
                     this.welcome = true;
-                    console.log(response.data)
+                    console.log(response.data);
+                    this.surveyDeletion = false;
+                    this.welcome = true;
                 }).catch(response => {
-                    console.log(response.data)
+                    console.log(response.data);
+                    this.message = response.response.data;
             });
             //to leave only in response=>
-            this.surveyDeletion = false;
-            this.welcome = true;
         },
         resetNewSurveyDateChoice: function(){
             this.welcome = true;
@@ -205,14 +208,15 @@ let index = new Vue ({
                 if (response.data === true) {
                     this.surveyDateChoice = false;
                     this.surveyNewProduct = true;
-                    this.message = "";
+                    this.internal_message = "";
                 }
                 else {
                     this.wrongDateChoice = true;
-                    this.message = "A survey for this date has already been created. Choose another date.";
+                    this.internal_message = "A survey for this date has already been created. Choose another date.";
                 }
             }).catch(response => {
-                console.log(response.data)
+                console.log(response.data);
+                this.message = response.response.data;
             });
         },
         getOldSurveys: function(){
@@ -226,6 +230,10 @@ let index = new Vue ({
                         tmp.push(survey.get(survey.getKey())); //name
                         this.oldSurveys.push(tmp);
                     })
+                })
+                .catch(response => {
+                    console.log(response.data);
+                    this.message = response.response.data;
                 })
         },
         handleImageUpdate: function(event) {
@@ -252,12 +260,14 @@ let index = new Vue ({
                     this.usersWhoSubmitted = usersListsObject.submitters;
                     this.usersWhoDeleted = usersListsObject.cancellers;
                     console.log(response.data)
-                }).catch(response => {
-                console.log(response.data)
+                })
+                .catch(response => {
+                this.message = response.response.data;
+                console.log(response.data);
             });
         },
         submitUserToInspect: function(){
-            axios.post("./AdminSurvey?user=" + this.userToInspect)
+            axios.post("./AdminSurvey?user=" + this.userToInspect + "&date=" + this.surveyToInspect)
                 .then(response => {
                     let surveyData = response.data;
                     surveyData.questionAnswersMap.forEach((qAnda)=> {
@@ -270,8 +280,10 @@ let index = new Vue ({
                     this.userToInspectGender.push(surveyData.gender);
                     this.userToInspectExpLvl.push(surveyData.expLvl);
                     console.log(response.data)
-                }).catch(response => {
-                console.log(response.data)
+                })
+                .catch(response => {
+                console.log(response.data);
+                this.message = response.response.data;
             });
         },
         showSubmissions: function() {

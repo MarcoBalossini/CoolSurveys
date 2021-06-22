@@ -39,6 +39,7 @@ let index = new Vue ({
             this.options1= [];
             this.options2= [];
             this.questions2Type= [];
+            this.message = '';
         },
         resetAll: function() {
             this.resetSurvey();
@@ -59,6 +60,7 @@ let index = new Vue ({
                 this.totalCharacters = 0;
             this.homepage = true;
             this.section1 = false;
+            this.message = '';
         },
         resetSection2Form: function () {
             this.age='';
@@ -66,6 +68,7 @@ let index = new Vue ({
             this.explvl='';
             this.homepage = true;
             this.section2 = false;
+            this.message = '';
         },
 
         receiveSurvey: function() {
@@ -101,13 +104,17 @@ let index = new Vue ({
                     this.homepage = false;
                     this.section1 = true;
                 })
-                .catch(error => {})
+                .catch(error => {
+                    console.log(error.response.data);
+                    this.message = error.response.data;
+                })
         },
 
         advanceSurveySection: function() {
             this.section1 = false;
             this.section2 = true;
         },
+
         submitSurvey: function() {
             let i;
             let questionsAnswersMap = new Map();
@@ -135,11 +142,11 @@ let index = new Vue ({
             axios.post("./HandleSurvey", object).then(response => {
                 this.greetings = true;
                 this.section2 = false;
-                console.log(response.data)
+                console.log(response.response.data)
                 //To change html file:
                 //window.location.href = "/nome.html";
             }).catch(response => {
-                this.message = response.data;
+                this.message = response.response.data;
             });
         },
 
@@ -147,6 +154,7 @@ let index = new Vue ({
             this.resetSurvey();
             axios.get("./Leaderboard")
                 .then(response => {
+                    this.scores = [];
                     const leaderboard = response.data;
                     leaderboard.forEach((user)=> {
                         let tmp = [];
@@ -157,7 +165,10 @@ let index = new Vue ({
                     this.leaderboard = true;
                     this.homepage = false;
                 })
-                .catch(error => {})
+                .catch(error => {
+                    console.log(error.response.data);
+                    this.message = error.response.data;
+                })
         },
         goToHomepage: function() {
             if (this.leaderboard === true)
@@ -167,6 +178,7 @@ let index = new Vue ({
             else if (this.greetings === true)
                 this.greetings = false;
             this.homepage = true;
+            this.message = '';
         },
         goToPrevSection: function () {
             this.section1 = true;

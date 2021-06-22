@@ -79,9 +79,13 @@
                     </div>
                 </form>
             </div>
+
+            <div class ="errorMsg" v-if="message!==''">
+                <label>{{ message }}</label>
+            </div>
         </div>
 
-        <div id="leaderBoard"  v-if = "leaderboard">
+        <div id = "leaderBoard"  v-if = "leaderboard">
             <header>
                 <h1>LeaderBoard</h1>
             </header>
@@ -101,6 +105,7 @@
                 </div>
             </div>
         </div>
+
         <div id="greetings" v-if = "greetings">
             <h1>Well Done!</h1>
             <p>Thanks for your time. You may have earned new points, check your position on the leaderboard!
@@ -108,6 +113,9 @@
             <div class="buttons">
                 <button v-on:click="goToHomepage">HomePage</button>
                 <button v-on:click="receiveLeaderboard">LeaderBoard</button>
+            </div>
+            <div class ="errorMsg" v-if="message!==''">
+                <label>{{ message }}</label>
             </div>
         </div>
     </div>

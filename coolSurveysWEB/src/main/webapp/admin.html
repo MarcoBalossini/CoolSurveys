@@ -20,6 +20,7 @@
                     <button id="deleteSurvey" v-on:click="deleteSurveyPage">Delete Survey</button>
                     <button id="surveysReview" v-on:click="surveysInspectionPage">Surveys Inspection</button>
                 </div>
+
             </div>
             <div id="surveyCreation" v-if = "surveyCreation">
                 <h1>Create New Survey</h1>
@@ -28,7 +29,7 @@
                         <div class="form-field">
                             <label class="question" for="date">New survey date: </label>
                             <input type="date" id="date" v-model.trim="newSurveyDate" required>
-                            <label v-if="wrongDateChoice" class="errorMsg"> {{message}} </label>
+                            <label v-if="wrongDateChoice" class="errorMsg"> {{internal_message}} </label>
                         </div>
                         <div class = "buttons">
                             <button type="reset" class="reset">Back</button>
@@ -75,7 +76,7 @@
                         </div>
                         <br> <label v-if="maxOptionsReached(questionIndex)">Max number of options reached.</label> <br>
                         <label v-if="questionAdded[questionIndex] === true">Question added to survey</label><br>
-                        <label v-if="questionAdded[questionIndex] !== true" class="errorMsg"> {{message}} </label><br>
+                        <label v-if="questionAdded[questionIndex] !== true" class="errorMsg"> {{internal_message}} </label><br>
                         <div class = "buttons">
                             <button type="submit" v-if="questionAdded[questionIndex] !== true">Add question</button>
                             <button v-show="questionAdded[questionIndex] === true" type="reset">Remove question</button><br>
@@ -164,6 +165,9 @@
                         <button v-on:click="()=>{deletionsInspection = false; singleSurveyInspection = true;}">Back</button>
                     </div>
                 </div>
+            </div>
+            <div class="errorMsg" v-if="message!==''">
+                <label>{{ message }}</label>
             </div>
         </div>
 

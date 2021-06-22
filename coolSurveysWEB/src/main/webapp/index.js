@@ -35,6 +35,7 @@ let index = new Vue ({
             this.password='';
             this.welcome = true;
             this.login = false;
+            this.message = '';
         },
         resetRegistrationForm: function (){
             this.username='';
@@ -43,6 +44,7 @@ let index = new Vue ({
             this.email='';
             this.welcome = true;
             this.registration = false;
+            this.message = '';
         },
         resetSection1Form: function () {
             this.answers=[];
@@ -50,6 +52,7 @@ let index = new Vue ({
                 this.totalCharacters = 0;
             this.homepage = true;
             this.section1 = false;
+            this.message = '';
         },
         resetSection2Form: function () {
             this.age='';
@@ -57,6 +60,7 @@ let index = new Vue ({
             this.explvl='';
             this.homepage = true;
             this.section2 = false;
+            this.message = '';
         },
         submitRegisterRequest: function() {
             axios.post("./DoRegistration", {
@@ -67,12 +71,12 @@ let index = new Vue ({
                 }).then(response => {
                     this.login = true;
                     this.registration = false;
-                    this.message = response.data;
+                    this.message = response.response.data;
                     this.email = '';
                     this.password = '';
                     this.passwordConfirm = '';
                 }).catch(response => {
-                    this.message = response.data;
+                    this.message = response.response.data;
                     this.password = '';
                     this.passwordConfirm = '';
                 });
@@ -84,11 +88,11 @@ let index = new Vue ({
             }).then(response => {
                 this.login = false;
                 this.homepage = true;
-                console.log(response.data);
+                console.log(response.response.data);
                 window.location.href = "userHome.html";
             }).catch(response => {
-                this.message = response.data;
-                console.log(response.data)
+                this.message = response.response.data;
+                console.log(response.response.data)
             });
         },
         advanceSurveySection: function() {
