@@ -142,6 +142,22 @@ let index = new Vue ({
             this.surveyNewProduct = false;
             this.surveyQuestions = true;
         },
+        checkValidDate: function(){
+            axios.post("./AdminSurvey?date=" + this.newSurveyDate).then(response => {
+                if (response.data === true) {
+                    this.surveyDateChoice = false;
+                    this.surveyNewProduct = true;
+                    this.internal_message = "";
+                }
+                else {
+                    this.wrongDateChoice = true;
+                    this.internal_message = "A survey for this date has already been created. Choose another date.";
+                }
+            }).catch(response => {
+                console.log(response.data);
+                this.message = response.response.data;
+            });
+        },
         submitQuestionsForm: function() {
             let toSend = new Map();
             let i;
@@ -156,6 +172,7 @@ let index = new Vue ({
                 let questionsMap = Object.fromEntries(toSend);
 
                 let formData = new FormData();
+                formData.append("date", this.newSurveyDate);
                 formData.append("name", this.newProductName);
                 formData.append("image", this.newProductImage);
                 formData.append("questionsMap", JSON.stringify(questionsMap));
@@ -202,22 +219,6 @@ let index = new Vue ({
             this.surveyDateChoice = false;
             this.newSurveyDate = "";
             this.newProductName = "";
-        },
-        checkValidDate: function(){
-            axios.post("./AdminSurvey?date=" + this.newSurveyDate).then(response => {
-                if (response.data === true) {
-                    this.surveyDateChoice = false;
-                    this.surveyNewProduct = true;
-                    this.internal_message = "";
-                }
-                else {
-                    this.wrongDateChoice = true;
-                    this.internal_message = "A survey for this date has already been created. Choose another date.";
-                }
-            }).catch(response => {
-                console.log(response.data);
-                this.message = response.response.data;
-            });
         },
         getOldSurveys: function(){
             axios.get("/AdminSurvey")
