@@ -153,9 +153,9 @@ let index = new Vue ({
                     this.wrongDateChoice = true;
                     this.internal_message = "A survey for this date has already been created. Choose another date.";
                 }
-            }).catch(response => {
-                console.log(response.data);
-                this.message = response.response.data;
+            }).catch(error => {
+                console.log(error.response.data);
+                this.message = error.response.data;
             });
         },
         submitQuestionsForm: function() {
@@ -186,9 +186,9 @@ let index = new Vue ({
                     this.surveyQuestions = false;
                     this.surveyCreation = false;
                     console.log(response.data)
-                }).catch(response => {
-                    this.message = response.response.data;
-                    console.log(response.data);
+                }).catch(error => {
+                    this.message = error.response.data;
+                    console.log(error.response.data);
                 });
             }
         },
@@ -207,11 +207,10 @@ let index = new Vue ({
                     console.log(response.data);
                     this.surveyDeletion = false;
                     this.welcome = true;
-                }).catch(response => {
-                    console.log(response.data);
-                    this.message = response.response.data;
+                }).catch(error => {
+                    console.log(error.response.data);
+                    this.message = error.response.data;
             });
-            //to leave only in response=>
         },
         resetNewSurveyDateChoice: function(){
             this.welcome = true;
@@ -232,9 +231,9 @@ let index = new Vue ({
                         this.oldSurveys.push(tmp);
                     })
                 })
-                .catch(response => {
-                    console.log(response.data);
-                    this.message = response.response.data;
+                .catch(error => {
+                    console.log(error.response.data);
+                    this.message = error.response.data;
                 })
         },
         handleImageUpdate: function(event) {
@@ -260,11 +259,11 @@ let index = new Vue ({
                     let usersListsObject = response.data;
                     this.usersWhoSubmitted = usersListsObject.submitters;
                     this.usersWhoDeleted = usersListsObject.cancellers;
-                    console.log(response.data)
+                    console.log(response.data);
                 })
-                .catch(response => {
-                this.message = response.response.data;
-                console.log(response.data);
+                .catch(error => {
+                this.message = error.response.data;
+                console.log(error.response.data);
             });
         },
         submitUserToInspect: function(){
@@ -280,11 +279,11 @@ let index = new Vue ({
                     this.userToInspectAge.push(surveyData.age);
                     this.userToInspectGender.push(surveyData.gender);
                     this.userToInspectExpLvl.push(surveyData.expLvl);
-                    console.log(response.data)
+                    console.log(response.data);
                 })
-                .catch(response => {
-                console.log(response.data);
-                this.message = response.response.data;
+                .catch(error => {
+                console.log(error.response.data);
+                this.message = error.response.data;
             });
         },
         showSubmissions: function() {

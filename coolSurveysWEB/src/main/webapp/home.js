@@ -142,11 +142,12 @@ let index = new Vue ({
             axios.post("./HandleSurvey", object).then(response => {
                 this.greetings = true;
                 this.section2 = false;
-                console.log(response.response.data)
+                console.log(response.data);
                 //To change html file:
                 //window.location.href = "/nome.html";
-            }).catch(response => {
-                this.message = response.response.data;
+            }).catch(error => {
+                this.message = error.response.data;
+                console.log(error.response.data);
             });
         },
 

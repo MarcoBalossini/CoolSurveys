@@ -71,12 +71,13 @@ let index = new Vue ({
                 }).then(response => {
                     this.login = true;
                     this.registration = false;
-                    this.message = response.response.data;
+                    this.message = response.data;
                     this.email = '';
                     this.password = '';
                     this.passwordConfirm = '';
-                }).catch(response => {
-                    this.message = response.response.data;
+                }).catch(error => {
+                    this.message = error.response.data;
+                    console.log(error.response.data);
                     this.password = '';
                     this.passwordConfirm = '';
                 });
@@ -88,11 +89,11 @@ let index = new Vue ({
             }).then(response => {
                 this.login = false;
                 this.homepage = true;
-                console.log(response.response.data);
+                console.log(response.data);
                 window.location.href = "userHome.html";
-            }).catch(response => {
-                this.message = response.response.data;
-                console.log(response.response.data)
+            }).catch(error => {
+                this.message = error.response.data;
+                console.log(error.response.data);
             });
         },
         advanceSurveySection: function() {
