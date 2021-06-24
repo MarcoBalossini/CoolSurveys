@@ -165,6 +165,8 @@ let index = new Vue ({
                         })
                     this.leaderboard = true;
                     this.homepage = false;
+                    if (this.greetings === true)
+                        this.greetings = false;
                 })
                 .catch(error => {
                     console.log(error.response.data);
