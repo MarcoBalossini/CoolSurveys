@@ -29,6 +29,16 @@ public class JsonUtils {
 
     private JsonUtils() {}
 
+    public static String getJson(HttpServletRequest request) throws IOException {
+        StringBuilder jb = new StringBuilder();
+        String line;
+        BufferedReader reader = request.getReader();
+        while ((line = reader.readLine()) != null)
+            jb.append(line);
+
+        return jb.toString();
+    }
+
     /**
      * Get json body from request
      * @param request The request
@@ -36,13 +46,7 @@ public class JsonUtils {
      * @throws IOException When a reader error occurs
      */
     public static JsonObject getJsonFromRequest(HttpServletRequest request) throws IOException {
-        StringBuilder jb = new StringBuilder();
-        String line;
-        BufferedReader reader = request.getReader();
-        while ((line = reader.readLine()) != null)
-            jb.append(line);
-
-        return new Gson().fromJson(jb.toString(), JsonElement.class).getAsJsonObject();
+        return new Gson().fromJson(getJson(request), JsonElement.class).getAsJsonObject();
     }
 
     public List<JsonObject> getPermanentQuestions() {
@@ -77,7 +81,7 @@ public class JsonUtils {
     public static Map<String, List<String>> convertToMapStringList(JsonObject jsonObject) {
         return jsonObject.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> {
             List<String> options = new ArrayList<>();
-            entry.getValue().getAsJsonArray().forEach(option -> options.add(option.getAsString()));
+            entry.getValue().getAsJsonArray().forEach(option -> options.add(((JsonObject) option).get("option").getAsString()));
 
             return options;
         }));

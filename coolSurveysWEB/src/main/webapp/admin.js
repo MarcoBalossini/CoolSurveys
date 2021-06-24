@@ -198,12 +198,10 @@ let index = new Vue ({
             this.welcome = true;
         },
         submitDeletion: function(){
-            let toSend = {};
-            let key = 0;
+            let toSend = [];
 
             for (const value of this.toDelete) {
-                toSend[key] = value;
-                key++;
+                toSend.push(value);
             }
 
             axios.delete("./AdminSurvey",toSend)

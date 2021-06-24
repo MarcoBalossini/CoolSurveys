@@ -12,11 +12,13 @@ import java.util.Map;
 
 public interface SurveyService {
     /**
-     * Create a survey in the database for the first available day.
+     * Create a survey in the database for the given date
+     * @param name The product's name
      * @param survey The Map< Questions, List< Options > >
-     * @return The planned date
+     * @param date The survey's date
+     * @param image The product's image
      */
-    LocalDate createSurvey(Map<String, List<String>> survey);
+    void createSurvey(String name, Map<String, List<String>> survey, LocalDate date, byte[] image);
 
     /**
      * Get the list of past surveys

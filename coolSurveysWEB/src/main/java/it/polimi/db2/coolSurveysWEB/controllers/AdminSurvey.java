@@ -2,12 +2,12 @@ package it.polimi.db2.coolSurveysWEB.controllers;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import it.polimi.db2.coolSurveysWEB.utils.JsonUtils;
 import it.polimi.db2.coolsurveys.dao.exceptions.DAOException;
 import it.polimi.db2.coolsurveys.entities.Questionnaire;
 import it.polimi.db2.coolsurveys.entities.Submission;
-import it.polimi.db2.coolsurveys.services.SubmissionService;
 import it.polimi.db2.coolsurveys.services.SurveyService;
 
 import javax.ejb.EJB;
@@ -15,9 +15,11 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.*;
+import java.util.List;
 
 /**
  * This servlet handles admin's requests concerning surveys<br>
@@ -36,6 +38,7 @@ import java.util.*;
  * </ul>
  */
 @WebServlet(name = "AdminSurvey", urlPatterns = "/AdminSurvey")
+@MultipartConfig
 public class AdminSurvey extends HttpServlet {
 
     protected static class Responders {
@@ -63,9 +66,24 @@ public class AdminSurvey extends HttpServlet {
     }
 
     /**
-     * Date parameter's name for GET requests
+     * Product's field name in survey's creation
+     */
+    protected static final String NAME = "name";
+
+    /**
+     * Product image's field name in surveys creation
+     */
+    protected static final String IMAGE = "image";
+
+    /**
+     * Date parameter's name for GET and POST requests
      */
     protected static final String DATE = "date";
+
+    /**
+     * Map parameter's name for POST requests
+     */
+    protected static final String MAP = "questionsMap";
 
     /**
      * User parameter's name for GET requests
@@ -79,7 +97,8 @@ public class AdminSurvey extends HttpServlet {
     private SurveyService surveysService;
 
     /**
-     * If the request has a date parameter, returns the responders lists (submit + cancel)<br>
+     * If the request has only a date parameter, returns the responders lists (submit + cancel)<br>
+     * If the request has a date and a user parameters, returns the response of the user to the survey <br>
      * If no parameter is given, returns the survey list without details
      */
     @Override
@@ -111,45 +130,46 @@ public class AdminSurvey extends HttpServlet {
     }
 
     /**
-     * Check the survey is not empty, then call SurveysService to register it into the database
+     * If a form is present, check the survey is not empty, then call SurveysService to register it into the database
+     * If not check the given date
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        var d = request.getParameter(DATE);
 
-        // If a date parameter is present we check its availability
-        // If available status = 200 (OK)
-        // If unavailable status = 403 (FORBIDDEN)
-        if (d != null) {
-            try {
-                LocalDate date = LocalDate.parse(d);
-                if (surveysService.checkDateAvailability(date))
-                    response.getWriter().println("true");
-                else
-                    response.getWriter().println("false");
+        String productName = request.getParameter(NAME);
+        if(productName != null && !productName.isEmpty()) {
+            //TODO: Fix image upload
+            Part imagePart = request.getPart(IMAGE);
+            InputStream imgStream = imagePart.getInputStream();
+            byte[] image = new byte[imgStream.available()];
+            imgStream.read(image);
 
-                response.setStatus(HttpServletResponse.SC_OK);
-
-            } catch (DateTimeParseException e) {
+            if (image.length==0) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                response.getWriter().println("The parameter is not formatted as a date");
+                response.getWriter().println("Image not present");
                 return;
             }
-            //TODO: Add catches
-        } else {
-            JsonObject json = JsonUtils.getJsonFromRequest(request);
 
-            Map<String, List<String>> survey = JsonUtils.convertToMapStringList(json);
+            String json = request.getParameter(MAP);
+            LocalDate date;
+            try {
+                date = LocalDate.parse(request.getParameter(DATE));
+            } catch (DateTimeParseException e) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.getWriter().println("Wrong date format");
+                return;
+            }
 
+            Map<String, List<String>> survey = JsonUtils.convertToMapStringList(new Gson().fromJson(json, JsonElement.class).getAsJsonObject());
             if (survey.isEmpty()) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 response.getWriter().println("The submitted survey is empty. Fill it!");
                 return;
             }
 
-            //TODO: Fix catch with correct exception/s
+            //TODO: Fix catch
             try {
-                LocalDate date = surveysService.createSurvey(survey);
+                surveysService.createSurvey(productName, survey, date, image);
 
                 response.setStatus(HttpServletResponse.SC_OK);
                 response.getWriter().println(date);
@@ -157,6 +177,22 @@ public class AdminSurvey extends HttpServlet {
             } catch (Exception e) {
                 response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 response.getWriter().println("Some server error occurred");
+                return;
+            }
+
+        } else {
+            try {
+                LocalDate date = LocalDate.parse(request.getParameter(DATE));
+                if (surveysService.checkDateAvailability(date))
+                    response.getWriter().println("true");
+                else
+                    response.getWriter().println("false");
+
+                response.setStatus(HttpServletResponse.SC_OK);
+                return;
+            } catch (DateTimeParseException e) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.getWriter().println("Wrong date format");
                 return;
             }
         }
@@ -167,7 +203,7 @@ public class AdminSurvey extends HttpServlet {
      */
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        JsonObject json = JsonUtils.getJsonFromRequest(request);
+        String json = JsonUtils.getJson(request);
         List<LocalDate> dates = new ArrayList<>();
 
         try {

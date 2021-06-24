@@ -14,7 +14,7 @@ import java.util.List;
  * Return to the client application the list of product reviews<br>
  * <b>Only GET verb</b>
  */
-@WebServlet(name = "Reviews", value = "/home/reviews")
+@WebServlet(name = "Reviews", urlPatterns = "/home/reviews")
 public class Reviews extends HttpServlet {
 
     @EJB(name = "it.polimi.db2.coolsurveys.services/SurveysService")

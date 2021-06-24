@@ -43,8 +43,8 @@ public class SurveyServiceBean implements SurveyService{
     }
 
     @Override
-    public LocalDate createSurvey(Map<String, List<String>> survey) {
-        return null;
+    public void createSurvey(String name, Map<String, List<String>> survey, LocalDate date, byte[] image) {
+        return;
     }
 
     @Override
