@@ -173,6 +173,7 @@ let index = new Vue ({
                     this.message = error.response.data;
                 })
         },
+
         goToHomepage: function() {
             if (this.leaderboard === true)
                 this.leaderboard = false;
@@ -183,6 +184,7 @@ let index = new Vue ({
             this.homepage = true;
             this.message = '';
         },
+
         goToPrevSection: function () {
             this.section1 = true;
             this.section2 = false;

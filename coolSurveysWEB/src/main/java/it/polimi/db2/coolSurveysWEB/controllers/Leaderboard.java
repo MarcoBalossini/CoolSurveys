@@ -3,7 +3,6 @@ package it.polimi.db2.coolSurveysWEB.controllers;
 import com.google.gson.Gson;
 import it.polimi.db2.coolSurveysWEB.utils.ResponseUser;
 import it.polimi.db2.coolsurveys.entities.User;
-import it.polimi.db2.coolsurveys.services.IAuthService;
 import it.polimi.db2.coolsurveys.services.IUserService;
 
 import javax.ejb.EJB;
