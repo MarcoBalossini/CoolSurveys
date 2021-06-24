@@ -45,10 +45,12 @@ let index = new Vue ({
             this.welcome = false;
         },
         deleteSurveyPage: function() {
+            this.getOldSurveys();
             this.surveyDeletion = true;
             this.welcome = false;
         },
         surveysInspectionPage: function() {
+            this.getOldSurveys();
             this.surveysInspection = true;
             this.oldSurveysBool = true;
             this.welcome = false;

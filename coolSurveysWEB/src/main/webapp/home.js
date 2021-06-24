@@ -2,6 +2,7 @@ let index = new Vue ({
     el : "#homeApp",
     data: {
         productOfTheDay: "Ping-Pong rackets",
+        productImageSrc: "",
         answers1: [],
         answers2: [],
         questions1: ["Do you like it?", "hello write here."],
@@ -69,6 +70,17 @@ let index = new Vue ({
             this.homepage = true;
             this.section2 = false;
             this.message = '';
+        },
+
+        getImageSrc: function() {
+            axios.get("./static/product", {
+                responseType: 'arraybuffer'
+            })
+            .then(response => {
+                const bytes = new Uint8Array(response.data);
+                const binary = bytes.reduce((data, b) => data += String.fromCharCode(b), '');
+                this.productImageSrc = "data:image/jpeg;base64," + btoa(binary);
+            })
         },
 
         receiveSurvey: function() {
@@ -189,5 +201,10 @@ let index = new Vue ({
             this.section1 = true;
             this.section2 = false;
         }
+    },
+    //Operations to be executed when userHome is loaded
+    beforeMount() {
+        //this.getImageSrc();
+        //this.receiveSurvey();
     }
 });
