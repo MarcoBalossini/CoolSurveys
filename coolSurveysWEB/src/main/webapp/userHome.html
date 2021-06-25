@@ -14,11 +14,11 @@
             <h1>HomePage</h1>
             <h2 style="background:snow">Today's product: {{productOfTheDay}}</h2>
             <!-- Indirizzamento relativo a /static/product -->
-            <img :src="productImageSrc" onerror="this.onerror=null;this.src='No-image.png';"
-                 style="height:200px; display: block; margin-left: auto; margin-right: auto;" alt="productOfTheDayImage">
+            <!-- onerror="this.onerror=null;this.src='No-image.png';"-->
+            <img :src="productImageSrc" style="height:200px; display: block; margin-left: auto; margin-right: auto;" alt="productOfTheDayImage">
             <div class="buttons">
                 <button v-on:click="receiveLeaderboard">LeaderBoard</button>
-                <button>StartDailySurvey</button>
+                <button v-on:click="goToQuestions">StartDailySurvey</button>
             </div>
         </div>
 

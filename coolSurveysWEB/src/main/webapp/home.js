@@ -73,14 +73,14 @@ let index = new Vue ({
         },
 
         getImageSrc: function() {
-            axios.get("./static/product", {
-                responseType: 'arraybuffer'
-            })
+            axios.get("./static/product")
             .then(response => {
-                const bytes = new Uint8Array(response.data);
-                const binary = bytes.reduce((data, b) => data += String.fromCharCode(b), '');
-                this.productImageSrc = "data:image/jpeg;base64," + btoa(binary);
+                this.productImageSrc = "data:image/png;base64, " + response.data;
             })
+        },
+        goToQuestions: function() {
+            this.homepage = false;
+            this.section1 = true;
         },
 
         receiveSurvey: function() {
@@ -90,6 +90,7 @@ let index = new Vue ({
                 .then(response => {
                     const survey = response.data;
                     const questions = survey.questions;
+                    this.productOfTheDay = survey.name;
                     questions.forEach((question)=> {
                         if (question.section === 1) {
                             this.questions1.push(question.question);
@@ -113,8 +114,6 @@ let index = new Vue ({
                         else
                             console.log("Section not found for question n." + question.number);
                     });
-                    this.homepage = false;
-                    this.section1 = true;
                 })
                 .catch(error => {
                     console.log(error.response.data);
@@ -204,7 +203,7 @@ let index = new Vue ({
     },
     //Operations to be executed when userHome is loaded
     beforeMount() {
-        //this.getImageSrc();
-        //this.receiveSurvey();
+        this.getImageSrc();
+        this.receiveSurvey();
     }
 });
