@@ -3,11 +3,9 @@ package it.polimi.db2.coolsurveys.services;
 import it.polimi.db2.coolsurveys.dao.QuestionnaireDAO;
 import it.polimi.db2.coolsurveys.dao.SubmissionDAO;
 import it.polimi.db2.coolsurveys.dao.UserDAO;
+import it.polimi.db2.coolsurveys.dao.exceptions.AlreadyExistsException;
 import it.polimi.db2.coolsurveys.dao.exceptions.NotFoundException;
-import it.polimi.db2.coolsurveys.entities.Answer;
-import it.polimi.db2.coolsurveys.entities.Questionnaire;
-import it.polimi.db2.coolsurveys.entities.Submission;
-import it.polimi.db2.coolsurveys.entities.User;
+import it.polimi.db2.coolsurveys.entities.*;
 import it.polimi.db2.coolsurveys.services.exceptions.ServiceException;
 
 import javax.ejb.EJB;
@@ -43,13 +41,22 @@ public class SurveyServiceBean implements SurveyService{
     }
 
     @Override
-    public void createSurvey(String name, Map<String, List<String>> survey, LocalDate date, byte[] image) {
-        return;
+    public void createSurvey(String name, Map<String, List<String>> survey, LocalDate date, byte[] image) throws AlreadyExistsException {
+        List<Question> questions = new ArrayList<>();
+
+        //convert strings to Question and Option instances
+        for(String key : survey.keySet()) {
+            Question question = new Question(key);
+            question.setOptions(survey.get(key).stream().map(Option::new).collect(Collectors.toList()));
+            questions.add(question);
+        }
+
+        questionnaireDAO.insertQuestionnaire(date, name, image, questions);
     }
 
     @Override
     public List<Questionnaire> getSurveyList() {
-        return null;
+        return questionnaireDAO.findAll();
     }
 
     @Override
@@ -123,7 +130,7 @@ public class SurveyServiceBean implements SurveyService{
     }
 
     @Override
-    public List<String> getReviews() {
-        return new ArrayList<>();
+    public List<String> getReviews() throws NotFoundException {
+        return questionnaireDAO.getByDate(LocalDate.now()).getReviews().stream().map(Review::getReview).collect(Collectors.toList());
     }
 }

@@ -6,10 +6,12 @@ import it.polimi.db2.coolsurveys.dao.exceptions.NotFoundException;
 import it.polimi.db2.coolsurveys.entities.Option;
 import it.polimi.db2.coolsurveys.entities.Question;
 import it.polimi.db2.coolsurveys.entities.Questionnaire;
+import it.polimi.db2.coolsurveys.entities.Review;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import javax.persistence.PersistenceException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,22 +25,41 @@ public class QuestionnaireDAOTest extends PersistenceTest {
     void insertQuestionnaire() {
         em.getTransaction().begin();
 
+        Questionnaire questionnaire = null;
+
         QuestionnaireDAO dao = new QuestionnaireDAO(em);
+
 
         byte[] smallPhoto = {0, 0, 0};
 
         List<Question> questionList = new ArrayList<>();
+        List<Review> reviewList = new ArrayList<>();
 
         questionList.add(new Question("question1?"));
         questionList.add(new Question("question2?"));
 
+        reviewList.add(new Review("Review 1"));
+        reviewList.add(new Review("Review 2"));
+
         try {
-            Questionnaire questionnaire = dao.insertQuestionnaire(LocalDate.now(), "questionnaire1", smallPhoto, questionList);
+            questionnaire = dao.insertQuestionnaire(LocalDate.now(), "questionnaire1", smallPhoto, questionList);
             em.getTransaction().commit();
 
         } catch (AlreadyExistsException e) {
             System.out.println("Questionnaire alreay exists");
             em.getTransaction().rollback();
+            fail();
+        }
+
+        try {
+            em.getTransaction().begin();
+            
+            questionnaire.setReviews(reviewList);
+            
+            em.getTransaction().commit();
+
+        } catch (PersistenceException e) {
+            System.out.println(e.getMessage());
             fail();
         }
 

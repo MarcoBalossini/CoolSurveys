@@ -1,5 +1,6 @@
 package it.polimi.db2.coolsurveys.services;
 
+import it.polimi.db2.coolsurveys.dao.exceptions.AlreadyExistsException;
 import it.polimi.db2.coolsurveys.dao.exceptions.NotFoundException;
 import it.polimi.db2.coolsurveys.entities.Questionnaire;
 import it.polimi.db2.coolsurveys.entities.Submission;
@@ -18,7 +19,7 @@ public interface SurveyService {
      * @param date The survey's date
      * @param image The product's image
      */
-    void createSurvey(String name, Map<String, List<String>> survey, LocalDate date, byte[] image);
+    void createSurvey(String name, Map<String, List<String>> survey, LocalDate date, byte[] image) throws AlreadyExistsException;
 
     /**
      * Get the list of past surveys
@@ -75,5 +76,5 @@ public interface SurveyService {
      * Get the reviews of today's survey as a list of strings
      * @return The list of reviews
      */
-    List<String> getReviews();
+    List<String> getReviews() throws NotFoundException;
 }

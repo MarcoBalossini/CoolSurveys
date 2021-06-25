@@ -16,6 +16,7 @@
         <class>it.polimi.db2.coolsurveys.entities.Submission</class>
         <class>it.polimi.db2.coolsurveys.entities.User</class>
         <class>it.polimi.db2.coolsurveys.entities.Log</class>
+        <class>it.polimi.db2.coolsurveys.entities.Review</class>
 
     <properties>
         <property name="eclipselink.logging.level" value="FINE" />
@@ -36,6 +37,7 @@
     <class>it.polimi.db2.coolsurveys.entities.User</class>
     <class>it.polimi.db2.coolsurveys.entities.Credentials</class>
     <class>it.polimi.db2.coolsurveys.entities.Log</class>
+    <class>it.polimi.db2.coolsurveys.entities.Review</class>
 
     <properties>
         <property name="eclipselink.logging.level" value="FINE" />

@@ -83,7 +83,7 @@ public class SubmissionServiceBean implements SubmissionService {
 
         Questionnaire questionnaire = questionnaireDAO.getByDate(LocalDate.now());
 
-        User user = em.merge(credentials.getUser());
+        User user = credentials.getUser();
 
         Submission submission = null;
 
@@ -116,8 +116,6 @@ public class SubmissionServiceBean implements SubmissionService {
         Integer expLvlOpt = expLvl.isEmpty() ? null : Submission.ExpertiseLevel.valueOf(expLvl.toUpperCase()).ordinal();
 
         submissionDAO.submit(submission, age, genderOpt, expLvlOpt);
-
-        em.refresh(user); //refresh user because changes were made from Database's triggers
 
     }
 

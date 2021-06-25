@@ -10,6 +10,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Stateless
 public class QuestionnaireDAO {
@@ -71,9 +72,16 @@ public class QuestionnaireDAO {
         }
     }
 
-    public void removeQuestionnaire(Questionnaire questionnaire) {
+    public List<Questionnaire> findAll() {
+        return em.createNamedQuery("Questionnaire.findAll", Questionnaire.class).getResultList();
+    }
 
+    public void removeQuestionnaire(Questionnaire questionnaire) {
         em.remove(questionnaire);
+    }
+
+    public List<String> getReviews() throws NotFoundException {
+        return getByDate(LocalDate.now()).getReviews().stream().map(Review::getReview).collect(Collectors.toList());
     }
 
 }

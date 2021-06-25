@@ -17,6 +17,12 @@ public class Review {
     @Column(name = "review")
     private String review;
 
+    public Review() {}
+
+    public Review(String review) {
+        this.review = review;
+    }
+
     public String getReview() {
         return review;
     }

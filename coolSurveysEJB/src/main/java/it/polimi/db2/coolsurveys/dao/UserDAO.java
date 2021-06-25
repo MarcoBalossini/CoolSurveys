@@ -82,7 +82,11 @@ public class UserDAO {
     }
 
     public List<User> getLeaderBoard() {
-        return em.createNamedQuery("User.selectOrderedByPoints", User.class).getResultList();
+        List<User> list = em.createNamedQuery("User.selectOrderedByPoints", User.class).getResultList();
+        for(User u: list)
+            em.refresh(u);
+
+        return list;
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)

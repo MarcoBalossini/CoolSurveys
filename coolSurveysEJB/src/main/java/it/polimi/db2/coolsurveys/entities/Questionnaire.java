@@ -11,7 +11,9 @@ import java.util.Objects;
         @NamedQuery(name = "Questionnaire.selectByName",
                 query = "select q from Questionnaire q where q.name = :name"),
         @NamedQuery(name = "Questionnaire.selectByDate",
-                query = "select q from Questionnaire q where q.date = :date")
+                query = "select q from Questionnaire q where q.date = :date"),
+        @NamedQuery(name = "Questionnaire.findAll",
+                query = "select q from Questionnaire q")
 })
 
 @Entity
@@ -38,6 +40,9 @@ public class Questionnaire implements Serializable {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "questionnaire")
     private List<Submission> submissions = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "questionnaire", cascade = CascadeType.ALL)
+    private List<Review> reviews = new ArrayList<>();
 
     public Questionnaire() {
     }
@@ -123,6 +128,17 @@ public class Questionnaire implements Serializable {
 
     public Integer getQId() {
         return qId;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+
+        for (Review review : reviews)
+            review.setQuestionnaire(this);
     }
 
     @Override
