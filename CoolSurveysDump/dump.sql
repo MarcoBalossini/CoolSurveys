@@ -1,4 +1,3 @@
-Enter password:
 -- MySQL dump 10.13  Distrib 8.0.21, for Linux (x86_64)
 --
 -- Host: localhost    Database: cool_surveys
