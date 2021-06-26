@@ -71,16 +71,17 @@ let index = new Vue ({
             this.section2 = false;
             this.message = '';
         },
+        resetAnswers: function () {
+            this.answers1= [];
+            this.answers2= [];
+            this.message = '';
+        },
 
         getImageSrc: function() {
             axios.get("./static/product")
             .then(response => {
                 this.productImageSrc = "data:image/png;base64, " + response.data;
             })
-        },
-        goToQuestions: function() {
-            this.homepage = false;
-            this.section1 = true;
         },
 
         receiveSurvey: function() {
@@ -114,6 +115,8 @@ let index = new Vue ({
                         else
                             console.log("Section not found for question n." + question.number);
                     });
+                    this.homepage = false;
+                    this.section1 = true;
                 })
                 .catch(error => {
                     console.log(error.response.data);
@@ -163,7 +166,7 @@ let index = new Vue ({
         },
 
         receiveLeaderboard: function() {
-            this.resetSurvey();
+            this.resetAnswers();
             axios.get("./Leaderboard")
                 .then(response => {
                     this.scores = [];
@@ -204,6 +207,5 @@ let index = new Vue ({
     //Operations to be executed when userHome is loaded
     beforeMount() {
         this.getImageSrc();
-        this.receiveSurvey();
     }
 });

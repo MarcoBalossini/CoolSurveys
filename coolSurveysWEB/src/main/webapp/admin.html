@@ -118,7 +118,7 @@
                     </div>
                     <label class="question">Click on a date for further details</label>
                     <div class="buttons">
-                        <button v-on:click="()=>{surveysInspection = false; welcome = true}">Back</button>
+                        <button v-on:click="()=>{surveysInspection = false; welcome = true; message = '';}">Back</button>
                     </div>
                 </div>
             </div>
@@ -153,7 +153,7 @@
                     <label v-if="userToInspectGender" class = "answer">Gender - {{userToInspectGender}}</label>
                     <label v-if="userToInspectExpLvl" class = "answer">Expertise Level - {{userToInspectExpLvl}}</label>
                     <div class="buttons">
-                        <button v-on:click="()=>{singleUserInspection = false; submissionsInspection = true;}">Back</button>
+                        <button v-on:click="()=>{singleUserInspection = false; submissionsInspection = true; message = '';}">Back</button>
                     </div>
                 </div>
             </div>
@@ -162,7 +162,7 @@
                     <h2>Users who cancelled the questionnaire: </h2>
                     <label v-for="user in usersWhoDeleted">{{user}}</label>
                     <div class="buttons" >
-                        <button v-on:click="()=>{deletionsInspection = false; singleSurveyInspection = true;}">Back</button>
+                        <button v-on:click="()=>{deletionsInspection = false; singleSurveyInspection = true; message = '';}">Back</button>
                     </div>
                 </div>
             </div>

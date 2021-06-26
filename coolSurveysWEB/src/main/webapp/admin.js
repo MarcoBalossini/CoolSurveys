@@ -226,16 +226,16 @@ let index = new Vue ({
             this.newProductName = "";
         },
         getOldSurveys: function(){
-            axios.get("/AdminSurvey")
+            axios.get("./AdminSurvey")
                 .then(response => {
                     this.oldSurveys= [];
                     const oldSurveys = response.data;
-                    oldSurveys.forEach((survey)=> {
+                    Object.entries(oldSurveys).forEach(([key, value]) => {
                         let tmp = [];
-                        tmp.push(survey.getKey()); //date
-                        tmp.push(survey.get(survey.getKey())); //name
+                        tmp.push(key); //date
+                        tmp.push(value); //name
                         this.oldSurveys.push(tmp);
-                    })
+                    });
                 })
                 .catch(error => {
                     console.log(error.response.data);
@@ -301,11 +301,13 @@ let index = new Vue ({
             this.deletionsInspection = true
         },
         showOldSurveysInspection: function() {
+            this.message = '';
             this.singleSurveyInspection = false;
             this.surveysInspection = true;
             this.oldSurveysBool = true;
         },
         showSingleSurvey: function() {
+            this.message = '';
             this.submissionsInspection = false;
             this.singleSurveyInspection = true;
         }
