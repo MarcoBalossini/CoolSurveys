@@ -195,6 +195,7 @@ let index = new Vue ({
             }
         },
         resetDeletion: function(){
+            this.message = "";
             this.toDelete = [];
             this.surveyDeletion = false;
             this.welcome = true;
@@ -262,6 +263,8 @@ let index = new Vue ({
         submitSurveyToInspect: function(){
             axios.get("./AdminSurvey?date=" + this.surveyToInspect)
                 .then(response => {
+                    this.usersWhoSubmitted = [];
+                    this.usersWhoDeleted = [];
                     let usersListsObject = response.data;
                     this.usersWhoSubmitted = usersListsObject.submitters;
                     this.usersWhoDeleted = usersListsObject.cancellers;
@@ -276,12 +279,13 @@ let index = new Vue ({
             axios.post("./AdminSurvey?user=" + this.userToInspect + "&date=" + this.surveyToInspect)
                 .then(response => {
                     let surveyData = response.data;
-                    surveyData.questionAnswersMap.forEach((qAnda)=> {
+                    this.singleUserAnswers = [];
+                    Object.entries(surveyData.questionAnswersMap).forEach(([key, value]) => {
                         let tmp = [];
-                        tmp.push(qAnda.getKey()); //question
-                        tmp.push(qAnda.get(qAnda.getKey())); //answer
+                        tmp.push(key); //question
+                        tmp.push(value); //answer
                         this.singleUserAnswers.push(tmp);
-                    })
+                    });
                     this.userToInspectAge.push(surveyData.age);
                     this.userToInspectGender.push(surveyData.gender);
                     this.userToInspectExpLvl.push(surveyData.expLvl);

@@ -69,7 +69,6 @@
                         <select v-if= "questions2Type[index] === 'options'" id="answer2Options" v-model="answers2[index]">
                             <option v-for="option in options2[index]" :value="option">{{option}}</option>
                         </select>
-                        <label class="errorMsg" v-if="message!==''"> {{message}} </label>
                     </div>
 
                     <div class="buttons">
