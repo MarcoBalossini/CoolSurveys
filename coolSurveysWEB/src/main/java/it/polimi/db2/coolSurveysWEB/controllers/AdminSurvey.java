@@ -5,10 +5,13 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import it.polimi.db2.coolSurveysWEB.utils.JsonUtils;
+import it.polimi.db2.coolsurveys.dao.exceptions.AlreadyExistsException;
 import it.polimi.db2.coolsurveys.dao.exceptions.DAOException;
+import it.polimi.db2.coolsurveys.dao.exceptions.NotFoundException;
 import it.polimi.db2.coolsurveys.entities.Questionnaire;
 import it.polimi.db2.coolsurveys.entities.Submission;
 import it.polimi.db2.coolsurveys.services.SurveyService;
+import it.polimi.db2.coolsurveys.services.exceptions.ServiceException;
 
 import javax.ejb.EJB;
 import javax.servlet.*;
@@ -167,16 +170,15 @@ public class AdminSurvey extends HttpServlet {
                 return;
             }
 
-            //TODO: Fix catch
             try {
                 surveysService.createSurvey(productName, survey, date, image);
 
                 response.setStatus(HttpServletResponse.SC_OK);
                 response.getWriter().println(date);
                 return;
-            } catch (Exception e) {
-                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                response.getWriter().println("Some server error occurred");
+            } catch (AlreadyExistsException e) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.getWriter().println(e.getMessage());
                 return;
             }
 
@@ -214,12 +216,12 @@ public class AdminSurvey extends HttpServlet {
             return;
         }
 
-        //TODO: Fix catch
         try {
             surveysService.deleteSurveys(dates);
-        } catch (Exception e) {
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().println("Some error");
+            response.setStatus(HttpServletResponse.SC_OK);
+        } catch (ServiceException | NotFoundException e) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().println(e.getMessage());
         }
     }
 
@@ -227,7 +229,6 @@ public class AdminSurvey extends HttpServlet {
      * Create and return a map date->name for past surveys
      */
     private void returnSurveys(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        //TODO: Fix catch
         try {
             List<Questionnaire> surveys = surveysService.getSurveyList();
             Map<LocalDate, String> toSend = new HashMap<>();
@@ -240,7 +241,7 @@ public class AdminSurvey extends HttpServlet {
             response.setCharacterEncoding("UTF-8");
             response.getWriter().println(json);
         } catch (Exception e) {
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().println("Some error");
         }
     }
@@ -285,7 +286,6 @@ public class AdminSurvey extends HttpServlet {
      * @param username The submitter
      */
     private void getResponses(HttpServletRequest request, HttpServletResponse response, LocalDate date, String username) throws IOException {
-        //TODO: Fix catch
         try {
             Map<String, String> qaMap = surveysService.getSurveyAnswers(date, username);
             Submission submission = surveysService.getSurveySubmission(date, username);
@@ -298,9 +298,9 @@ public class AdminSurvey extends HttpServlet {
             response.setCharacterEncoding("UTF-8");
             String json = new Gson().toJson(toSend);
             response.getWriter().println(json);
-        } catch (Exception e) {
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().println("Some error");
+        } catch (NotFoundException e) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().println(e.getMessage());
             return;
         }
 
