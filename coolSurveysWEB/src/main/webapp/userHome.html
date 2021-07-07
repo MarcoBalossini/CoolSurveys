@@ -12,10 +12,13 @@
     <div id="homeApp">
         <div id="homePage" v-if = "homepage">
             <h1>HomePage</h1>
-            <h2 style="background:snow">Today's product: {{productOfTheDay}}</h2>
+            <h2 v-if="message===''" style="background:snow">Today's product: {{productOfTheDay}}</h2>
             <!-- Indirizzamento relativo a /static/product -->
             <!-- onerror="this.onerror=null;this.src='No-image.png';"-->
-            <img :src="productImageSrc" style="height:200px; display: block; margin-left: auto; margin-right: auto;" alt="productOfTheDayImage">
+            <img v-if="message===''" :src="productImageSrc" style="height:200px; display: block; margin-left: auto; margin-right: auto;" alt="productOfTheDayImage">
+            <div id="reviews" v-for="review in productReviews">
+                <label class="question">{{review}}</label>
+            </div>
             <div class="buttons">
                 <button v-on:click="receiveLeaderboard">LeaderBoard</button>
                 <button v-on:click="receiveSurvey">StartDailySurvey</button>

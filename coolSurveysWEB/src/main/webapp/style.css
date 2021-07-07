@@ -16,6 +16,18 @@ body {
     text-align: left;
 }
 
+#reviews {
+    text-align: center;
+    font-size: 1.2rem;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    display: block;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0;
+    margin-inline-end: 0;
+}
+
 #greetings p {
     font-size: 1.5rem;
     font-weight: 300;

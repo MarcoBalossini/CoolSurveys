@@ -3,6 +3,7 @@ let index = new Vue ({
     data: {
         productOfTheDay: "Ping-Pong rackets",
         productImageSrc: "",
+        productReviews: [],
         answers1: [],
         answers2: [],
         questions1: ["Do you like it?", "hello write here."],
@@ -82,6 +83,26 @@ let index = new Vue ({
             .then(response => {
                 this.productImageSrc = "data:image/png;base64, " + response.data;
             })
+            .catch(error => {
+                console.log(error.response.data);
+                this.message = error.response.data;
+            })
+        },
+
+        getReviews: function() {
+            axios.get("/home/reviews")
+            .then(response => {
+                this.productReviews = response.data;
+            })
+            .catch(error => {
+                console.log(error.response.data);
+                this.message = error.response.data;
+            })
+        },
+
+        getProductOfTheDayName: function() {
+            this.productOfTheDay = "";
+            //TODO:get name
         },
 
         receiveSurvey: function() {
@@ -203,9 +224,12 @@ let index = new Vue ({
             this.section1 = true;
             this.section2 = false;
         }
+
     },
     //Operations to be executed when userHome is loaded
     beforeMount() {
         this.getImageSrc();
+        this.getReviews();
+        this.getProductOfTheDayName();
     }
 });
