@@ -90,7 +90,7 @@ let index = new Vue ({
         },
 
         getReviews: function() {
-            axios.get("/home/reviews")
+            axios.get("./home/reviews")
             .then(response => {
                 this.productReviews = response.data;
             })
