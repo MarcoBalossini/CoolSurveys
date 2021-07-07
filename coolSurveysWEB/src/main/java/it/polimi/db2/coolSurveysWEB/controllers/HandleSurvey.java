@@ -43,7 +43,6 @@ public class HandleSurvey extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Questionnaire questionnaire;
         try {
-            //TODO: filter on servlet. Session cannot be empty
             questionnaire = surveysService.retrieveDailySurvey((Credentials) request.getSession().getAttribute("user"));
         } catch (DAOException e) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);

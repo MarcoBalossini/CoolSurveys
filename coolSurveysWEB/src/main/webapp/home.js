@@ -101,8 +101,15 @@ let index = new Vue ({
         },
 
         getProductOfTheDayName: function() {
-            this.productOfTheDay = "";
-            //TODO:get name
+            axios.get("./static/product?param=prodName")
+                .then(response => {
+                    this.productOfTheDay = response.data;
+                })
+                .catch(error => {
+                    this.productOfTheDay = "NoName";
+                    console.log(error.response.data);
+                    this.message = error.response.data;
+                });
         },
 
         receiveSurvey: function() {

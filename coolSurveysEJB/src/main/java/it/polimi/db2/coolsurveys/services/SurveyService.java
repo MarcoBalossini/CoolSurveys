@@ -73,6 +73,12 @@ public interface SurveyService {
     byte[] getImage() throws NotFoundException;
 
     /**
+     * Gets the product's of the day name
+     * @return The name
+     */
+    String getName() throws NotFoundException;
+
+    /**
      * Get the reviews of today's survey as a list of strings
      * @return The list of reviews
      */

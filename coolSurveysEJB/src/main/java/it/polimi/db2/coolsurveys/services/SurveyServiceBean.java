@@ -130,6 +130,14 @@ public class SurveyServiceBean implements SurveyService{
     }
 
     @Override
+    public String getName() throws NotFoundException {
+        Questionnaire questionnaire = questionnaireDAO.getByDate(LocalDate.now());
+
+        return questionnaire.getName();
+
+    }
+
+    @Override
     public List<String> getReviews() throws NotFoundException {
         return questionnaireDAO.getByDate(LocalDate.now()).getReviews().stream().map(Review::getReview).collect(Collectors.toList());
     }

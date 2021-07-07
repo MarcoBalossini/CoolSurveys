@@ -1,6 +1,7 @@
 package it.polimi.db2.coolSurveysWEB.controllers;
 
 import com.google.gson.Gson;
+import it.polimi.db2.coolsurveys.dao.exceptions.NotFoundException;
 import it.polimi.db2.coolsurveys.services.SurveyService;
 
 import javax.ejb.EJB;
@@ -22,16 +23,15 @@ public class Reviews extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //TODO: Fix catch
         try {
             List<String> reviews = surveysService.getReviews();
             response.setStatus(HttpServletResponse.SC_OK);
             String json = new Gson().toJson(reviews);
             response.getWriter().println(json);
             return;
-        } catch (Exception e) {
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().println("Some error");
+        } catch (NotFoundException e) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().println(e.getMessage());
             return;
         }
     }
