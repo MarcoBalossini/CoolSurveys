@@ -16,7 +16,9 @@ import java.util.List;
         @NamedQuery(name = "User.selectByMail",
                 query = "select u from User u where u.credentials.mail = :mail"),
         @NamedQuery(name = "User.selectOrderedByPoints",
-                query = "select u from User u order by u.points desc ")
+                query = "select u from User u order by u.points desc "),
+        @NamedQuery(name = "User.selectDailyLeaderboard",
+                query = "select s.user from Submission s where s.questionnaire.date = :date order by s.user.points desc")
 })
 @Table(name = "user")
 public class User implements Serializable {
