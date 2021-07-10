@@ -15,6 +15,7 @@ public class Logout extends HttpServlet {
             session.invalidate();
         }
         response.setStatus(HttpServletResponse.SC_OK);
+        response.sendRedirect(request.getServletContext().getContextPath() + "/index.html");
     }
 
     @Override
