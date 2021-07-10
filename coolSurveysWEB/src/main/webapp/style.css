@@ -232,7 +232,11 @@ button.link {
     padding:0 22px;
 }
 
-#surveyDiv button, .secondaryBtn {
+#logout {
+    margin: 10px 0 0 20px;
+}
+
+#surveyDiv button, .secondaryBtn, #logout {
     color: #6c757d !important;
     background-color: #eff6ff !important;
     border-color: #6c757d !important;

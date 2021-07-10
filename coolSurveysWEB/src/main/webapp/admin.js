@@ -326,6 +326,17 @@ let index = new Vue ({
             this.message = '';
             this.submissionsInspection = false;
             this.singleSurveyInspection = true;
+        },
+
+        logout: function() {
+            axios.get("./logout")
+                .then(response=>{
+                    window.location.href = "index.html";
+                })
+                .catch(error=> {
+                    console.log(error.response.data);
+                    this.message = error.response.data;
+                })
         }
     },
 });
