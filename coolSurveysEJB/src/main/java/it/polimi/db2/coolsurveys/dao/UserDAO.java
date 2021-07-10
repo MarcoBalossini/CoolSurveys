@@ -13,6 +13,7 @@ import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -82,7 +83,8 @@ public class UserDAO {
     }
 
     public List<User> getLeaderBoard() {
-        List<User> list = em.createNamedQuery("User.selectOrderedByPoints", User.class).getResultList();
+        List<User> list = em.createNamedQuery("User.selectDailyLeaderboard", User.class)
+                .setParameter("date", LocalDate.now()).getResultList();
         for(User u: list)
             em.refresh(u);
 

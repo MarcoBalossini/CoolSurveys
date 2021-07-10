@@ -41,7 +41,7 @@ public class Questionnaire implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "questionnaire")
     private List<Submission> submissions = new ArrayList<>();
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "questionnaire", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "questionnaire", cascade = CascadeType.ALL)
     private List<Review> reviews = new ArrayList<>();
 
     public Questionnaire() {
