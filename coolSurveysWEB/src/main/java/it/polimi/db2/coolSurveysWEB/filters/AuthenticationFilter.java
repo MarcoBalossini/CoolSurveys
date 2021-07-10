@@ -45,7 +45,9 @@ public class AuthenticationFilter implements Filter {
         String userPath = req.getServletContext().getContextPath() + "/userHome.html";
         String adminPath = req.getServletContext().getContextPath() + "/admin.html";
 
-        if (req.getRequestURI().contains("index.html")) {
+        if (req.getRequestURI().contains("index.html") || req.getRequestURI().contains("CheckLogin")  ||
+                req.getRequestURI().contains("DoRegistration") || req.getRequestURI().contains("css") ||
+                req.getRequestURI().contains("js")) {
             chain.doFilter(request, response);
             return;
         }

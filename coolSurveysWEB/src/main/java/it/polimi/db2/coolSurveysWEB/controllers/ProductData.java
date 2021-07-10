@@ -12,7 +12,7 @@ import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.util.Base64;
 
-@WebServlet(name = "SendImage", urlPatterns = "/static/product")
+@WebServlet(name = "ProductData", urlPatterns = "/static/product")
 public class ProductData extends HttpServlet {
 
     @EJB(name = "it.polimi.db2.coolsurveys.services/SurveysService")

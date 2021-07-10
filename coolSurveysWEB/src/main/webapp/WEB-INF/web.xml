@@ -23,6 +23,8 @@
     <filter-mapping>
         <filter-name>AdminAuthorizationFilter</filter-name>
         <servlet-name>AdminSurvey</servlet-name>
+        <servlet-name>AdminDelete</servlet-name>
+        <url-pattern>/admin.html</url-pattern>
     </filter-mapping>
 
     <filter-mapping>
@@ -30,7 +32,8 @@
         <servlet-name>HandleSurvey</servlet-name>
         <servlet-name>Leaderboard</servlet-name>
         <servlet-name>Reviews</servlet-name>
-        <servlet-name>SendImage</servlet-name>
+        <servlet-name>ProductData</servlet-name>
+        <url-pattern>/userHome.html</url-pattern>
     </filter-mapping>
 
 </web-app>

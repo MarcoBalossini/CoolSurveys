@@ -215,7 +215,7 @@ let index = new Vue ({
                 toSend.push(value);
             }
 
-            axios.post("./AdminSurvey", toSend)
+            axios.post("./admin/delete", toSend)
                 .then(response => {
                     this.surveyDeletion = false;
                     this.welcome = true;
