@@ -106,7 +106,7 @@ let index = new Vue ({
                     this.productOfTheDay = response.data;
                 })
                 .catch(error => {
-                    this.productOfTheDay = "NoName";
+                    this.productOfTheDay = "";
                     console.log(error.response.data);
                     this.message = error.response.data;
                 });
@@ -225,12 +225,23 @@ let index = new Vue ({
             else if (this.greetings === true)
                 this.greetings = false;
             this.homepage = true;
-            this.message = '';
+            //this.message = '';
         },
 
         goToPrevSection: function () {
             this.section1 = true;
             this.section2 = false;
+        },
+
+        logout: function() {
+            axios.get("./logout")
+                .then(response=>{
+                    window.location.href = "index.html";
+                })
+                .catch(error=> {
+                    console.log(error.response.data);
+                    this.message = error.response.data;
+                })
         }
 
     },
