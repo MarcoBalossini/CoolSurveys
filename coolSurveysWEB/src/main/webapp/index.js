@@ -90,7 +90,12 @@ let index = new Vue ({
                 this.login = false;
                 this.homepage = true;
                 console.log(response.data);
-                window.location.href = "userHome.html";
+                if(response.data.includes("user"))
+                    window.location.href = "userHome.html";
+                else if (response.data.includes("admin"))
+                    window.location.href = "admin.html";
+                else
+                    console.log(response.data)
             }).catch(error => {
                 this.message = error.response.data;
                 console.log(error.response.data);

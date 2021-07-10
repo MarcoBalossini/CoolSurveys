@@ -169,12 +169,14 @@ public class CheckLogin extends HttpServlet {
 
         if (credentials.isAdmin()) {
             response.setStatus(HttpServletResponse.SC_OK);
-            response.sendRedirect(request.getServletContext().getContextPath() + "/admin.html");
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().println("admin");
         } else {
             response.setStatus(HttpServletResponse.SC_OK);
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
-            response.getWriter().println(credentials.getUsername());
+            response.getWriter().println("user");
         }
     }
 
