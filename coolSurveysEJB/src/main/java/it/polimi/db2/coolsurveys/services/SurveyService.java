@@ -83,4 +83,11 @@ public interface SurveyService {
      * @return The list of reviews
      */
     List<String> getReviews() throws NotFoundException;
+
+    /**
+     * Get the number of questions in today's survey
+     * @return The number of questions
+     * @throws NotFoundException When there's no survey
+     */
+    int getQuestionCount() throws NotFoundException;
 }

@@ -4,12 +4,12 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import it.polimi.db2.coolSurveysWEB.utils.JsonUtils;
 import it.polimi.db2.coolSurveysWEB.utils.ResponseQuestionnaire;
+import it.polimi.db2.coolsurveys.services.SurveyService;
 import it.polimi.db2.coolsurveys.services.exceptions.BadWordFoundException;
 import it.polimi.db2.coolsurveys.dao.exceptions.DAOException;
 import it.polimi.db2.coolsurveys.entities.Credentials;
 import it.polimi.db2.coolsurveys.entities.Question;
 import it.polimi.db2.coolsurveys.entities.Questionnaire;
-import it.polimi.db2.coolsurveys.services.IAuthService;
 import it.polimi.db2.coolsurveys.services.SubmissionService;
 
 import javax.ejb.EJB;
@@ -27,8 +27,11 @@ import java.util.stream.Collectors;
 @MultipartConfig
 public class HandleSurvey extends HttpServlet {
 
+    @EJB(name = "it.polimi.db2.coolsurveys.services/SubmissionService")
+    private SubmissionService submissionService;
+
     @EJB(name = "it.polimi.db2.coolsurveys.services/SurveysService")
-    private SubmissionService surveysService;
+    private SurveyService surveysService;
 
     /**
      * Respond to daily surveys requests
@@ -43,7 +46,7 @@ public class HandleSurvey extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Questionnaire questionnaire;
         try {
-            questionnaire = surveysService.retrieveDailySurvey((Credentials) request.getSession().getAttribute("user"));
+            questionnaire = submissionService.retrieveDailySurvey((Credentials) request.getSession().getAttribute("user"));
         } catch (DAOException e) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().println(e.getMessage());
@@ -114,13 +117,30 @@ public class HandleSurvey extends HttpServlet {
             if (!sec2Answers.get(0).isEmpty())
                 age = Integer.parseInt(sec2Answers.get(0));
 
-            surveysService.registerSubmission(JsonUtils.convertToMap(json), credentials, age, sec2Answers.get(1), sec2Answers.get(2));
+            //If some question has no answer status = 400
+            Map<String, String> qaMap = JsonUtils.convertToMap(json);
+            for (Map.Entry<String, String> entry : qaMap.entrySet()) {
+                if(entry.getValue() == null || entry.getValue().isEmpty()) {
+                    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                    response.getWriter().println("Answer all the questions from part 1");
+                    return;
+                }
+            }
+
+            //If the number of given and expected answers are different status = 400
+            if(qaMap.size() != surveysService.getQuestionCount()) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.getWriter().println("Answer all the questions from part 1");
+                return;
+            }
+
+            submissionService.registerSubmission(qaMap, credentials, age, sec2Answers.get(1), sec2Answers.get(2));
             response.setStatus(HttpServletResponse.SC_ACCEPTED);
         } catch (NumberFormatException nfe) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().println("Age must be a number");
         } catch (BadWordFoundException e) {
-            surveysService.blockUser(credentials);
+            submissionService.blockUser(credentials);
 
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().println("Your answers contained swear words. Your account will be blocked");
