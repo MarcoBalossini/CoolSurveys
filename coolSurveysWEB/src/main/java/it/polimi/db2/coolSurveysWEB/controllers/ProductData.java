@@ -24,7 +24,7 @@ public class ProductData extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        if(request.getParameter(PARAM).equals(NAME)) {
+        if(request.getParameter(PARAM) != null && request.getParameter(PARAM).equals(NAME)) {
             try {
                 String name = surveysService.getName();
                 response.setStatus(HttpServletResponse.SC_OK);
