@@ -1,16 +1,16 @@
 let index = new Vue ({
     el : "#homeApp",
     data: {
-        productOfTheDay: "Ping-Pong rackets",
+        productOfTheDay: "",
         productImageSrc: "",
         productReviews: [],
         answers1: [],
         answers2: [],
-        questions1: ["Do you like it?", "hello write here."],
-        questions2: ["What's your age?", "ExpLvl", "What's your sex?"],
-        questions2Type: ["number", "options", "radio"],
-        options1: [["No", "Bleah"],[]],
-        options2: [[], ["low", "medium", "high"], ["male", "female"]],
+        questions1: [],
+        questions2: [],
+        questions2Type: [],
+        options1: [],
+        options2: [],
         age: 0,
         sex: 0,
         explvl: '',
@@ -181,7 +181,8 @@ let index = new Vue ({
             }
             let object = mapToObj(questionsAnswersMap);
 
-            axios.post("./HandleSurvey", object).then(response => {
+            axios.post("./HandleSurvey", object)
+                .then(response => {
                 this.greetings = true;
                 this.section2 = false;
                 console.log(response.data);

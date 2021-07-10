@@ -10,14 +10,14 @@ let index = new Vue ({
         questionAdded:[],
         optionAdded:[],
         multipleChoice: false,
-        oldSurveys:[["2021-10-05", "ShampooGarden"], ["2021-05-13", "SpecialSoap"]],
+        oldSurveys:[],
         toDelete:[],
-        usersWhoSubmitted: ["Giuseppe", "Pino"],
-        usersWhoDeleted: ["Marco", "Annulla", "RandomUser"],
-        singleUserAnswers: [["Did you like this product?", "yes a lot"], ["Do you find your hair softer?", "no"]], //questions + answers
+        usersWhoSubmitted: [],
+        usersWhoDeleted: [],
+        singleUserAnswers: [], //questions + answers
         userToInspectAge: "",
         userToInspectGender: "",
-        userToInspectExpLvl: "ciao",
+        userToInspectExpLvl: "",
         surveyToInspect: "",
         userToInspect: "",
         internal_message: "",
@@ -46,11 +46,19 @@ let index = new Vue ({
         },
         deleteSurveyPage: function() {
             this.getOldSurveys();
+            if (this.oldSurveys.length === 0)
+                this.message = "No old survey available";
+            else
+                this.message = '';
             this.surveyDeletion = true;
             this.welcome = false;
         },
         surveysInspectionPage: function() {
             this.getOldSurveys();
+            if (this.oldSurveys.length === 0)
+                this.message = "No old survey available";
+            else
+                this.message = '';
             this.surveysInspection = true;
             this.oldSurveysBool = true;
             this.welcome = false;
@@ -207,7 +215,7 @@ let index = new Vue ({
                 toSend.push(value);
             }
 
-            axios.delete("./AdminSurvey",toSend)
+            axios.post("./AdminSurvey", toSend)
                 .then(response => {
                     this.surveyDeletion = false;
                     this.welcome = true;
@@ -306,7 +314,10 @@ let index = new Vue ({
             this.deletionsInspection = true
         },
         showOldSurveysInspection: function() {
-            this.message = '';
+            if (this.oldSurveys.length === 0)
+                this.message = "No old survey available";
+            else
+                this.message = '';
             this.singleSurveyInspection = false;
             this.surveysInspection = true;
             this.oldSurveysBool = true;

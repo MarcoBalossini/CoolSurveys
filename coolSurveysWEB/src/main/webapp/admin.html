@@ -104,7 +104,7 @@
                     </div>
                     <div class="buttons">
                         <button type="reset" class="reset">Cancel</button>
-                        <button type="submit">Delete</button>
+                        <button type="submit" v-if = "oldSurveys.length !== 0">Delete</button>
                     </div>
                 </form>
             </div>
@@ -116,7 +116,7 @@
                         <button class="link"  v-on:click="setSurveyChoice($event)">{{oldSurvey[0]}}</button>
                         <label class="link">{{oldSurvey[1]}}</label>
                     </div>
-                    <label class="question">Click on a date for further details</label>
+                    <label class="question" v-if = "oldSurveys.length !== 0">Click on a date for further details</label>
                     <div class="buttons">
                         <button v-on:click="()=>{surveysInspection = false; welcome = true; message = '';}">Back</button>
                     </div>
