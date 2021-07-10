@@ -254,6 +254,7 @@ let index = new Vue ({
             this.surveyToInspect = event.target.innerText;
             this.oldSurveysBool = false;
             this.singleSurveyInspection = true;
+            this.submitSurveyToInspect();
         },
         setUserChoice: function(event) {
             this.userToInspect = event.target.innerText;
