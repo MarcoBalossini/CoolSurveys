@@ -45,14 +45,21 @@ public class AnswerDAO {
         if(em.createNamedQuery("Answer.selectByUserAndQuestion", Answer.class)
                 .setParameter("user", user)
                 .setParameter("question", question).getResultList().size() > 0)
-            throw new AlreadyExistsException("User already submitted");
+            throw new AlreadyExistsException("User already answered this question");
 
         List<String> badWords = em.createNamedQuery("BadWord.findAllWords", String.class).getResultList();
 
-        for (String word: text.split(" "))
-            if (badWords.contains(word))
+        /*for (String word: text.replaceAll("[^a-zA-Z0-9]", " ").split(" "))
+            if (badWords.contains(word.toLowerCase()))
                 throw new BadWordFoundException(); //this will cause a Rollback (see BadWordFoundException annotation)
+        */
 
+        text = text.toLowerCase();
+
+        for (String word : badWords) {
+            if (text.contains(word))
+                throw new BadWordFoundException();
+        }
 
         answer = new Answer(question, user, text);
 

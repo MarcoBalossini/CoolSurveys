@@ -54,9 +54,14 @@ public class SubmissionServiceBean implements SubmissionService {
      */
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public Questionnaire retrieveDailySurvey(Credentials credentials) throws NotFoundException, AlreadyExistsException {
+    public Questionnaire retrieveDailySurvey(Credentials credentials) throws NotFoundException, AlreadyExistsException, BlockedAccountException {
 
         User user = credentials.getUser();
+
+        LocalDateTime blockedUntil = user.getBlockedUntil();
+
+        if(blockedUntil.isAfter(LocalDateTime.now()))
+            throw new BlockedAccountException(blockedUntil);
 
         Questionnaire questionnaire = questionnaireDAO.getByDate(LocalDate.now());
 

@@ -18,7 +18,7 @@ public interface SubmissionService {
      * @return The survey, if found. null otherwise
      * @param credentials
      */
-    Questionnaire retrieveDailySurvey(Credentials credentials) throws NotFoundException, AlreadyExistsException;
+    Questionnaire retrieveDailySurvey(Credentials credentials) throws NotFoundException, AlreadyExistsException, BlockedAccountException;
 
     /**
      * Submit user's answers
