@@ -142,7 +142,7 @@
                 <div class = "usersList">
                     <h2>Users who submitted the questionnaire:</h2>
                     <button class="link" v-for="user in usersWhoSubmitted" v-on:click="setUserChoice($event)">{{user}}</button>
-                    <label class="question">Click on a name to see submission details</label>
+                    <label class="question" v-if = "usersWhoSubmitted.length !== 0">Click on a name to see submission details</label>
                     <div class="buttons" >
                         <button v-on:click="showSingleSurvey()">Back</button>
                     </div>

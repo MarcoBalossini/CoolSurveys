@@ -46,19 +46,11 @@ let index = new Vue ({
         },
         deleteSurveyPage: function() {
             this.getOldSurveys();
-            if (this.oldSurveys.length === 0)
-                this.message = "No old survey available";
-            else
-                this.message = '';
             this.surveyDeletion = true;
             this.welcome = false;
         },
         surveysInspectionPage: function() {
             this.getOldSurveys();
-            if (this.oldSurveys.length === 0)
-                this.message = "No old survey available";
-            else
-                this.message = '';
             this.surveysInspection = true;
             this.oldSurveysBool = true;
             this.welcome = false;
@@ -245,6 +237,10 @@ let index = new Vue ({
                         tmp.push(value); //name
                         this.oldSurveys.push(tmp);
                     });
+                    if (this.oldSurveys.length === 0)
+                        this.message = "No old survey available";
+                    else
+                        this.message = '';
                 })
                 .catch(error => {
                     console.log(error.response.data);
@@ -268,6 +264,7 @@ let index = new Vue ({
             this.userToInspect = event.target.innerText;
             this.submissionsInspection = false;
             this.singleUserInspection = true;
+            this.submitUserToInspect();
         },
         submitSurveyToInspect: function(){
             axios.get("./AdminSurvey?date=" + this.surveyToInspect)
@@ -285,7 +282,7 @@ let index = new Vue ({
             });
         },
         submitUserToInspect: function(){
-            axios.post("./AdminSurvey?user=" + this.userToInspect + "&date=" + this.surveyToInspect)
+            axios.get("./AdminSurvey?user=" + this.userToInspect + "&date=" + this.surveyToInspect)
                 .then(response => {
                     let surveyData = response.data;
                     this.singleUserAnswers = [];
@@ -308,16 +305,20 @@ let index = new Vue ({
         showSubmissions: function() {
             this.singleSurveyInspection = false;
             this.submissionsInspection = true;
+            if (this.oldSurveys.length === 0)
+                this.message = "No submissions yet for that questionnaire.";
+            else
+                this.message = '';
         },
         showCancellations: function() {
             this.singleSurveyInspection = false;
             this.deletionsInspection = true
-        },
-        showOldSurveysInspection: function() {
             if (this.oldSurveys.length === 0)
-                this.message = "No old survey available";
+                this.message = "No cancellations for that questionnaire.";
             else
                 this.message = '';
+        },
+        showOldSurveysInspection: function() {
             this.singleSurveyInspection = false;
             this.surveysInspection = true;
             this.oldSurveysBool = true;
