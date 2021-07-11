@@ -16,8 +16,6 @@
         <div id="homePage" v-if = "homepage">
             <h1>HomePage</h1>
             <h2 v-if="productOfTheDay !== ''" style="background:snow">Today's product: {{productOfTheDay}}</h2>
-            <!-- Indirizzamento relativo a /static/product -->
-            <!-- onerror="this.onerror=null;this.src='No-image.png';"-->
             <img v-if="productOfTheDay !== ''" :src="productImageSrc" style="height:200px; display: block; margin-left: auto; margin-right: auto;" alt="productOfTheDayImage">
             <div id="reviews" v-for="review in productReviews">
                 <label class="question">{{review}}</label>
@@ -96,6 +94,7 @@
             </header>
             <div class="scores">
                 <table>
+                    <caption>Leaderboard</caption>
                     <th>Position</th>
                     <th scope="col">Username</th>
                     <th scope="col">Score</th>

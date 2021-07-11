@@ -3,7 +3,6 @@ package it.polimi.db2.coolSurveysWEB.controllers;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import it.polimi.db2.coolSurveysWEB.utils.JsonUtils;
 import it.polimi.db2.coolsurveys.dao.exceptions.AlreadyExistsException;
 import it.polimi.db2.coolsurveys.dao.exceptions.DAOException;
@@ -94,6 +93,11 @@ public class AdminSurvey extends HttpServlet {
     protected static final String USER = "user";
 
     /**
+     * Wrong date format response
+     */
+    private static final String WRONG_DATE = "Wrong date format";
+
+    /**
      * Injected EJB service for survey related needs
      */
     @EJB(name = "it.polimi.db2.coolsurveys.services/SurveyService")
@@ -114,7 +118,7 @@ public class AdminSurvey extends HttpServlet {
                 date = LocalDate.parse(d);
             } catch (DateTimeParseException e) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                response.getWriter().println("Wrong date format");
+                response.getWriter().println(WRONG_DATE);
                 return;
             }
 
@@ -141,7 +145,6 @@ public class AdminSurvey extends HttpServlet {
 
         String productName = request.getParameter(NAME);
         if(productName != null && !productName.isEmpty()) {
-            //TODO: Fix image upload
             Part imagePart = request.getPart(IMAGE);
             InputStream imgStream = imagePart.getInputStream();
             byte[] image = new byte[imgStream.available()];
@@ -159,7 +162,7 @@ public class AdminSurvey extends HttpServlet {
                 date = LocalDate.parse(request.getParameter(DATE));
             } catch (DateTimeParseException e) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                response.getWriter().println("Wrong date format");
+                response.getWriter().println(WRONG_DATE);
                 return;
             }
 
@@ -194,7 +197,7 @@ public class AdminSurvey extends HttpServlet {
                 return;
             } catch (DateTimeParseException e) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                response.getWriter().println("Wrong date format");
+                response.getWriter().println(WRONG_DATE);
                 return;
             }
         }

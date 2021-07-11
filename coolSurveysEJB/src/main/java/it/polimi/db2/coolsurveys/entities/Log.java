@@ -3,7 +3,6 @@ package it.polimi.db2.coolsurveys.entities;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Entity

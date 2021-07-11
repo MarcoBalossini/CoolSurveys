@@ -13,7 +13,7 @@ import java.util.List;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class SurveyServiceTest {
+class SurveyServiceTest {
 
     private static QuestionnaireDAO questionnaireDAO;
 
@@ -36,7 +36,7 @@ public class SurveyServiceTest {
     }
 
     @Test
-    public void testDeleteSurveysDates() {
+    void testDeleteSurveysDates() {
         assertThrows(ServiceException.class, () -> surveyService.deleteSurveys(List.of(today)));
         assertThrows(ServiceException.class, () -> surveyService.deleteSurveys(List.of(tomorrow)));
         assertThrows(ServiceException.class, () -> surveyService.deleteSurveys(List.of(today, tomorrow)));

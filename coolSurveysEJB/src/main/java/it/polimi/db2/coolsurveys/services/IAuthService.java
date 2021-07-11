@@ -38,6 +38,4 @@ public interface IAuthService {
      * @return The newly created credentials, if existing. Elsewhere null.
      */
     Credentials register(String mail, String username, String password, boolean isAdmin) throws AlreadyExistsException;
-
-    //TODO: recupero password tramite email
 }

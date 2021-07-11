@@ -37,7 +37,6 @@ public class Submission implements Serializable {
     @Column(name = "sex")
     private Integer sex = null;
 
-    //TODO: use enum?
     @Column(name = "expertise_level")
     private Integer expertiseLevel = null;
 

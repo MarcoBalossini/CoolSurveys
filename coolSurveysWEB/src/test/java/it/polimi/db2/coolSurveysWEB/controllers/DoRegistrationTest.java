@@ -20,7 +20,7 @@ import static org.mockito.Mockito.atLeast;
 class DoRegistrationTest {
 
     @Test
-    public void testRegistration() throws Exception {
+    void testRegistration() throws Exception {
         // Test null values
         testNoDB("usrn", null, null, null, "Please, fill all the fields");
 
@@ -94,7 +94,7 @@ class DoRegistrationTest {
     }
 
     @Test
-    public void testDoGet() throws IOException, ServletException {
+    void testDoGet() throws IOException, ServletException {
         HttpServletRequest request = mock(HttpServletRequest.class);
         HttpServletResponse response = mock(HttpServletResponse.class);
 

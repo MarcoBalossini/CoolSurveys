@@ -28,7 +28,7 @@ class CheckLoginTest {
     private static final String TOKEN_EXCEPTION = "TokenException";
 
     @Test
-    public void testFormLogin() throws Exception {
+    void testFormLogin() throws Exception {
 
         //Test null String value
         testFormNoDB(null, "pwd", "Missing credential value");

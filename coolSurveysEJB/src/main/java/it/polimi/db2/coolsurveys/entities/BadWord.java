@@ -2,7 +2,6 @@ package it.polimi.db2.coolsurveys.entities;
 
 import java.io.Serializable;
 import java.util.Objects;
-import javax.ejb.TransactionAttribute;
 import javax.persistence.*;
 
 

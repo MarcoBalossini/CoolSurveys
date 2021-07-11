@@ -18,7 +18,7 @@ class AuthManagerTest {
     }
 
     @Test
-    public void testTokenValidity() throws TokenException, InterruptedException {
+    void testTokenValidity() throws TokenException, InterruptedException {
         //Test wrong token validity
         assertEquals(null, authManager.generateToken(1, 0));
 

@@ -111,13 +111,11 @@ public class AuthManager implements IAuthManager {
         if (validity <= 0)
             return null;
 
-        String token = JWT.create()
+        return JWT.create()
                 .withIssuer(issuer)
                 .withExpiresAt(new Date(System.currentTimeMillis() + validity))
                 .withClaim(ID, id)
                 .sign(algorithm);
-
-        return token;
     }
 
     /**
@@ -128,11 +126,11 @@ public class AuthManager implements IAuthManager {
         Gson gson = new Gson();
         JsonObject json = gson.fromJson(reader, JsonObject.class);
         JsonElement code = json.get(KEY_NAME);
-        JsonElement issuer = json.get(ISSUER_NAME);
-        if(code == null || issuer == null) {
+        JsonElement token_issuer = json.get(ISSUER_NAME);
+        if(code == null || token_issuer == null) {
             throw new RuntimeException("Configuration data not found");
         }
         this.key = code.getAsString();
-        this.issuer = issuer.getAsString();
+        this.issuer = token_issuer.getAsString();
     }
 }

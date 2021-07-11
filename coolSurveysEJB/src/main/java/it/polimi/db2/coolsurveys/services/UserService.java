@@ -1,12 +1,10 @@
 package it.polimi.db2.coolsurveys.services;
 
 import it.polimi.db2.coolsurveys.dao.UserDAO;
-import it.polimi.db2.coolsurveys.entities.Credentials;
 import it.polimi.db2.coolsurveys.entities.User;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import java.util.ArrayList;
 import java.util.List;
 
 @Stateless

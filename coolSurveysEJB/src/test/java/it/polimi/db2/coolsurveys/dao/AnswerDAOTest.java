@@ -16,7 +16,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class AnswerDAOTest extends PersistenceTest {
+class AnswerDAOTest extends PersistenceTest {
 
     static protected QuestionnaireDAO questionnaireDAO = new QuestionnaireDAO(em);
     static protected AnswerDAO answerDAO = new AnswerDAO(em);
@@ -32,7 +32,7 @@ public class AnswerDAOTest extends PersistenceTest {
 
 
     @Test
-    public void addAnswer() {
+    void addAnswer() {
         em.getTransaction().begin();
 
         byte[] smallPhoto = {0, 0, 0};
@@ -56,7 +56,7 @@ public class AnswerDAOTest extends PersistenceTest {
     }
 
     @Test
-    public void badWordTest() {
+    void badWordTest() {
         em.getTransaction().begin();
 
         byte[] smallPhoto = {0, 0, 0};

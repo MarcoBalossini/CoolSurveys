@@ -21,7 +21,7 @@ import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-public class SubmissionServiceTest {
+class SubmissionServiceTest {
 
     private static final String USER1 = "user1";
     private static final String PASS1 = "pass1";
@@ -94,14 +94,14 @@ public class SubmissionServiceTest {
     }
 
     @Test
-    public void blockedAccount() {
+    void blockedAccount() {
         map = Map.of(QUESTION1, "answer1", QUESTION2, "answer2");
 
         assertThrows(BlockedAccountException.class, () -> service.registerSubmission(map, cred2, 1, "Male", "High"));
     }
 
     @Test
-    public void badWordInsertion() throws NotFoundException, AlreadyExistsException, it.polimi.db2.coolsurveys.dao.exceptions.BadWordFoundException {
+    void badWordInsertion() throws NotFoundException, AlreadyExistsException, it.polimi.db2.coolsurveys.dao.exceptions.BadWordFoundException {
         map = Map.of(QUESTION1, "answer1", QUESTION2, "answer2");
 
         when(answerDAO.insertAnswer(any(Question.class), anyString(), any(User.class))).thenThrow(new it.polimi.db2.coolsurveys.dao.exceptions.BadWordFoundException());
@@ -110,7 +110,7 @@ public class SubmissionServiceTest {
     }
 
     @Test
-    public void nullArguments() {
+    void nullArguments() {
         map = Map.of(QUESTION1, "answer1", QUESTION2, "answer2");
 
         assertThrows(IllegalArgumentException.class, () -> service.registerSubmission(null, cred1, 1, "Male", "Low"));

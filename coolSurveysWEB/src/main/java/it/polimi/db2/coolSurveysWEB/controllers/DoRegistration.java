@@ -93,7 +93,6 @@ public class DoRegistration extends HttpServlet {
         } catch (Exception e) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().println("Failed registration");
-            return;
         }
 
     }

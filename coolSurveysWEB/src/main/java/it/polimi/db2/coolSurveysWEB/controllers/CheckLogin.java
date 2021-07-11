@@ -2,11 +2,8 @@ package it.polimi.db2.coolSurveysWEB.controllers;
 
 import com.google.gson.JsonObject;
 import it.polimi.db2.coolSurveysWEB.auth.AuthManager;
-import it.polimi.db2.coolSurveysWEB.auth.exceptions.TokenException;
 import it.polimi.db2.coolSurveysWEB.utils.JsonUtils;
-import it.polimi.db2.coolsurveys.dao.exceptions.NotFoundException;
 import it.polimi.db2.coolsurveys.entities.Credentials;
-import it.polimi.db2.coolsurveys.dao.exceptions.DAOException;
 import it.polimi.db2.coolsurveys.services.IAuthService;
 import it.polimi.db2.coolsurveys.services.exceptions.ServiceException;
 
@@ -15,7 +12,6 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
-import java.util.Arrays;
 
 /**
  * Servlet managing login to CoolSurveys.<br>
@@ -33,18 +29,18 @@ public class CheckLogin extends HttpServlet {
     /**
      * Password form field name
      */
-    protected final static String PASSWORD = "password";
+    protected static final String PASSWORD = "password";
 
     /**
      * Username form field name
      */
-    protected final static String USERNAME = "username";
+    protected static final String USERNAME = "username";
 
     //Cookies
     /**
      * Token name
      */
-    protected final static String AUTH_TOKEN = "auth-token";
+    protected static final String AUTH_TOKEN = "auth-token";
 
     /**
      * Token validity

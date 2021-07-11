@@ -24,7 +24,7 @@ import static org.mockito.Mockito.when;
 class LeaderboardTest {
 
     @Test
-    public void testGetLeaderboard() throws NoSuchFieldException, IllegalAccessException, ServletException, IOException {
+    void testGetLeaderboard() throws NoSuchFieldException, IllegalAccessException, ServletException, IOException {
         HttpServletRequest request = mock(HttpServletRequest.class);
         HttpServletResponse response = mock(HttpServletResponse.class);
         IUserService userService = mock(IUserService.class);

@@ -13,7 +13,6 @@ public class HashUtility {
     private static final int saltLength = 16;
 
     private static String hash(String password, byte[] salt) {
-        String generatedPassword = null;
 
         try {
             MessageDigest md = MessageDigest.getInstance(algorithm);

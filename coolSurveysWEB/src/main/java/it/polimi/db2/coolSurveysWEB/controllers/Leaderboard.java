@@ -31,11 +31,9 @@ public class Leaderboard extends HttpServlet {
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
             response.getWriter().println(json);
-            return;
         } catch (Exception e) {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             response.getWriter().println("Database error");
-            return;
         }
     }
 
@@ -47,7 +45,7 @@ public class Leaderboard extends HttpServlet {
 
     private List<ResponseUser> createResponseList(List<User> leaderboard) {
         List<ResponseUser> toSend = new ArrayList<>();
-        leaderboard.forEach((user) -> toSend.add(new ResponseUser(user.getCredentials().getUsername(), user.getPoints())));
+        leaderboard.forEach(user -> toSend.add(new ResponseUser(user.getCredentials().getUsername(), user.getPoints())));
         return toSend;
     }
 }

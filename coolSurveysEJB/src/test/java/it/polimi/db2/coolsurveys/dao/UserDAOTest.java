@@ -14,10 +14,10 @@ import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class UserDAOTest extends PersistenceTest {
+class UserDAOTest extends PersistenceTest {
 
     @Test
-    public void insertUser() {
+    void insertUser() {
         em.getTransaction().begin();
 
         UserDAO dao = new UserDAO(em);
@@ -32,7 +32,7 @@ public class UserDAOTest extends PersistenceTest {
     }
 
     @Test
-    public void banUser() {
+    void banUser() {
 
         insertUser();
 
@@ -57,7 +57,7 @@ public class UserDAOTest extends PersistenceTest {
     }
 
     @Test
-    public void logUser() {
+    void logUser() {
         em.getTransaction().begin();
 
         UserDAO dao = new UserDAO(em);
@@ -73,7 +73,7 @@ public class UserDAOTest extends PersistenceTest {
 
     @AfterEach
     @BeforeEach
-    public void clean() {
+    void clean() {
         em.getTransaction().begin();
         em.createNativeQuery("delete from user").executeUpdate();
         em.createNativeQuery("delete from credentials").executeUpdate();

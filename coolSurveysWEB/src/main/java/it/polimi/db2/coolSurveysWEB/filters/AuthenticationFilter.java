@@ -1,8 +1,6 @@
 package it.polimi.db2.coolSurveysWEB.filters;
 
 import it.polimi.db2.coolSurveysWEB.auth.AuthManager;
-import it.polimi.db2.coolSurveysWEB.auth.exceptions.TokenException;
-import it.polimi.db2.coolsurveys.dao.exceptions.DAOException;
 import it.polimi.db2.coolsurveys.entities.Credentials;
 import it.polimi.db2.coolsurveys.services.IAuthService;
 
@@ -12,7 +10,6 @@ import javax.servlet.annotation.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -32,7 +29,7 @@ public class AuthenticationFilter implements Filter {
     /**
      * Token name
      */
-    protected final static String AUTH_TOKEN = "auth-token";
+    protected static final String AUTH_TOKEN = "auth-token";
 
     @EJB(name = "it.polimi.db2.coolsurveys.services/AuthService")
     private IAuthService authService;

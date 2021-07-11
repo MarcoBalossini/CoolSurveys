@@ -12,9 +12,6 @@ import java.io.Serializable;
 @Table(name = "options")
 public class Option implements Serializable {
 
-    /*@EmbeddedId
-    private OptionPK id;*/
-
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "option_id")
