@@ -5,12 +5,14 @@ import com.google.gson.JsonObject;
 import it.polimi.db2.coolSurveysWEB.utils.JsonUtils;
 import it.polimi.db2.coolSurveysWEB.utils.ResponseQuestionnaire;
 import it.polimi.db2.coolsurveys.dao.exceptions.DAOException;
+import it.polimi.db2.coolsurveys.dao.exceptions.NotFoundException;
 import it.polimi.db2.coolsurveys.entities.Credentials;
 import it.polimi.db2.coolsurveys.entities.Option;
 import it.polimi.db2.coolsurveys.entities.Question;
 import it.polimi.db2.coolsurveys.entities.Questionnaire;
 import it.polimi.db2.coolsurveys.services.SubmissionService;
 import it.polimi.db2.coolsurveys.services.SubmissionServiceBean;
+import it.polimi.db2.coolsurveys.services.SurveyService;
 import org.junit.jupiter.api.Test;
 
 import javax.servlet.ServletException;
@@ -72,7 +74,7 @@ class HandleSurveyTest {
         HttpSession session = mock(HttpSession.class);
 
         HandleSurvey handleSurvey = new HandleSurvey();
-        Field surveyServiceField = handleSurvey.getClass().getDeclaredField("surveysService");
+        Field surveyServiceField = handleSurvey.getClass().getDeclaredField("submissionService");
         surveyServiceField.setAccessible(true);
         surveyServiceField.set(handleSurvey, surveysService);
 
@@ -109,10 +111,11 @@ class HandleSurveyTest {
     }
 
     @Test
-    void testSurveySubmission() throws IOException, ServletException, NoSuchFieldException, IllegalAccessException {
+    void testSurveySubmission() throws IOException, ServletException, NoSuchFieldException, IllegalAccessException, NotFoundException {
         HttpServletRequest request = mock(HttpServletRequest.class);
         HttpServletResponse response = mock(HttpServletResponse.class);
-        SubmissionService surveysService = mock(SubmissionServiceBean.class);
+        SubmissionService submissionService = mock(SubmissionServiceBean.class);
+        SurveyService surveyService = mock(SurveyService.class);
         HttpSession session = mock(HttpSession.class);
 
         Map<String, String> questionsAnswersMap = new HashMap<>();
@@ -121,9 +124,14 @@ class HandleSurveyTest {
 
 
         HandleSurvey handleSurvey = new HandleSurvey();
+        Field submissionServiceField = handleSurvey.getClass().getDeclaredField("submissionService");
+        submissionServiceField.setAccessible(true);
+        submissionServiceField.set(handleSurvey, submissionService);
+
         Field surveyServiceField = handleSurvey.getClass().getDeclaredField("surveysService");
         surveyServiceField.setAccessible(true);
-        surveyServiceField.set(handleSurvey, surveysService);
+        surveyServiceField.set(handleSurvey, surveyService);
+        when(surveyService.getQuestionCount()).thenReturn(2);
 
         StringWriter stringWriter = new StringWriter();
         PrintWriter writer = new PrintWriter(stringWriter);
