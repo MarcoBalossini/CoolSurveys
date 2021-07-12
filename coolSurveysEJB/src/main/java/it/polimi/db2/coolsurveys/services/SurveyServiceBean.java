@@ -56,7 +56,7 @@ public class SurveyServiceBean implements SurveyService{
 
     @Override
     public List<Questionnaire> getSurveyList() {
-        return questionnaireDAO.findAll();
+        return questionnaireDAO.findPast();
     }
 
     @Override

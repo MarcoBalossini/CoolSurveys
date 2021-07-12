@@ -13,7 +13,9 @@ import java.util.Objects;
         @NamedQuery(name = "Questionnaire.selectByDate",
                 query = "select q from Questionnaire q where q.date = :date"),
         @NamedQuery(name = "Questionnaire.findAll",
-                query = "select q from Questionnaire q")
+                query = "select q from Questionnaire q"),
+        @NamedQuery(name = "Questionnaire.findPast",
+                query = "select q from Questionnaire q where q.date < :date")
 })
 
 @Entity

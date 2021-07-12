@@ -30,9 +30,9 @@ CREATE TABLE `answer` (
                           PRIMARY KEY (`answer_id`),
                           KEY `answer/user_idx` (`user_id`),
                           KEY `answer/question_idx` (`question_id`),
-                          CONSTRAINT `answer/question` FOREIGN KEY (`question_id`) REFERENCES `question` (`question_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+                          CONSTRAINT `answer/question` FOREIGN KEY (`question_id`) REFERENCES `question` (`question_id`) ON UPDATE CASCADE,
                           CONSTRAINT `answer/user` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=122 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=134 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -52,11 +52,29 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `answer_BEFORE_INSERT` BEFORE INSERT ON `answer` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `check_bad_words` BEFORE INSERT ON `answer` FOR EACH ROW BEGIN
     IF EXISTS (SELECT word FROM bad_words WHERE new.answer LIKE concat('%', concat(word, '%'))) THEN
         SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT = "Bad Word Found";
     END IF;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `delete_points` AFTER DELETE ON `answer` FOR EACH ROW BEGIN
+    update `user` set `points` = `points` - 1
+    where `user`.`user_id` = OLD.`user_id`;
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -104,7 +122,7 @@ CREATE TABLE `credentials` (
                                UNIQUE KEY `user_id_UNIQUE` (`user_id`),
                                UNIQUE KEY `username_UNIQUE` (`username`),
                                UNIQUE KEY `mail_UNIQUE` (`mail`)
-) ENGINE=InnoDB AUTO_INCREMENT=176 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=179 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -113,7 +131,7 @@ CREATE TABLE `credentials` (
 
 LOCK TABLES `credentials` WRITE;
 /*!40000 ALTER TABLE `credentials` DISABLE KEYS */;
-INSERT INTO `credentials` VALUES (173,'1JJgChJvh54d4Ue2Gt1uCV2B6a8PgUs+n7/uRVBGLuiS0FuNJoPUCu3wNA/RW2fpk7iGZJByezOiW7vYoJJAXg==:hHOLwtMR/A9sqm+rSqPZyQ==','tom','tom@tom',0),(174,'UZ6rruUd7eLZ933Y0XnQYI+RcT5CPuKYM1k7ZoAR7DTyVyKFXUPOl51ZcDV0SCy0vKRgb/LSP4h4MCAAFN42xg==:Ul3VGQuwpgJYbIZHSgsSNA==','gaia','gaia@gaia',0),(175,'pn7SzqEGRmng9kXqz5lkQvzXngS22r0Gl8FCgNH3Ipd7ImVXP5Dt8A2oWqaR53lwiEAKjG1IXdSl6IoUyezm5A==:7AG0i8SzD77Tb+F4s0OfDw==','jkl','jkl@jkl',0);
+INSERT INTO `credentials` VALUES (176,'4Bn//AdaSHNaWUmf2pPA0mMy6hia/8ieG1VF7fWd0R3ebIsa02AplQRdW8zVXk9dwAGITR+E2ROytZhrn7MmDQ==:nCbQGVZ7BlJoRFbbXd6JMA==','tom','tom@tom',1),(177,'geo6mjWMO1FQA0qIOlMRdlqvQNuJUEFxTUI4JM4ktd///kiQs88R5SEhYRyRBmCgAHswPyhgYD5Qa+Z0bE3Tvg==:1fmtZe0VCO2PyTKJvReQOA==','tom1','tom1@tom1',0),(178,'cr8WlzdjqdUsQvqnw50+Bn2VKekuBn34qarvCu/qocTCc4IrufaPa7MCuDTH7OJ/1drzZQw+7CX60R+Bq3ntew==:KY3wNGbkIQLqbm5huP0RkQ==','tomtom','tomtom@tomtom',0);
 /*!40000 ALTER TABLE `credentials` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -138,7 +156,7 @@ CREATE TABLE `log` (
 
 LOCK TABLES `log` WRITE;
 /*!40000 ALTER TABLE `log` DISABLE KEYS */;
-INSERT INTO `log` VALUES (173,'2021-06-20 10:39:44'),(173,'2021-06-20 10:45:22'),(173,'2021-06-23 09:36:29'),(173,'2021-06-23 09:37:48'),(173,'2021-06-23 09:44:53'),(173,'2021-06-23 09:45:09'),(173,'2021-06-23 14:28:47'),(173,'2021-06-23 14:47:29'),(173,'2021-06-24 09:35:05'),(173,'2021-06-24 09:47:53'),(173,'2021-06-24 09:50:45'),(173,'2021-06-24 09:51:54'),(173,'2021-06-24 09:59:41'),(173,'2021-06-25 10:36:50'),(173,'2021-06-25 10:37:53'),(173,'2021-06-25 10:47:42'),(174,'2021-06-20 10:51:26'),(174,'2021-06-21 07:46:06'),(174,'2021-06-21 07:48:10'),(174,'2021-06-23 09:37:34'),(174,'2021-06-24 10:00:50'),(174,'2021-06-25 10:40:40'),(175,'2021-06-24 10:01:03');
+INSERT INTO `log` VALUES (176,'2021-07-12 10:35:45'),(176,'2021-07-12 10:36:38'),(176,'2021-07-12 10:38:09'),(176,'2021-07-12 10:38:48'),(176,'2021-07-12 10:40:48'),(176,'2021-07-12 10:43:33'),(176,'2021-07-12 11:03:17'),(176,'2021-07-12 11:05:13'),(176,'2021-07-12 11:21:40'),(176,'2021-07-12 11:23:55'),(176,'2021-07-12 11:27:02'),(177,'2021-07-12 10:37:14'),(177,'2021-07-12 10:38:34'),(177,'2021-07-12 10:39:20'),(177,'2021-07-12 10:42:48'),(178,'2021-07-12 10:39:34'),(178,'2021-07-12 10:41:13'),(178,'2021-07-12 10:57:26'),(178,'2021-07-12 11:03:39'),(178,'2021-07-12 11:05:33'),(178,'2021-07-12 11:17:30'),(178,'2021-07-12 11:22:02'),(178,'2021-07-12 11:24:15'),(178,'2021-07-12 11:27:21');
 /*!40000 ALTER TABLE `log` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -181,8 +199,8 @@ CREATE TABLE `question` (
                             `question` varchar(512) NOT NULL,
                             PRIMARY KEY (`question_id`),
                             KEY `questionnaire_idx` (`questionnaire_id`),
-                            CONSTRAINT `questionnaire/question` FOREIGN KEY (`questionnaire_id`) REFERENCES `questionnaire` (`q_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=290 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+                            CONSTRAINT `questionnaire/question` FOREIGN KEY (`questionnaire_id`) REFERENCES `questionnaire` (`q_id`) ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=298 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -193,6 +211,23 @@ LOCK TABLES `question` WRITE;
 /*!40000 ALTER TABLE `question` DISABLE KEYS */;
 /*!40000 ALTER TABLE `question` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `delete_answers` BEFORE DELETE ON `question` FOR EACH ROW BEGIN
+    DELETE from `answer` WHERE `answer`.`question_id` = OLD.`question_id`;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `questionnaire`
@@ -208,7 +243,7 @@ CREATE TABLE `questionnaire` (
                                  `date` date NOT NULL,
                                  PRIMARY KEY (`q_id`),
                                  UNIQUE KEY `name_UNIQUE` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=214 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=222 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -228,15 +263,9 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `delete_points` BEFORE DELETE ON `questionnaire` FOR EACH ROW BEGIN
-    UPDATE `user` SET `points` = `points` - (SELECT count(*) FROM `question` WHERE `question`.`questionnaire_id` = OLD.`q_id`)
-        - (SELECT
-                   CASE WHEN `age` IS NOT NULL THEN 2 ELSE 0 END +
-                   CASE WHEN `sex` IS NOT NULL THEN 2 ELSE 0 END +
-                   CASE WHEN `expertise_level` IS NOT NULL THEN 2 ELSE 0 END
-           FROM `submission`
-           WHERE `questionnaire_id` = OLD.`q_id` and `user`.`user_id` = `submission`.`user_id`)
-    WHERE `user_id` in (SELECT `user_id` FROM `submission` WHERE `questionnaire_id` = OLD.`q_id` AND `submitted` = TRUE);
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `delete_questions_submissions` BEFORE DELETE ON `questionnaire` FOR EACH ROW BEGIN
+    DELETE from `question` where `question`.`questionnaire_id` = OLD.`q_id`;
+    DELETE from `submission` where `submission`.`questionnaire_id` = OLD.`q_id`;
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -287,7 +316,7 @@ CREATE TABLE `submission` (
                               PRIMARY KEY (`user_id`,`questionnaire_id`),
                               KEY `submission/user_idx` (`user_id`),
                               KEY `submission/questionnaire_idx` (`questionnaire_id`),
-                              CONSTRAINT `submission/questionnaire` FOREIGN KEY (`questionnaire_id`) REFERENCES `questionnaire` (`q_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+                              CONSTRAINT `submission/questionnaire` FOREIGN KEY (`questionnaire_id`) REFERENCES `questionnaire` (`q_id`) ON UPDATE CASCADE,
                               CONSTRAINT `submission/user` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -309,7 +338,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `checks` BEFORE UPDATE ON `submission` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `check_valid_submission` BEFORE UPDATE ON `submission` FOR EACH ROW BEGIN
     IF(OLD.`submitted` = true) THEN
         SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT = 'Cannot update. Already submitted';
@@ -373,9 +402,45 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (173,0,'2021-06-20 10:39:41'),(174,0,'2021-06-20 10:51:23'),(175,0,'2021-06-23 09:43:16');
+INSERT INTO `user` VALUES (176,0,'2021-07-12 10:35:08'),(177,0,'2021-07-12 10:37:12'),(178,0,'2021-07-12 10:39:32');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Temporary view structure for view `user_submission_points`
+--
+
+DROP TABLE IF EXISTS `user_submission_points`;
+/*!50001 DROP VIEW IF EXISTS `user_submission_points`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `user_submission_points` AS SELECT
+                                                     1 AS `username`,
+                                                     1 AS `questionnaire_id`,
+                                                     1 AS `age`,
+                                                     1 AS `sex`,
+                                                     1 AS `expertise_level`,
+                                                     1 AS `NumberOfQuestions`,
+                                                     1 AS `points`*/;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Final view structure for view `user_submission_points`
+--
+
+/*!50001 DROP VIEW IF EXISTS `user_submission_points`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+    /*!50013 DEFINER=`root`@`%` SQL SECURITY DEFINER */
+    /*!50001 VIEW `user_submission_points` AS select `credentials`.`username` AS `username`,`submission`.`questionnaire_id` AS `questionnaire_id`,`submission`.`age` AS `age`,`submission`.`sex` AS `sex`,`submission`.`expertise_level` AS `expertise_level`,count(0) AS `NumberOfQuestions`,`user`.`points` AS `points` from (((`credentials` join `user` on((`credentials`.`user_id` = `user`.`user_id`))) join `submission` on((`credentials`.`user_id` = `submission`.`user_id`))) join `question` `q` on((`submission`.`questionnaire_id` = `q`.`questionnaire_id`))) where (`submission`.`submitted` = true) group by `credentials`.`username`,`submission`.`questionnaire_id`,`submission`.`age`,`submission`.`sex`,`submission`.`expertise_level` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -386,4 +451,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-06-25 13:33:55
+-- Dump completed on 2021-07-12 11:31:57

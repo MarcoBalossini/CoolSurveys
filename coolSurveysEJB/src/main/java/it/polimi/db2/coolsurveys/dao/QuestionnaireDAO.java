@@ -72,8 +72,9 @@ public class QuestionnaireDAO {
         }
     }
 
-    public List<Questionnaire> findAll() {
-        return em.createNamedQuery("Questionnaire.findAll", Questionnaire.class).getResultList();
+    public List<Questionnaire> findPast() {
+        return em.createNamedQuery("Questionnaire.findPast", Questionnaire.class)
+                .setParameter("date", LocalDate.now()).getResultList();
     }
 
     public void removeQuestionnaire(Questionnaire questionnaire) {
