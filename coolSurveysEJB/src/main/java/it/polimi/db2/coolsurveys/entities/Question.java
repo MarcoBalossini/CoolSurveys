@@ -27,7 +27,7 @@ public class Question implements Serializable {
     @JoinColumn(name = "questionnaire_id")
     private Questionnaire questionnaire;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "question", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "question", cascade = CascadeType.ALL)
     private List<Option> options = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "question", cascade = CascadeType.ALL)

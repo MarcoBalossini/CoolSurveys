@@ -3,7 +3,7 @@ package it.polimi.db2.coolSurveysWEB.controllers;
 import com.google.gson.JsonObject;
 import it.polimi.db2.coolSurveysWEB.utils.JsonUtils;
 import it.polimi.db2.coolsurveys.entities.Credentials;
-import it.polimi.db2.coolsurveys.services.IAuthService;
+import it.polimi.db2.coolsurveys.services.AuthService;
 
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
@@ -30,7 +30,7 @@ public class DoRegistration extends HttpServlet {
     public final static String CONF_PASSWORD = "passwordConfirm";
 
     @EJB(name = "it.polimi.db2.coolsurveys.services/AuthService")
-    private IAuthService authService;
+    private AuthService authService;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

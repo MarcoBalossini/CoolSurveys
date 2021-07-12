@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import it.polimi.db2.coolSurveysWEB.auth.AuthManager;
 import it.polimi.db2.coolSurveysWEB.utils.JsonUtils;
 import it.polimi.db2.coolsurveys.entities.Credentials;
-import it.polimi.db2.coolsurveys.services.IAuthService;
+import it.polimi.db2.coolsurveys.services.AuthService;
 import it.polimi.db2.coolsurveys.services.exceptions.ServiceException;
 
 import javax.ejb.EJB;
@@ -48,7 +48,7 @@ public class CheckLogin extends HttpServlet {
     protected static final long EXPIRATION_TIME = 1000*60*60*24;
 
     @EJB(name = "it.polimi.db2.coolsurveys.services/AuthService")
-    private IAuthService authService;
+    private AuthService authService;
 
 
     /**

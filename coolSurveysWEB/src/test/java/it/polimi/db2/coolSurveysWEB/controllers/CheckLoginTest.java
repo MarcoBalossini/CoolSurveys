@@ -1,14 +1,11 @@
 package it.polimi.db2.coolSurveysWEB.controllers;
 
 import it.polimi.db2.coolSurveysWEB.auth.AuthManager;
-import it.polimi.db2.coolSurveysWEB.auth.exceptions.TokenException;
-import it.polimi.db2.coolsurveys.dao.exceptions.NotFoundException;
 import it.polimi.db2.coolsurveys.entities.Credentials;
-import it.polimi.db2.coolsurveys.services.IAuthService;
+import it.polimi.db2.coolsurveys.services.AuthService;
 import it.polimi.db2.coolsurveys.services.exceptions.InvalidCredentialsException;
 import org.junit.jupiter.api.Test;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -154,7 +151,7 @@ class CheckLoginTest {
         HttpServletRequest request = mock(HttpServletRequest.class);
         HttpServletResponse response = mock(HttpServletResponse.class);
         HttpSession session = mock(HttpSession.class);
-        IAuthService authenticationService = mock(IAuthService.class);
+        AuthService authenticationService = mock(AuthService.class);
 
         try {
 
