@@ -185,6 +185,7 @@ let index = new Vue ({
                 .then(response => {
                 this.greetings = true;
                 this.section2 = false;
+                this.message = "";
                 console.log(response.data);
                 //To change html file:
                 //window.location.href = "/nome.html";

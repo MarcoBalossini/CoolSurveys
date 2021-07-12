@@ -87,7 +87,7 @@
                     </form>
                 </div>
                 <div id="addSurveyForm" v-if="surveyQuestions">
-                    <form v-on:reset.prevent="resetQuestionsForm" v-on:submit.prevent="submitQuestionsForm" method="post">
+                    <form v-on:reset.prevent="resetQuestionsForm" v-on:submit.prevent="submitQuestionsForm">
                         <div class = "buttons">
                             <button type="reset">Back</button>
                             <button type="submit">Send survey</button>

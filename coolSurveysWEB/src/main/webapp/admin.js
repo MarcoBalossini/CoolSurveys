@@ -131,6 +131,7 @@ let index = new Vue ({
                 this.internal_message = "Option can't be empty.";
         },
         resetQuestionsForm: function(){
+            this.message = "";
             this.questions = [{ question: "" }];
             this.options = [[{ option: "" }]];
             this.multipleChoice = false;
@@ -139,6 +140,11 @@ let index = new Vue ({
             this.newProductName="";
             this.surveyQuestions = false;
             this.surveyNewProduct = true;
+        },
+        redoQuestionsForm: function() {
+            this.questions = [{ question: "" }];
+            this.options = [[{ option: "" }]];
+            this.multipleChoice = false;
         },
         goToNewQuestionsPage() {
             this.surveyNewProduct = false;
@@ -165,6 +171,7 @@ let index = new Vue ({
             let i;
             if (this.questions.length === this.options.length) {
                 //returned a map of questions (keys) -> array of options (value)
+
                 this.questions.pop();
                 for(i=0; i < this.questions.length; i++) {
                     this.options[i].pop();
@@ -191,6 +198,7 @@ let index = new Vue ({
                 }).catch(error => {
                     this.message = error.response.data;
                     console.log(error.response.data);
+                    this.redoQuestionsForm();
                 });
             }
         },
@@ -220,6 +228,7 @@ let index = new Vue ({
             });
         },
         resetNewSurveyDateChoice: function(){
+            this.message = "";
             this.welcome = true;
             this.surveyCreation = false;
             this.surveyDateChoice = false;
@@ -251,6 +260,7 @@ let index = new Vue ({
             this.newProductImage = event.target.files[0];
         },
         resetNewProduct: function(){
+            this.message = "";
             this.surveyDateChoice = true;
             this.surveyNewProduct = false;
         },
