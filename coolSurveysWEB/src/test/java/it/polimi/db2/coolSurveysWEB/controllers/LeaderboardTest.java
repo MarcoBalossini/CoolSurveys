@@ -3,7 +3,7 @@ package it.polimi.db2.coolSurveysWEB.controllers;
 import com.google.gson.Gson;
 import it.polimi.db2.coolsurveys.entities.Credentials;
 import it.polimi.db2.coolsurveys.entities.User;
-import it.polimi.db2.coolsurveys.services.IUserService;
+import it.polimi.db2.coolsurveys.services.SubmissionService;
 import org.junit.jupiter.api.Test;
 
 import javax.servlet.ServletException;
@@ -27,7 +27,7 @@ class LeaderboardTest {
     void testGetLeaderboard() throws NoSuchFieldException, IllegalAccessException, ServletException, IOException {
         HttpServletRequest request = mock(HttpServletRequest.class);
         HttpServletResponse response = mock(HttpServletResponse.class);
-        IUserService userService = mock(IUserService.class);
+        SubmissionService userService = mock(SubmissionService.class);
 
         Leaderboard leaderboard = new Leaderboard();
         Field userServiceField = leaderboard.getClass().getDeclaredField("userService");

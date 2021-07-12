@@ -35,5 +35,9 @@ public interface SubmissionService {
 
     void blockUser(Credentials credentials);
 
-
+    /**
+     * Gets the leaderboard
+     * @return
+     */
+    List<User> getLeaderboard();
 }

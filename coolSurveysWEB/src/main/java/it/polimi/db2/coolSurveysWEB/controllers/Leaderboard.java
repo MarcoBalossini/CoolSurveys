@@ -3,7 +3,7 @@ package it.polimi.db2.coolSurveysWEB.controllers;
 import com.google.gson.Gson;
 import it.polimi.db2.coolSurveysWEB.utils.ResponseUser;
 import it.polimi.db2.coolsurveys.entities.User;
-import it.polimi.db2.coolsurveys.services.IUserService;
+import it.polimi.db2.coolsurveys.services.SubmissionService;
 
 import javax.ejb.EJB;
 import javax.servlet.*;
@@ -16,8 +16,8 @@ import java.util.List;
 @WebServlet(name = "Leaderboard", value = "/Leaderboard")
 public class Leaderboard extends HttpServlet {
 
-    @EJB(name = "it.polimi.db2.coolsurveys.services/UserService")
-    private IUserService userService;
+    @EJB(name = "it.polimi.db2.coolsurveys.services/SubmissionService")
+    private SubmissionService userService;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

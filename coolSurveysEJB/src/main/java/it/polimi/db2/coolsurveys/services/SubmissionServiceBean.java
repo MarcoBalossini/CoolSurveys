@@ -140,4 +140,12 @@ public class SubmissionServiceBean implements SubmissionService {
         userDAO.banUser(user);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<User> getLeaderboard() {
+        return userDAO.getLeaderBoard();
+    }
+
 }
