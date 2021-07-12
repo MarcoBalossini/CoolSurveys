@@ -55,11 +55,11 @@ public class AdminSurvey extends HttpServlet {
 
     protected static class SurveyData {
         final Map<String, String> questionAnswersMap;
-        final int age;
+        final Integer age;
         final String gender;
         final String expLvl;
 
-        public SurveyData(Map<String, String> questionAnswersMap, int age, String gender, String expLvl) {
+        public SurveyData(Map<String, String> questionAnswersMap, Integer age, String gender, String expLvl) {
             this.questionAnswersMap = questionAnswersMap;
             this.age = age;
             this.gender = gender;
