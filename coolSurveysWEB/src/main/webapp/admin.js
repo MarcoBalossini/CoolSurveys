@@ -302,9 +302,9 @@ let index = new Vue ({
                         tmp.push(value); //answer
                         this.singleUserAnswers.push(tmp);
                     });
-                    this.userToInspectAge.push(surveyData.age);
-                    this.userToInspectGender.push(surveyData.gender);
-                    this.userToInspectExpLvl.push(surveyData.expLvl);
+                    this.userToInspectAge = surveyData.age;
+                    this.userToInspectGender = surveyData.gender;
+                    this.userToInspectExpLvl = surveyData.expLvl;
                     console.log(response.data);
                 })
                 .catch(error => {

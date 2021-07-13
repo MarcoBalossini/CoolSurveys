@@ -5,7 +5,6 @@ import it.polimi.db2.coolsurveys.entities.Credentials;
 import it.polimi.db2.coolsurveys.entities.Questionnaire;
 import it.polimi.db2.coolsurveys.entities.Submission;
 import it.polimi.db2.coolsurveys.entities.User;
-import it.polimi.db2.coolsurveys.services.SubmissionService;
 import it.polimi.db2.coolsurveys.services.SurveyService;
 import org.junit.jupiter.api.Test;
 
@@ -101,7 +100,7 @@ class AdminSurveyTest {
 
     @Test
     void testGetResponses() {
-        int age = 20;
+        Integer age = 20;
         int expLvl = 0;
         int gender = 0;
 
@@ -134,7 +133,7 @@ class AdminSurveyTest {
             adminSurvey.doGet(request, response);
             writer.flush();
 
-            SurveyData resp = new SurveyData(qaMap, age, "Male", "Low");
+            SurveyData resp = new SurveyData(qaMap, age.toString(), "Male", "Low");
 
             assertEquals(stringWriter.toString().trim(),new Gson().toJson(resp).trim());
         } catch (Exception e) {

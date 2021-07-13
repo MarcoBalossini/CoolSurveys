@@ -55,11 +55,11 @@ public class AdminSurvey extends HttpServlet {
 
     protected static class SurveyData {
         final Map<String, String> questionAnswersMap;
-        final Integer age;
+        final String age;
         final String gender;
         final String expLvl;
 
-        public SurveyData(Map<String, String> questionAnswersMap, Integer age, String gender, String expLvl) {
+        public SurveyData(Map<String, String> questionAnswersMap, String age, String gender, String expLvl) {
             this.questionAnswersMap = questionAnswersMap;
             this.age = age;
             this.gender = gender;
@@ -271,7 +271,8 @@ public class AdminSurvey extends HttpServlet {
             String sex = submission.getSex() != null ? capitalize(Submission.Gender.values()[submission.getSex()].name()) : "Unknown";
             String exp_lvl = submission.getExpertiseLevel() != null ?
                     capitalize(Submission.ExpertiseLevel.values()[submission.getExpertiseLevel()].name()) : "Unknown";
-            SurveyData toSend = new SurveyData(qaMap, submission.getAge(), sex, exp_lvl);
+            String age = submission.getAge() != null ? submission.getAge().toString() : "Unknown";
+            SurveyData toSend = new SurveyData(qaMap, age, sex, exp_lvl);
 
             response.setStatus(HttpServletResponse.SC_OK);
             response.setContentType("application/json");

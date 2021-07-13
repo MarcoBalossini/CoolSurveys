@@ -13,8 +13,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "submission")
 public class Submission implements Serializable {
-
-
+    
     public enum Gender {
         MALE,
         FEMALE,
@@ -47,8 +46,6 @@ public class Submission implements Serializable {
     @ManyToOne
     @JoinColumn(name="user_id")
     private User user;
-
-
 
     @Column(name = "submitted", nullable = false)
     private Boolean submitted = false;

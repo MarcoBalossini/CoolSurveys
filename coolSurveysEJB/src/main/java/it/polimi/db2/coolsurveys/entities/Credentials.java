@@ -23,21 +23,19 @@ public class Credentials implements Serializable {
     @Column (name = "mail", nullable = false, unique = true)
     private String mail;
 
-    //sets admin to false by default
     @Column (nullable = false)
     private boolean admin = false;
+
+    @OneToOne(fetch = FetchType.EAGER, mappedBy = "credentials", orphanRemoval = true)
+    private User user;
 
     public User getUser() {
         return user;
     }
 
-
     public void setUser(User user) {
         this.user = user;
     }
-
-    @OneToOne(fetch = FetchType.EAGER, mappedBy = "credentials", orphanRemoval = true)
-    private User user;
 
     public Credentials(String username, String passwordHash, String mail, boolean admin) {
         this.username = username;
