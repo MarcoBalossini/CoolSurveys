@@ -204,31 +204,6 @@ public class AdminSurvey extends HttpServlet {
     }
 
     /**
-     * Deletes surveys given a Dates array
-     */
-    @Override
-    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String json = JsonUtils.getJson(request);
-        List<LocalDate> dates = new ArrayList<>();
-
-        try {
-            new Gson().fromJson(json, JsonArray.class).forEach(d -> dates.add(LocalDate.parse(d.getAsString())));
-        } catch (DateTimeParseException e) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().println("Invalid dates");
-            return;
-        }
-
-        try {
-            surveysService.deleteSurveys(dates);
-            response.setStatus(HttpServletResponse.SC_OK);
-        } catch (ServiceException | NotFoundException e) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().println(e.getMessage());
-        }
-    }
-
-    /**
      * Create and return a map date->name for past surveys
      */
     private void returnSurveys(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -293,8 +268,10 @@ public class AdminSurvey extends HttpServlet {
             Map<String, String> qaMap = surveysService.getSurveyAnswers(date, username);
             Submission submission = surveysService.getSurveySubmission(date, username);
 
-            SurveyData toSend = new SurveyData(qaMap, submission.getAge(), capitalize(Submission.Gender.values()[submission.getSex()].name()),
-                    capitalize(Submission.ExpertiseLevel.values()[submission.getExpertiseLevel()].name()));
+            String sex = submission.getSex() != null ? capitalize(Submission.Gender.values()[submission.getSex()].name()) : "Unknown";
+            String exp_lvl = submission.getExpertiseLevel() != null ?
+                    capitalize(Submission.ExpertiseLevel.values()[submission.getExpertiseLevel()].name()) : "Unknown";
+            SurveyData toSend = new SurveyData(qaMap, submission.getAge(), sex, exp_lvl);
 
             response.setStatus(HttpServletResponse.SC_OK);
             response.setContentType("application/json");

@@ -104,7 +104,7 @@ public class Submission implements Serializable {
     public void setUser(User user) {
         this.user = user;
     }
-    public int getAge() {
+    public Integer getAge() {
         return age;
     }
 
