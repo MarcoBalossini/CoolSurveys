@@ -49,10 +49,6 @@ public class AnswerDAO {
 
         List<String> badWords = em.createNamedQuery("BadWord.findAllWords", String.class).getResultList();
 
-        /*for (String word: text.replaceAll("[^a-zA-Z0-9]", " ").split(" "))
-            if (badWords.contains(word.toLowerCase()))
-                throw new BadWordFoundException(); //this will cause a Rollback (see BadWordFoundException annotation)
-        */
 
         text = text.toLowerCase();
 
